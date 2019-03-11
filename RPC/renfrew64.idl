@@ -1,0 +1,10 @@
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+   uuid(708D7500-239D-49D7-91CD-A01E921EACF0),
+   version(1.0)
+]
+interface Magnifier {
+   void mag_Echo([in, string] const TCHAR *ptszMessage);
+}

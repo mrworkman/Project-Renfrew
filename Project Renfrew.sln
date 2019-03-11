@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Magnifier", "Magnifier\Magn
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Interop", "Win32Interop\Win32Interop.vcxproj", "{713C548E-95A4-47C9-B381-23DB5F20F091}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Host64", "Host64\Host64.vcxproj", "{EAF5B8AE-74AE-40DF-A470-DED894CB5117}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -63,6 +65,10 @@ Global
 		{713C548E-95A4-47C9-B381-23DB5F20F091}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{713C548E-95A4-47C9-B381-23DB5F20F091}.Release|Mixed Platforms.ActiveCfg = Release|Win32
 		{713C548E-95A4-47C9-B381-23DB5F20F091}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{EAF5B8AE-74AE-40DF-A470-DED894CB5117}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{EAF5B8AE-74AE-40DF-A470-DED894CB5117}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{EAF5B8AE-74AE-40DF-A470-DED894CB5117}.Release|Mixed Platforms.ActiveCfg = Release|x64
+		{EAF5B8AE-74AE-40DF-A470-DED894CB5117}.Release|Mixed Platforms.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,7 @@
+[
+   type_strict_context_handle,
+   implicit_handle (handle_t magnifier_IfHandle)
+]
+interface Magnifier
+{
+}
