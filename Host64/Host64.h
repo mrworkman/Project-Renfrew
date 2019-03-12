@@ -15,9 +15,7 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-#include "pch.h"
-#include "renfrew64_h.h"
+#pragma once
 
-void mag_Echo(const TCHAR *ptszMessage) {
-   std::tcout << ptszMessage << std::endl;
-}
+// RPC endpoint name. To be used across RPC server/clients.
+const TCHAR pctszEndpointName[] = _T("DD8A3E19-F2F2-4B24-81F1-816B1D6126D8");
