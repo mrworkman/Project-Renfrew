@@ -50,6 +50,9 @@
     <ClCompile Include="renfrew64_s.cpp">
       <Filter>Source Files\Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Ping.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">

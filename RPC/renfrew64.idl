@@ -8,3 +8,11 @@ import "ocidl.idl";
 interface Magnifier {
    void mag_Echo([in, string] const TCHAR *ptszMessage);
 }
+
+[
+   uuid(32343F02-7DDA-4545-8A53-18CA23CA0DB8),
+   version(1.0)
+]
+interface Ping {
+   int ping_Ping(void);
+}

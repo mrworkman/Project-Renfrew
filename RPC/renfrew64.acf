@@ -5,3 +5,11 @@
 interface Magnifier
 {
 }
+
+[
+   type_strict_context_handle,
+   implicit_handle (handle_t ping_IfHandle)
+]
+interface Ping
+{
+}

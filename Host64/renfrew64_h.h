@@ -66,6 +66,22 @@ extern RPC_IF_HANDLE Magnifier_v1_0_c_ifspec;
 extern RPC_IF_HANDLE Magnifier_v1_0_s_ifspec;
 #endif /* __Magnifier_INTERFACE_DEFINED__ */
 
+#ifndef __Ping_INTERFACE_DEFINED__
+#define __Ping_INTERFACE_DEFINED__
+
+/* interface Ping */
+/* [implicit_handle][type_strict_context_handle][version][uuid] */ 
+
+int ping_Ping( void);
+
+
+extern handle_t ping_IfHandle;
+
+
+extern RPC_IF_HANDLE Ping_v1_0_c_ifspec;
+extern RPC_IF_HANDLE Ping_v1_0_s_ifspec;
+#endif /* __Ping_INTERFACE_DEFINED__ */
+
 /* Additional Prototypes for ALL interfaces */
 
 /* end of Additional Prototypes */

@@ -31,7 +31,7 @@
 #include "renfrew64_h.h"
 
 #define TYPE_FORMAT_STRING_SIZE   7                                 
-#define PROC_FORMAT_STRING_SIZE   33                                
+#define PROC_FORMAT_STRING_SIZE   65                                
 #define EXPR_FORMAT_STRING_SIZE   1                                 
 #define TRANSMIT_AS_TABLE_SIZE    0            
 #define WIRE_MARSHAL_TABLE_SIZE   0            
@@ -91,6 +91,31 @@ RPC_IF_HANDLE Magnifier_v1_0_s_ifspec = (RPC_IF_HANDLE)& Magnifier___RpcServerIn
 extern const MIDL_STUB_DESC Magnifier_StubDesc;
 
 
+/* Standard interface: Ping, ver. 1.0,
+   GUID={0x32343F02,0x7DDA,0x4545,{0x8A,0x53,0x18,0xCA,0x23,0xCA,0x0D,0xB8}} */
+
+
+extern const MIDL_SERVER_INFO Ping_ServerInfo;
+
+extern const RPC_DISPATCH_TABLE Ping_v1_0_DispatchTable;
+
+static const RPC_SERVER_INTERFACE Ping___RpcServerInterface =
+    {
+    sizeof(RPC_SERVER_INTERFACE),
+    {{0x32343F02,0x7DDA,0x4545,{0x8A,0x53,0x18,0xCA,0x23,0xCA,0x0D,0xB8}},{1,0}},
+    {{0x8A885D04,0x1CEB,0x11C9,{0x9F,0xE8,0x08,0x00,0x2B,0x10,0x48,0x60}},{2,0}},
+    (RPC_DISPATCH_TABLE*)&Ping_v1_0_DispatchTable,
+    0,
+    0,
+    0,
+    &Ping_ServerInfo,
+    0x06000000
+    };
+RPC_IF_HANDLE Ping_v1_0_s_ifspec = (RPC_IF_HANDLE)& Ping___RpcServerInterface;
+
+extern const MIDL_STUB_DESC Ping_StubDesc;
+
+
 #if !defined(__RPC_WIN64__)
 #error  Invalid build platform for this stub.
 #endif
@@ -123,6 +148,31 @@ static const renfrew64_MIDL_PROC_FORMAT_STRING renfrew64__MIDL_ProcFormatString 
 /* 26 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
 /* 28 */	NdrFcShort( 0x0 ),	/* X64 Stack size/offset = 0 */
 /* 30 */	NdrFcShort( 0x4 ),	/* Type Offset=4 */
+
+	/* Procedure ping_Ping */
+
+/* 32 */	0x32,		/* FC_BIND_PRIMITIVE */
+			0x48,		/* Old Flags:  */
+/* 34 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 38 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 40 */	NdrFcShort( 0x8 ),	/* X64 Stack size/offset = 8 */
+/* 42 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 44 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 46 */	0x44,		/* Oi2 Flags:  has return, has ext, */
+			0x1,		/* 1 */
+/* 48 */	0xa,		/* 10 */
+			0x1,		/* Ext Flags:  new corr desc, */
+/* 50 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 52 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 54 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 56 */	NdrFcShort( 0x0 ),	/* 0 */
+
+	/* Return value */
+
+/* 58 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 60 */	NdrFcShort( 0x0 ),	/* X64 Stack size/offset = 0 */
+/* 62 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
 
 			0x0
         }
@@ -158,6 +208,23 @@ static const RPC_DISPATCH_TABLE Magnifier_v1_0_DispatchTable =
     {
     1,
     (RPC_DISPATCH_FUNCTION*)Magnifier_table
+    };
+
+static const unsigned short Ping_FormatStringOffsetTable[] =
+    {
+    32
+    };
+
+
+static const RPC_DISPATCH_FUNCTION Ping_table[] =
+    {
+    NdrServerCall2,
+    0
+    };
+static const RPC_DISPATCH_TABLE Ping_v1_0_DispatchTable = 
+    {
+    1,
+    (RPC_DISPATCH_FUNCTION*)Ping_table
     };
 
 
@@ -196,6 +263,20 @@ static const RPC_DISPATCH_TABLE Magnifier_v1_0_DispatchTable =
 
 
 typedef 
+NDR64_FORMAT_CHAR
+__midl_frag6_t;
+extern const __midl_frag6_t __midl_frag6;
+
+typedef 
+struct 
+{
+    struct _NDR64_PROC_FORMAT frag1;
+    struct _NDR64_PARAM_FORMAT frag2;
+}
+__midl_frag5_t;
+extern const __midl_frag5_t __midl_frag5;
+
+typedef 
 struct _NDR64_CONFORMANT_STRING_FORMAT
 __midl_frag4_t;
 extern const __midl_frag4_t __midl_frag4;
@@ -218,6 +299,49 @@ typedef
 NDR64_FORMAT_UINT32
 __midl_frag1_t;
 extern const __midl_frag1_t __midl_frag1;
+
+static const __midl_frag6_t __midl_frag6 =
+0x5    /* FC64_INT32 */;
+
+static const __midl_frag5_t __midl_frag5 =
+{ 
+/* ping_Ping */
+    { 
+    /* ping_Ping */      /* procedure ping_Ping */
+        (NDR64_UINT32) 524354 /* 0x80042 */,    /* primitive handle */ /* IsIntrepreted, HasReturn */
+        (NDR64_UINT32) 8 /* 0x8 */ ,  /* Stack size */
+        (NDR64_UINT32) 0 /* 0x0 */,
+        (NDR64_UINT32) 8 /* 0x8 */,
+        (NDR64_UINT16) 0 /* 0x0 */,
+        (NDR64_UINT16) 0 /* 0x0 */,
+        (NDR64_UINT16) 1 /* 0x1 */,
+        (NDR64_UINT16) 0 /* 0x0 */
+    },
+    { 
+    /* int */      /* parameter int */
+        &__midl_frag6,
+        { 
+        /* int */
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            (NDR64_UINT16) 0 /* 0x0 */,
+            0
+        },    /* [out], IsReturn, Basetype, ByValue */
+        (NDR64_UINT16) 0 /* 0x0 */,
+        0 /* 0x0 */,   /* Stack offset */
+    }
+};
 
 static const __midl_frag4_t __midl_frag4 =
 { 
@@ -377,6 +501,89 @@ static const MIDL_SERVER_INFO Magnifier_ServerInfo =
     (RPC_SYNTAX_IDENTIFIER*)&_NDR64_RpcTransferSyntax,
     2,
     (MIDL_SYNTAX_INFO*)Magnifier_SyntaxInfo
+    };
+
+static const FormatInfoRef Ping_Ndr64ProcTable[] =
+    {
+    &__midl_frag5
+    };
+
+
+static const MIDL_STUB_DESC Ping_StubDesc = 
+    {
+    (void *)& Ping___RpcServerInterface,
+    MIDL_user_allocate,
+    MIDL_user_free,
+    0,
+    0,
+    0,
+    0,
+    0,
+    renfrew64__MIDL_TypeFormatString.Format,
+    1, /* -error bounds_check flag */
+    0x60001, /* Ndr library version */
+    0,
+    0x801026e, /* MIDL Version 8.1.622 */
+    0,
+    0,
+    0,  /* notify & notify_flag routine table */
+    0x2000001, /* MIDL flag */
+    0, /* cs routines */
+    (void *)& Ping_ServerInfo,   /* proxy/server info */
+    0
+    };
+
+static const RPC_DISPATCH_FUNCTION Ping_NDR64__table[] =
+    {
+    NdrServerCallAll,
+    0
+    };
+static const RPC_DISPATCH_TABLE Ping_NDR64__v1_0_DispatchTable = 
+    {
+    1,
+    (RPC_DISPATCH_FUNCTION*)Ping_NDR64__table
+    };
+
+static const MIDL_SYNTAX_INFO Ping_SyntaxInfo [  2 ] = 
+    {
+    {
+    {{0x8A885D04,0x1CEB,0x11C9,{0x9F,0xE8,0x08,0x00,0x2B,0x10,0x48,0x60}},{2,0}},
+    (RPC_DISPATCH_TABLE*)&Ping_v1_0_DispatchTable,
+    renfrew64__MIDL_ProcFormatString.Format,
+    Ping_FormatStringOffsetTable,
+    renfrew64__MIDL_TypeFormatString.Format,
+    0,
+    0,
+    0
+    }
+    ,{
+    {{0x71710533,0xbeba,0x4937,{0x83,0x19,0xb5,0xdb,0xef,0x9c,0xcc,0x36}},{1,0}},
+    (RPC_DISPATCH_TABLE*)&Ping_NDR64__v1_0_DispatchTable,
+    0 ,
+    (unsigned short *) Ping_Ndr64ProcTable,
+    0,
+    0,
+    0,
+    0
+    }
+    };
+
+
+static const SERVER_ROUTINE Ping_ServerRoutineTable[] = 
+    {
+    (SERVER_ROUTINE)ping_Ping
+    };
+
+static const MIDL_SERVER_INFO Ping_ServerInfo = 
+    {
+    &Ping_StubDesc,
+    Ping_ServerRoutineTable,
+    renfrew64__MIDL_ProcFormatString.Format,
+    (unsigned short *) Ping_FormatStringOffsetTable,
+    0,
+    (RPC_SYNTAX_IDENTIFIER*)&_NDR64_RpcTransferSyntax,
+    2,
+    (MIDL_SYNTAX_INFO*)Ping_SyntaxInfo
     };
 #if _MSC_VER >= 1200
 #pragma warning(pop)
