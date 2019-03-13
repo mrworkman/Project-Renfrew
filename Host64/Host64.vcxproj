@@ -102,6 +102,7 @@
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Host64.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="renfrew64_h.h" />
     <ClInclude Include="resource.h" />

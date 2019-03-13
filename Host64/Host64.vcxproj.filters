@@ -30,10 +30,13 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="renfrew64_h.h">
+      <Filter>Header Files\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Host64.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renfrew64_h.h">
+    <ClInclude Include="resource.h">
       <Filter>Header Files\Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

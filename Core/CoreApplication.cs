@@ -110,7 +110,7 @@ namespace Renfrew.Core {
       #endregion
 
       private void InitializeGrammarsFromAssembly(Assembly assembly) {
-         
+
          // Get a list of all of the classes marked with the GrammarExportAttribute.
          var types = assembly.GetTypes()
             .Select(e => new {
@@ -129,7 +129,7 @@ namespace Renfrew.Core {
                var fileName = Path.GetFileName(assembly.Location);
 
                _logger.Warn(
-                  $"Class '{type.Type.FullName}' in {fileName} marked as exported grammar, " + 
+                  $"Class '{type.Type.FullName}' in {fileName} marked as exported grammar, " +
                   $"but it does not extend {typeof(Grammar).FullName}. Ignoring."
                );
 
@@ -207,14 +207,14 @@ namespace Renfrew.Core {
 
       public void Start(NatSpeakService natSpeakService) {
          _natSpeakService = natSpeakService ?? throw new ArgumentNullException(nameof(natSpeakService));
-         
+
          ShowConsole();
 
          _logger.Info("Starting...");
          _logger.Info(
             $"Product version: {Assembly.GetExecutingAssembly().GetName().Version}"
          );
-         
+
          // Get a reference to the GrammarService instance.
          _grammarService = _natSpeakService.GrammarService;
          _grammarService.GrammarSerializer = new GrammarSerializer();
