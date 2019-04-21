@@ -1,0 +1,23 @@
+natspeak.exe command-line options:
+   /Diagnose
+   /FindDragonLog
+   /Quick
+   /FindSetupLog
+   /FindAppDataAllUsers
+   /FindAppData
+   /FindUpgradeLog
+   /FindCustom
+   /FixGuid
+   /FixGuids
+   /DeactivateSilent
+   /Deactivate
+   /DeactivateSilent
+   /TrackCitrixApplications
+   /SetDefaultOptions
+   /SetDefaultAdministrativeOptions
+   /SetAdministrativeOptions
+   /SetDefaultFormattingOptions
+   /About (shows splash-screen)
+   /User
+   /Shutdown
+   /SaveAndShutdown
