@@ -22,6 +22,8 @@ namespace Renfrew::NatSpeakInterop {
       private: IGrammar ^_grammar;
       private: ISrGramCommon ^_isrGramCommon;
 
+      private: bool _isLoaded = false;
+
       public: GrammarExecutive(IGrammar ^grammar) {
          if (grammar == nullptr)
             throw gcnew ArgumentNullException("grammar");
@@ -42,6 +44,16 @@ namespace Renfrew::NatSpeakInterop {
 
          void set(ISrGramCommon ^isrGramCommon) {
             _isrGramCommon = isrGramCommon;
+         }
+      };
+
+      public: property bool IsLoaded {
+         bool get() {
+            return _isLoaded;
+         }
+
+         void set(bool isLoaded) {
+            _isLoaded = isLoaded;
          }
       };
 
