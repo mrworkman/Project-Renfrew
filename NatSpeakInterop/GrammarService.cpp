@@ -49,12 +49,9 @@ GrammarService::GrammarService(ISrCentral ^isrCentral,
 }
 
 GrammarService::~GrammarService() {
-   auto grammars = gcnew List<IGrammar^>(_grammars->Keys);
-
    Debug::WriteLine("GrammarService: Releasing.");
 
-   for each (auto g in grammars)
-      UnloadGrammar(g);
+   UnloadAllGrammars();
 }
 
 void GrammarService::ActivateRule(IGrammar ^grammar, HWND hWnd, String ^ruleName) {
@@ -203,6 +200,10 @@ void GrammarService::LoadGrammar(IGrammar ^grammar) {
    // Store isrGramCommon with our grammar
    ge->GramCommonInterface = isrGramCommon;
 
+   /*
+    * TODO: Initialize the grammar here instead of in core app.
+    */
+
 }
 
 void GrammarService::PausedProcessor(UInt64 cookie) {
@@ -312,6 +313,21 @@ void GrammarService::SetExclusiveGrammar(IGrammar ^grammar, bool exclusive) {
    auto ge = GetGrammarExecutive(grammar);
 
    ((IDgnSrGramCommon^)(ge->GramCommonInterface))->SpecialGrammar(exclusive);
+}
+
+void GrammarService::UnloadAllGrammars() {
+   auto grammars = gcnew List<IGrammar^>(_grammars->Keys);
+
+   Debug::WriteLine("GrammarService: Releasing.");
+
+   for each (IGrammar ^g in grammars) {
+
+      /*
+       * TODO: Deactivate all rules in grammar.
+       */
+
+      UnloadGrammar(g);
+   }
 }
 
 void GrammarService::UnloadGrammar(IGrammar ^grammar) {

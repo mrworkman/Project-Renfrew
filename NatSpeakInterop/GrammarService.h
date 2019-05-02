@@ -56,6 +56,7 @@ namespace Renfrew::NatSpeakInterop {
       }
 
       public: virtual void LoadGrammar(IGrammar ^grammar);
+      public: virtual void UnloadAllGrammars();
       public: virtual void UnloadGrammar(IGrammar ^grammar);
 
       public: void PausedProcessor(UInt64 cookie);
