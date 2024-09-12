@@ -57,16 +57,19 @@ namespace Renfrew.Launcher {
 
             await CoreApplication.Instance.Start(_natSpeakService);
 
-         } catch (COMException e) {
+         } catch (Exception e) {
+            _logger.Fatal(e, "");
 
             _logger.Fatal(e, "Could not connect to Dragon NaturallySpeaking. Is it running?");
 
             CoreApplication.Instance.ShowNotifyError(
-               "Please ensure that NatSpeak is running, and that you have selected a profile."
+               "There was an unexpected error that requires Project Renfrew to quit. 😞 See the log for more info."
             );
 
             // Wait long enough for the user to see the error message.
             Thread.Sleep(10000);
+
+            _logger.Debug("Exiting application.");
 
             // Kill the application
             Application.ExitThread();

@@ -212,11 +212,11 @@ namespace Renfrew.Core {
          InfoConsole.Instance.Focus();
       }
 
-      public void ShowNotifyError(String message, String title = "Mouse Plot for NatSpeak") {
+      public void ShowNotifyError(String message, String title = "Project Renfrew") {
          _notifyIcon.ShowBalloonTip(2000, title, message, ToolTipIcon.Error);
       }
 
-      public void ShowNotifyInfo(String message, String title = "Mouse Plot for NatSpeak") {
+      public void ShowNotifyInfo(String message, String title = "Project Renfrew") {
          _notifyIcon.ShowBalloonTip(2000, title, message, ToolTipIcon.Info);
       }
 
@@ -235,6 +235,8 @@ namespace Renfrew.Core {
          _grammarService.GrammarSerializer = new GrammarSerializer();
 
          _logger.Info("Querying Dragon Naturally Speaking...");
+
+         _logger.Info($"Dragon Version: {_natSpeakService.GetDragonVersion()}");
 
          String profileName;
          String profilePath;

@@ -48,7 +48,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
       private Point _currentCell = Point.Empty;
 
       // TODO: Add support for determining this from windows and setting it by configuration.
-      private readonly double _displayScaleMultiplier = 1;
+      private readonly double _displayScaleMultiplier = 1.0;
 
       private readonly uint _scrollWheelDelta = 300;
 

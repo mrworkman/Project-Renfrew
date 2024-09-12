@@ -38,7 +38,7 @@ namespace Renfrew.Launcher {
 
             MessageBox.Show(
                "An unexpected exception occurred. Please see the log for more information.",
-               "Mouse Plot for NatSpeak",
+               "Project Renfrew",
                MessageBoxButtons.OK, MessageBoxIcon.Error
             );
 
