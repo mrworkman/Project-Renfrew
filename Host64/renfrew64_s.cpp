@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 8.01.0622 */
-/* at Mon Jan 18 22:14:07 2038
+/* at Tue Jan 19 03:14:07 2038
  */
 /* Compiler settings for ..\RPC\renfrew64.idl, D:\Opt\Projects\Project Renfrew\RPC\renfrew64.acf:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 8.01.0622 
@@ -236,7 +236,7 @@ static const RPC_DISPATCH_TABLE Ping_v1_0_DispatchTable =
 
 
  /* File created by MIDL compiler version 8.01.0622 */
-/* at Mon Jan 18 22:14:07 2038
+/* at Tue Jan 19 03:14:07 2038
  */
 /* Compiler settings for ..\RPC\renfrew64.idl, D:\Opt\Projects\Project Renfrew\RPC\renfrew64.acf:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 8.01.0622 
