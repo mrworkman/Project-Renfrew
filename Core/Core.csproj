@@ -72,6 +72,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="CoreApplication.cs" />
+    <Compile Include="Grammars\SteveGlobals.cs" />
     <Compile Include="InfoConsole.xaml.cs">
       <DependentUpon>InfoConsole.xaml</DependentUpon>
       <SubType>Code</SubType>
