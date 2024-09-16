@@ -36,81 +36,48 @@ void Keyboard::PlayKeys(... array<KeySeq^>^ keySequences) {
 }
 
 void Keyboard::SendKeySequence(KeySeq^ keySequence) {
-   //auto num_keys = keySequence->keys->Length;
+   auto keys = keySequence->keys;
+   auto num_inputs = keySequence->keys->Count * 2;
 
-   //if (num_keys == 0) {
-   //   return;
-   //}
-
-   //auto num_inputs = (keySequence->modifiers->Count + keySequence->keys->Length) * 2;
-
-
-   //INPUT* inputs = new INPUT[num_inputs];
-
-   //ZeroMemory(
-   //   inputs, 
-   //   sizeof(INPUT) * num_inputs
-   //);
-
-   //auto chars = keySequence->keys->ToCharArray();
-
-   //for (int i = 0, j = 0; i < num_inputs; i += 2, j++) {
-   //   inputs[i].type = INPUT_KEYBOARD;
-   //   inputs[i].ki.wVk = chars[j];
-
-   //   inputs[i + 1].type = INPUT_KEYBOARD;
-   //   inputs[i + 1].ki.wVk = chars[j];
-   //   inputs[i + 1].ki.dwFlags = KEYEVENTF_KEYUP;
-   //}
-
-   ////inputs[0].type = INPUT_KEYBOARD;
-   ////inputs[0].ki.wVk = 'a';
-
-   ////inputs[1].type = INPUT_KEYBOARD;
-   ////inputs[1].ki.wVk = 'a';
-   ////inputs[1].ki.dwFlags = KEYEVENTF_KEYUP;
-
-   //UINT uSent = SendInput(num_inputs, inputs, sizeof(INPUT));
-
-   //if (uSent != num_inputs) {
-
-   //   Debug::WriteLine("SendInput failed.");
-   //}
-}
-
-void TestSequence() {
-   OutputDebugString(L"Sending test sequence.");
-
-   INPUT inputs[6] = {};
-   ZeroMemory(inputs, sizeof(inputs));
-
-   inputs[0].type = INPUT_KEYBOARD;
-   inputs[0].ki.wVk = VK_SHIFT;
-   inputs[0].ki.dwFlags = KEYEVENTF_EXTENDEDKEY;
-
-   inputs[1].type = INPUT_KEYBOARD;
-   inputs[1].ki.wVk = VK_MENU;
-   inputs[1].ki.dwFlags = KEYEVENTF_EXTENDEDKEY;
-
-   inputs[2].type = INPUT_KEYBOARD;
-   inputs[2].ki.wVk = VK_LEFT;
-
-   inputs[3].type = INPUT_KEYBOARD;
-   inputs[3].ki.wVk = VK_LEFT;
-   inputs[3].ki.dwFlags = KEYEVENTF_KEYUP;
-
-   inputs[4].type = INPUT_KEYBOARD;
-   inputs[4].ki.wVk = VK_MENU;
-   inputs[4].ki.dwFlags = KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP;
-
-   inputs[5].type = INPUT_KEYBOARD;
-   inputs[5].ki.wVk = VK_SHIFT;
-   inputs[5].ki.dwFlags = KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP;
-
-   UINT uSent = SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
-
-   if (uSent != ARRAYSIZE(inputs)) {
-
-      OutputDebugString(L"SendInput failed.");
+   if (num_inputs == 0) {
+      return;
    }
+
+   auto inputs = new INPUT[num_inputs];
+
+   ZeroMemory(
+      inputs, 
+      sizeof(INPUT) * num_inputs
+   );
+
+   for (int i = 0, j = 0; i < num_inputs/2; i++, j++) {
+      auto key = keys[j];
+
+      Debug::WriteLine("({0}:{1}) Key: {2}, DOWN, {3}", i, j, key->VirtCode, key->IsExtended);
+
+      inputs[i].type = INPUT_KEYBOARD;
+      inputs[i].ki.wVk = key->VirtCode;
+      inputs[i].ki.dwFlags = key->IsExtended ? KEYEVENTF_EXTENDEDKEY : 0;
+   }
+
+   for (int i = num_inputs/2, j = (keys->Count - 1); i < num_inputs; i++, j--) {
+      auto key = keys[j];
+
+      Debug::WriteLine("({0}:{1}) Key: {2}, UP, {3}", i, j, key->VirtCode, key->IsExtended);
+
+      inputs[i].type = INPUT_KEYBOARD;
+      inputs[i].ki.wVk = key->VirtCode;
+      inputs[i].ki.dwFlags = KEYEVENTF_KEYUP | (
+         key->IsExtended ? KEYEVENTF_EXTENDEDKEY : 0
+      );
+   }
+
+   UINT uSent = SendInput(num_inputs, inputs, sizeof(INPUT));
+   
+   if (uSent != num_inputs) {
+      delete inputs;
+      Debug::WriteLine("SendInput failed.");
+   }
+
+   delete inputs;
 }

@@ -7,1347 +7,1347 @@
 
 namespace Renfrew::Win32::Interop {
     public ref class D0Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    48; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    48; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class D1Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    49; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    49; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class D2Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    50; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    50; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class D3Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    51; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    51; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class D4Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    52; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    52; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class D5Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    53; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    53; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class D6Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    54; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    54; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class D7Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    55; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    55; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class D8Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    56; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    56; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class D9Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    57; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    57; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class AKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    65; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    65; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class BKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    66; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    66; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class CKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    67; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    67; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class DKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    68; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    68; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class EKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    69; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    69; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class FKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    70; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    70; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    71; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    71; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class HKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    72; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    72; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class IKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    73; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    73; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class JKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    74; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    74; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class KKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    75; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    75; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class LKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    76; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    76; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class MKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    77; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    77; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class NKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    78; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    78; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    79; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    79; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class PKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    80; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    80; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class QKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    81; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    81; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class RKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    82; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    82; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class SKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    83; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    83; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class TKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    84; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    84; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class UKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    85; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    85; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class VKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    86; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    86; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class WKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    87; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    87; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class XKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    88; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    88; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class YKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    89; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    89; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class ZKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    90; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    90; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class LButtonKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return     1; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     1; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class RButtonKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return     2; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     2; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class CancelKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return     3; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     3; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class MbuttonKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return     4; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     4; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Xbutton1Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return     5; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     5; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Xbutton2Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return     6; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     6; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class BackKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return     8; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     8; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class TabKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return     9; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     9; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class ClearKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    12; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    12; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class ReturnKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    13; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    13; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class ShiftKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    16; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return  true; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    16; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return  true; } }
     };
 
     public ref class ControlKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    17; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return  true; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    17; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return  true; } }
     };
 
     public ref class MenuKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    18; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    18; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return  true; } }
     };
 
     public ref class PauseKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    19; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    19; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class CapitalKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    20; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    20; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class KanaKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    21; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    21; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class HangeulKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    21; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    21; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class HangulKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    21; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    21; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class ImeOnKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    22; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    22; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class JunjaKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    23; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    23; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class FinalKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    24; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    24; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class HanjaKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    25; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    25; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class KanjiKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    25; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    25; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class ImeOffKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    26; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    26; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class EscapeKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    27; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    27; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class ConvertKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    28; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    28; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class NonconvertKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    29; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    29; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class AcceptKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    30; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    30; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class ModechangeKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    31; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    31; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class SpaceKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    32; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    32; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class PriorKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    33; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    33; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class NextKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    34; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    34; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class EndKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    35; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    35; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class HomeKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    36; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    36; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class LeftKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    37; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    37; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class UpKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    38; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    38; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class RightKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    39; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    39; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class DownKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    40; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    40; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class SelectKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    41; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    41; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class PrintKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    42; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    42; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class ExecuteKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    43; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    43; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class SnapshotKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    44; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    44; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class InsertKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    45; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    45; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class DeleteKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    46; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    46; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class HelpKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    47; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    47; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class LWinKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    91; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    91; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class RWinKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    92; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    92; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class AppsKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    93; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    93; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class SleepKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    95; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    95; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Numpad0Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    96; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    96; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Numpad1Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    97; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    97; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Numpad2Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    98; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    98; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Numpad3Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return    99; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    99; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Numpad4Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   100; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   100; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Numpad5Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   101; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   101; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Numpad6Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   102; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   102; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Numpad7Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   103; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   103; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Numpad8Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   104; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   104; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Numpad9Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   105; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   105; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class MultiplyKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   106; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   106; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class AddKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   107; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   107; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class SeparatorKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   108; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   108; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class SubtractKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   109; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   109; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class DecimalKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   110; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   110; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class DivideKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   111; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   111; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F1Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   112; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   112; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F2Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   113; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   113; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F3Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   114; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   114; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F4Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   115; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   115; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F5Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   116; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   116; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F6Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   117; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   117; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F7Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   118; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   118; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F8Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   119; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   119; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F9Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   120; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   120; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F10Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   121; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   121; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F11Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   122; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   122; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F12Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   123; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   123; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F13Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   124; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   124; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F14Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   125; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   125; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F15Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   126; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   126; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F16Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   127; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   127; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F17Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   128; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   128; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F18Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   129; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   129; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F19Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   130; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   130; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F20Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   131; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   131; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F21Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   132; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   132; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F22Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   133; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   133; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F23Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   134; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   134; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class F24Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   135; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   135; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class NavigationViewKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   136; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   136; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class NavigationMenuKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   137; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   137; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class NavigationUpKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   138; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   138; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class NavigationDownKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   139; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   139; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class NavigationLeftKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   140; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   140; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class NavigationRightKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   141; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   141; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class NavigationAcceptKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   142; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   142; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class NavigationCancelKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   143; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   143; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class NumlockKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   144; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   144; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class ScrollKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   145; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   145; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemNecEqualKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   146; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   146; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemFjJishoKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   146; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   146; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemFjMasshouKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   147; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   147; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemFjTourokuKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   148; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   148; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemFjLoyaKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   149; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   149; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemFjRoyaKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   150; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   150; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class BrowserBackKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   166; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   166; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class BrowserForwardKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   167; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   167; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class BrowserRefreshKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   168; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   168; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class BrowserStopKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   169; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   169; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class BrowserSearchKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   170; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   170; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class BrowserFavoritesKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   171; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   171; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class BrowserHomeKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   172; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   172; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class VolumeMuteKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   173; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   173; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class VolumeDownKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   174; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   174; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class VolumeUpKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   175; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   175; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class MediaNextTrackKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   176; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   176; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class MediaPrevTrackKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   177; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   177; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class MediaStopKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   178; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   178; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class MediaPlayPauseKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   179; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   179; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class LaunchMailKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   180; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   180; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class LaunchMediaSelectKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   181; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   181; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class LaunchApp1Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   182; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   182; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class LaunchApp2Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   183; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   183; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Oem1Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   186; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   186; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemPlusKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   187; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   187; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemCommaKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   188; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   188; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemMinusKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   189; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   189; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemPeriodKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   190; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   190; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Oem2Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   191; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   191; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Oem3Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   192; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   192; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadAKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   195; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   195; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadBKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   196; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   196; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadXKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   197; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   197; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadYKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   198; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   198; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadRightShoulderKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   199; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   199; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadLeftShoulderKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   200; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   200; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadLeftTriggerKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   201; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   201; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadRightTriggerKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   202; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   202; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadDpadUpKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   203; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   203; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadDpadDownKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   204; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   204; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadDpadLeftKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   205; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   205; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadDpadRightKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   206; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   206; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadMenuKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   207; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   207; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadViewKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   208; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   208; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadLeftThumbstickButtonKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   209; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   209; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadRightThumbstickButtonKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   210; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   210; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadLeftThumbstickUpKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   211; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   211; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadLeftThumbstickDownKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   212; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   212; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadLeftThumbstickRightKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   213; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   213; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadLeftThumbstickLeftKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   214; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   214; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadRightThumbstickUpKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   215; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   215; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadRightThumbstickDownKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   216; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   216; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadRightThumbstickRightKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   217; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   217; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class GamepadRightThumbstickLeftKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   218; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   218; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Oem4Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   219; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   219; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Oem5Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   220; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   220; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Oem6Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   221; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   221; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Oem7Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   222; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   222; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Oem8Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   223; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   223; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemAxKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   225; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   225; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Oem102Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   226; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   226; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class IcoHelpKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   227; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   227; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Ico00Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   228; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   228; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class ProcesskeyKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   229; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   229; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class IcoClearKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   230; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   230; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class PacketKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   231; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   231; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemResetKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   233; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   233; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemJumpKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   234; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   234; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemPa1Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   235; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   235; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemPa2Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   236; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   236; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemPa3Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   237; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   237; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemWsctrlKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   238; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   238; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemCuselKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   239; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   239; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemAttnKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   240; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   240; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemFinishKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   241; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   241; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemCopyKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   242; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   242; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemAutoKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   243; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   243; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemEnlwKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   244; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   244; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemBacktabKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   245; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   245; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class AttnKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   246; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   246; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class CrselKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   247; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   247; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class ExselKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   248; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   248; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class EreofKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   249; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   249; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class PlayKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   250; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   250; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class ZoomKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   251; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   251; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class NonameKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   252; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   252; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Pa1Key sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   253; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   253; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class OemClearKey sealed : IKeyBase {
-        public: virtual property int  VirtCode    { int  get() { return   254; } }
-        public: virtual property int  ScanCode    { int  get() { return     0; } }
-        public: virtual property bool IsExtended  { bool get() { return false; } }
+        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   254; } }
+        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
+        public: virtual property bool            IsExtended  { bool           get() { return false; } }
     };
 
     public ref class Key abstract sealed {

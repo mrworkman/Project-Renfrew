@@ -46,7 +46,7 @@ namespace VKCodeGen {
 
             if (matches.Count > 0) {
                var name = Pascalize(matches[0].Groups[1].Value);
-               var value = Convert.ToInt16(matches[0].Groups[2].Value, 16);
+               var value = Convert.ToUInt16(matches[0].Groups[2].Value, 16);
 
                // Skip VK_LSHIFT, VK_RSHIFT, etc..
                if (value >= 0xA0 && value <= 0xA5) {
@@ -56,6 +56,7 @@ namespace VKCodeGen {
                bool isExtended =
                   name == "Shift" ||
                   name == "Control" ||
+                  name == "Menu" ||
                   name == "Win";
                ;
 
@@ -89,9 +90,9 @@ namespace VKCodeGen {
       static void AddVkKeyClassDef(StringBuilder builder, string name, int value, bool isExtended) {
          var classdef =
             "    public ref class {0}Key sealed : IKeyBase {{\r\n" +
-            "        public: virtual property int  VirtCode    {{ int  get() {{ return {1,5}; }} }}\r\n" +
-            "        public: virtual property int  ScanCode    {{ int  get() {{ return     0; }} }}\r\n" +
-            "        public: virtual property bool IsExtended  {{ bool get() {{ return {2,5}; }} }}\r\n" +
+            "        public: virtual property unsigned short  VirtCode    {{ unsigned short get() {{ return {1,5}; }} }}\r\n" +
+            "        public: virtual property unsigned short  ScanCode    {{ unsigned short get() {{ return     0; }} }}\r\n" +
+            "        public: virtual property bool            IsExtended  {{ bool           get() {{ return {2,5}; }} }}\r\n" +
             "    }};\r\n\r\n"; 
 
          builder.AppendFormat(classdef, name, value, isExtended.ToString().ToLower());

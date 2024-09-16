@@ -9,7 +9,15 @@ namespace Renfrew::Win32::Interop {
    public ref class KeySeq sealed {
       internal: property List<IKeyBase^>^ keys;
 
-      public: static KeySeq^ Keys(... array<IKeyBase^>^ keys) { throw gcnew System::Exception(); }
-      public: static KeySeq^ Keys(IEnumerable<IKeyBase^>^ keys) { throw gcnew System::Exception(); }
+      private: KeySeq(IEnumerable<IKeyBase^>^ keySequences) {
+         keys = gcnew List<IKeyBase^>(keySequences);
+      }
+
+      public: static KeySeq^ Keys(... array<IKeyBase^>^ keySequences) {
+         return gcnew KeySeq(keySequences);
+      }
+      public: static KeySeq^ Keys(IEnumerable<IKeyBase^>^ keySequences) {
+         return gcnew KeySeq(keySequences);
+      }
    };
 }
