@@ -12,19 +12,6 @@ using namespace System::Linq;
 
 using namespace Renfrew::Win32::Interop;
 
-
-//private ref class Lookups {
-//   static Dictionary<Modifier, int>^ _modifierMapping;
-//
-//   static Lookups() {
-//      _modifierMapping = gcnew Dictionary<Modifier, int>();
-//
-//      _modifierMapping->Add(Modifier::Shift,      VK_SHIFT);
-//      _modifierMapping->Add(Modifier::LeftShift,  VK_LSHIFT);
-//      _modifierMapping->Add(Modifier::RightShift, VK_RSHIFT);
-//   }
-//};
-
 void Keyboard::PlayKeys(IEnumerable<KeySeq^>^ keySequences) {
    for each (auto seq in keySequences) {
       SendKeySequence(seq);
