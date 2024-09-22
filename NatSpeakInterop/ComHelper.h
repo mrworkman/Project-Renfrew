@@ -19,33 +19,33 @@
 
 namespace Renfrew::Helpers {
    public ref class ComHelper {
-      public:
-         template <typename _ServiceType, typename _ReturnType, typename _ServicePtr>
-         static _ReturnType *QueryService(_ServicePtr instance) {
-            HRESULT r;
-            _ReturnType *ptr;
+   public:
+      template <typename _ServiceType, typename _ReturnType, typename _ServicePtr>
+      static _ReturnType *QueryService(_ServicePtr instance) {
+         HRESULT r;
+         _ReturnType *ptr;
 
-            r = instance->QueryService(__uuidof(_ServiceType), __uuidof(_ReturnType), (void**)&ptr);
+         r = instance->QueryService(__uuidof(_ServiceType), __uuidof(_ReturnType), (void**)&ptr);
 
-            if (FAILED(r)) {
-               LPTSTR lpMessage;
+         if (FAILED(r)) {
+            LPTSTR lpMessage;
 
-               // Get a description of what the problem is.
-               FormatMessage(
-                  FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
-                  nullptr, r, 0, reinterpret_cast<LPTSTR>(&lpMessage), 0, nullptr
-               );
+            // Get a description of what the problem is.
+            FormatMessage(
+               FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
+               nullptr, r, 0, reinterpret_cast<LPTSTR>(&lpMessage), 0, nullptr
+            );
 
-               auto message = gcnew String(lpMessage);
+            auto message = gcnew String(lpMessage);
 
-               LocalFree(lpMessage);
+            LocalFree(lpMessage);
 
-               throw gcnew System::Runtime::InteropServices::COMException(
-                  message->Trim(), r
-               );
-            }
-
-            return static_cast<_ReturnType*>(ptr);
+            throw gcnew System::Runtime::InteropServices::COMException(
+               message->Trim(), r
+            );
          }
+
+         return static_cast<_ReturnType*>(ptr);
+      }
    };
 }

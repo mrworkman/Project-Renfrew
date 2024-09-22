@@ -19,15 +19,16 @@
 
 namespace Renfrew::Win32::Interop {
    public ref class WindowHandle {
-      private: HWND _hWnd;
+      HWND _hWnd;
 
-      public: WindowHandle(HWND hWnd);
+   public:
+      WindowHandle(HWND hWnd);
 
-      public: property HWND Hwnd {
+      property HWND Hwnd {
          HWND get();
       }
 
-      public: property System::IntPtr HwndPtr {
+      property System::IntPtr HwndPtr {
          System::IntPtr get();
       }
    };

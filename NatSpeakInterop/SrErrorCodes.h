@@ -19,11 +19,12 @@
 
 namespace Renfrew::NatSpeakInterop::Dragon {
    public ref class SrErrorCodes {
-      public: static const int SRERR_INVALIDCHAR       = 0x80040208;
-      public: static const int SRERR_GRAMMARTOOCOMPLEX = 0x80040406;
-      public: static const int SRERR_GRAMMARERROR      = 0x80040416;
-      public: static const int SRERR_INVALIDRULE       = 0x80040417;
-      public: static const int SRERR_RULEALREADYACTIVE = 0x80040418;
-      public: static const int SRERR_RULENOTACTIVE     = 0x80040419;
+   public:
+      static constexpr int SRERR_INVALIDCHAR       = 0x80040208;
+      static constexpr int SRERR_GRAMMARTOOCOMPLEX = 0x80040406;
+      static constexpr int SRERR_GRAMMARERROR      = 0x80040416;
+      static constexpr int SRERR_INVALIDRULE       = 0x80040417;
+      static constexpr int SRERR_RULEALREADYACTIVE = 0x80040418;
+      static constexpr int SRERR_RULENOTACTIVE     = 0x80040419;
    };
 }

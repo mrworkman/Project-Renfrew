@@ -23,8 +23,9 @@ namespace Renfrew::NatSpeakInterop::Sinks {
    public ref class SSvcAppTrackingNotifySink :
       public Dragon::ComInterfaces::IDgnSSvcAppTrackingNotifySink {
 
-      public: SSvcAppTrackingNotifySink();
-      public: void virtual AppLoaded(DWORD, const wchar_t*, const wchar_t*);
-      public: void virtual AppTerminated(DWORD, const wchar_t*, const wchar_t*);
+   public:
+      SSvcAppTrackingNotifySink();
+      void virtual AppLoaded(DWORD, const wchar_t*, const wchar_t*);
+      void virtual AppTerminated(DWORD, const wchar_t*, const wchar_t*);
    };
 }

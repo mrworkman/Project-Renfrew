@@ -71,10 +71,11 @@ namespace VKCodeGen {
          }
 
          outputFileContents.Append("    public ref class Key abstract sealed {\r\n");
+         outputFileContents.Append("    public:\r\n");
 
          foreach (var name in names) {
             outputFileContents.AppendFormat(
-               "        public: static initonly {0,-32}^ {1,-32} = gcnew {2,-35};\r\n", $"{name}Key", name, $"{name}Key"
+               "        static initonly {0,-32}^ {1,-32} = gcnew {2,-35};\r\n", $"{name}Key", name, $"{name}Key"
             );
          }
 

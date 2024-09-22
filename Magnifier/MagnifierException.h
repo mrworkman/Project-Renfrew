@@ -19,16 +19,17 @@
 
 namespace Renfrew::Utility {
    public ref class MagnifierException : System::Exception {
-      private: System::String ^_internalErrorMessage;
-      private: int _errorCode;
+      System::String ^_internalErrorMessage;
+      int _errorCode;
 
-      public: MagnifierException(System::String ^message, int errorCode);
+   public:
+      MagnifierException(System::String ^message, int errorCode);
 
-      public: property int ErrorCode {
+      property int ErrorCode {
          int get();
       }
 
-      public: property System::String ^InternalErrorMessage {
+      property System::String ^InternalErrorMessage {
          System::String ^get();
       }
    };

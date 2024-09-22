@@ -20,14 +20,15 @@
 namespace Renfrew::NatSpeakInterop::Exceptions {
 
    public ref class GrammarException : Exception {
-      public: GrammarException(String ^message, COMException ^innerException) :
+   public:
+      GrammarException(String ^message, COMException ^innerException) :
          Exception(message, innerException) {
          
          if (innerException != nullptr)
             this->HResult = innerException->HResult;
 
       }
-      public: GrammarException(String ^message, Exception ^innerException) :
+      GrammarException(String ^message, Exception ^innerException) :
          Exception(message, innerException) {
       }
    };

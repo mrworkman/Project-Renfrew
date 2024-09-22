@@ -26,39 +26,39 @@ namespace Renfrew::NatSpeakInterop {
    private ref class GrammarService :
       public IGrammarService {
 
-      private: ISrCentral ^_isrCentral;
-      private: IDgnSrEngineControl ^_idgnSrEngineControl;
+      ISrCentral ^_isrCentral;
+      IDgnSrEngineControl ^_idgnSrEngineControl;
+      IGrammarSerializer ^_grammarSerializer;
 
-      private: IGrammarSerializer ^_grammarSerializer;
+      Dictionary<IGrammar^, GrammarExecutive^> ^_grammars;
+      HashSet<String^> ^_activeRules;
 
-      private: Dictionary<IGrammar^, GrammarExecutive^> ^_grammars;
+      GrammarExecutive^ AddGrammarToList(IGrammar^ grammar);
+      GrammarExecutive^ RemoveGrammarFromList(IGrammar^ grammar);
+      GrammarExecutive^ GetGrammarExecutive(IGrammar^ grammar);
 
-      private: HashSet<String^> ^_activeRules;
+   public:
+      GrammarService(
+         ISrCentral ^isrCentral, 
+         IDgnSrEngineControl ^idgnSrEngineControl
+      );
+      ~GrammarService();
 
-      public: GrammarService(ISrCentral ^isrCentral,
-                             IDgnSrEngineControl ^idgnSrEngineControl);
-      public: ~GrammarService();
+      virtual void ActivateRule(IGrammar ^grammar, HWND hWnd, String ^ruleName);
+      virtual void ActivateRule(IGrammar ^grammar, IntPtr hWnd, String ^ruleName);
+      virtual void ActivateRules(IGrammar ^grammar);
+      virtual void DeactivateRule(IGrammar ^grammar, String ^ruleName);
 
-      private: GrammarExecutive ^AddGrammarToList(IGrammar ^grammar);
-      private: GrammarExecutive ^RemoveGrammarFromList(IGrammar ^grammar);
+      virtual void SetExclusiveGrammar(IGrammar ^grammar, bool exclusive);
 
-      private: GrammarExecutive ^GetGrammarExecutive(IGrammar ^grammar);
-
-      public: virtual void ActivateRule(IGrammar ^grammar, HWND hWnd, String ^ruleName);
-      public: virtual void ActivateRule(IGrammar ^grammar, IntPtr hWnd, String ^ruleName);
-      public: virtual void ActivateRules(IGrammar ^grammar);
-      public: virtual void DeactivateRule(IGrammar ^grammar, String ^ruleName);
-
-      public: virtual void SetExclusiveGrammar(IGrammar ^grammar, bool exclusive);
-
-      public: virtual property IGrammarSerializer ^GrammarSerializer {
+      virtual property IGrammarSerializer ^GrammarSerializer {
          void set(IGrammarSerializer ^grammarSerializer);
       }
 
-      public: virtual void LoadGrammar(IGrammar ^grammar);
-      public: virtual void UnloadGrammar(IGrammar ^grammar);
+      virtual void LoadGrammar(IGrammar ^grammar);
+      virtual void UnloadGrammar(IGrammar ^grammar);
 
-      public: void PausedProcessor(UInt64 cookie);
-      public: void PhraseFinishedCallback(UInt32 flags, Object ^grammarObj, ISrResBasic^ isrResBasic);
+      void PausedProcessor(UInt64 cookie);
+      void PhraseFinishedCallback(UInt32 flags, Object ^grammarObj, ISrResBasic^ isrResBasic);
    };
 }

@@ -21,33 +21,37 @@ using namespace System;
 
 namespace Renfrew::Win32::Interop {
    public ref class KeyPress abstract : IEquatable<KeyPress^> {
-      internal: virtual property DWORD KeyFlags {
+   internal:
+      virtual property DWORD KeyFlags {
          DWORD get();
       }
 
-      internal: virtual property WORD ScanCode {
+      virtual property WORD ScanCode {
          WORD get();
       }
 
-      internal: virtual property WORD VirtualKeyCode {
+      virtual property WORD VirtualKeyCode {
          WORD get();
       }
 
-      internal: virtual void KeyDown(LPINPUT input) sealed;
-      internal: virtual void KeyUp(LPINPUT input) sealed;
+      virtual void KeyDown(LPINPUT input) sealed;
+      virtual void KeyUp(LPINPUT input) sealed;
 
-      public: virtual bool Equals(KeyPress^ other);
-      public: String^ ToString() override;
+   public:
+      virtual bool Equals(KeyPress^ other);
+      String^ ToString() override;
    };
 
    public ref class ExtendedKeyPress abstract : KeyPress {
-      internal: virtual property DWORD KeyFlags {
+   internal:
+      virtual property DWORD KeyFlags {
          DWORD get() override;
       }
    };
 
    public ref class UnicodeKeyPress abstract : KeyPress {
-      internal: virtual property DWORD KeyFlags {
+   internal:
+      virtual property DWORD KeyFlags {
          DWORD get() override;
       }
    };

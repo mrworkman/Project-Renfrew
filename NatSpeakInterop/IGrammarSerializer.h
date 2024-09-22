@@ -19,6 +19,6 @@
 
 namespace Renfrew::NatSpeakInterop {
    public interface class IGrammarSerializer {
-      public: array<byte> ^Serialize(IGrammar ^grammar);
+      array<byte> ^Serialize(IGrammar ^grammar);
    };
 }

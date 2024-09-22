@@ -19,25 +19,26 @@
 
 namespace Renfrew::NatSpeakInterop {
    private ref class GrammarExecutive {
-      private: IGrammar ^_grammar;
-      private: ISrGramCommon ^_isrGramCommon;
+      IGrammar ^_grammar;
+      ISrGramCommon ^_isrGramCommon;
 
-      private: bool _isLoaded = false;
+      bool _isLoaded = false;
 
-      public: GrammarExecutive(IGrammar ^grammar) {
+   public:
+      GrammarExecutive(IGrammar ^grammar) {
          if (grammar == nullptr)
             throw gcnew ArgumentNullException("grammar");
 
          _grammar = grammar;
       }
 
-      public: property IGrammar ^Grammar {
+      property IGrammar ^Grammar {
          IGrammar ^get() {
             return _grammar;
          };
       };
 
-      public: property ISrGramCommon ^GramCommonInterface {
+      property ISrGramCommon ^GramCommonInterface {
          ISrGramCommon ^get() {
             return _isrGramCommon;
          }
@@ -47,7 +48,7 @@ namespace Renfrew::NatSpeakInterop {
          }
       };
 
-      public: property bool IsLoaded {
+      property bool IsLoaded {
          bool get() {
             return _isLoaded;
          }
@@ -57,7 +58,7 @@ namespace Renfrew::NatSpeakInterop {
          }
       };
 
-      public: int GetHashCode() override {
+      int GetHashCode() override {
          return _grammar->GetHashCode();
       }
    };

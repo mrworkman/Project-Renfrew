@@ -25,15 +25,17 @@ using namespace System::Text;
 
 namespace Renfrew::Win32::Interop {
    public ref class KeyChord sealed : IEquatable<KeyChord^> {
-      internal: property List<KeyPress^>^ _keys;
+      KeyChord(IEnumerable<KeyPress^>^ keys);
 
-      private: KeyChord(IEnumerable<KeyPress^>^ keys);
+   internal:
+      property List<KeyPress^>^ _keys;
 
-      public: static KeyChord^ Keys(... array<KeyPress^>^ keys);
-      public: static KeyChord^ Keys(IEnumerable<KeyPress^>^ keys);
+   public:
+      static KeyChord^ Keys(... array<KeyPress^>^ keys);
+      static KeyChord^ Keys(IEnumerable<KeyPress^>^ keys);
 
-      public: virtual bool Equals(KeyChord^ other);
+      virtual bool Equals(KeyChord^ other);
 
-      public: String^ ToString() override;
+      String^ ToString() override;
    };
 }

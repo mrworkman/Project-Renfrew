@@ -27,24 +27,25 @@ namespace Renfrew::NatSpeakInterop::Sinks {
       public Dragon::ComInterfaces::IDgnSrEngineNotifySink,
       public Dragon::ComInterfaces::ISrNotifySink {
 
-      private: Action<UInt64> ^_pausedProcessingCallback;
+      Action<UInt64> ^_pausedProcessingCallback;
 
-      public: SrNotifySink(Action<UInt64> ^pausedProcessingCallback);
-      public: void virtual SinkFlagsGet(DWORD *pdwFlags);
+   public:
+      SrNotifySink(Action<UInt64> ^pausedProcessingCallback);
+      void virtual SinkFlagsGet(DWORD *pdwFlags);
 
       // IDgnSREngineNotifySink Methods
-      public: void virtual AttribChanged2(DWORD);
-      public: void virtual Paused(QWORD cookie);
-      public: void virtual MimicDone(DWORD, LPUNKNOWN);
-      public: void virtual ErrorHappened(LPUNKNOWN);
-      public: void virtual Progress(int, const WCHAR *);
+      void virtual AttribChanged2(DWORD);
+      void virtual Paused(QWORD cookie);
+      void virtual MimicDone(DWORD, LPUNKNOWN);
+      void virtual ErrorHappened(LPUNKNOWN);
+      void virtual Progress(int, const WCHAR *);
 
       // ISRNotifySink Methods
-      public: void virtual AttribChanged(DWORD);
-      public: void virtual Interference(QWORD, QWORD, DWORD);
-      public: void virtual Sound(QWORD, QWORD);
-      public: void virtual UtteranceBegin(QWORD);
-      public: void virtual UtteranceEnd(QWORD, QWORD);
-      public: void virtual VUMeter(QWORD, WORD);
+      void virtual AttribChanged(DWORD);
+      void virtual Interference(QWORD, QWORD, DWORD);
+      void virtual Sound(QWORD, QWORD);
+      void virtual UtteranceBegin(QWORD);
+      void virtual UtteranceEnd(QWORD, QWORD);
+      void virtual VUMeter(QWORD, WORD);
    };
 }

@@ -25,13 +25,14 @@ namespace Renfrew::Win32::Interop {
    ref class KeyChord;
 
    public ref class CharKey sealed : UnicodeKeyPress {
-      private: WORD _scanCode;
-      private: CharKey(WORD scanCode);
+      WORD _scanCode;
+      CharKey(WORD scanCode);
 
-      public: property WORD ScanCode {
+   public:
+      property WORD ScanCode {
          WORD get() override;
       }
 
-      public: static UnicodeKeyPress^ KeyPress(Char c);
+      static UnicodeKeyPress^ KeyPress(Char c);
    };
 }

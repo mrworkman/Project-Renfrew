@@ -22,16 +22,17 @@
 
 namespace Renfrew::Win32::Interop {
    public ref class Mouse abstract {
-      public: static void Animate(int startX, int startY, int endX, int endY);
-      public: static void Animate(int startX, int startY, int endX, int endY, int stepSize);
+   public:
+      static void Animate(int startX, int startY, int endX, int endY);
+      static void Animate(int startX, int startY, int endX, int endY, int stepSize);
 
-      public: static void Click(MouseButtons buttons);
+      static void Click(MouseButtons buttons);
 
-      public: static void Down(MouseButtons buttons);
-      public: static void Up(MouseButtons buttons);
+      static void Down(MouseButtons buttons);
+      static void Up(MouseButtons buttons);
 
-      public: static void Scroll(MouseScrollDirection scrollDirection, DWORD scrollDelta);
+      static void Scroll(MouseScrollDirection scrollDirection, DWORD scrollDelta);
 
-      public: static void SetPosition(int x, int y);
+      static void SetPosition(int x, int y);
    };
 }

@@ -26,23 +26,25 @@ namespace Renfrew::NatSpeakInterop::Sinks {
       public Dragon::ComInterfaces::ISrGramNotifySink,
       public Dragon::ComInterfaces::IDgnGetSinkFlags {
 
-      private: Object ^_callbackParam;
-      private: Action<UInt32, Object^, Dragon::ComInterfaces::ISrResBasic^> ^_phraseFinishCallback;
-      public: SrGramNotifySink(Action<UInt32, Object^,
-                               Dragon::ComInterfaces::ISrResBasic^> ^phraseFinishCallback,
-                               Object ^callbackParam);
+      Object ^_callbackParam;
+      Action<UInt32, Object^, Dragon::ComInterfaces::ISrResBasic^> ^_phraseFinishCallback;
+
+   public:
+      SrGramNotifySink(Action<UInt32, Object^,
+                       Dragon::ComInterfaces::ISrResBasic^> ^phraseFinishCallback,
+                       Object ^callbackParam);
 
       // IDgnGetSinkFlags Methods
-      public: void virtual SinkFlagsGet(DWORD *pdwFlags);
+      void virtual SinkFlagsGet(DWORD *pdwFlags);
 
       // ISrGramNotifySink Methods
-      public: void virtual BookMark(DWORD);
-      public: void virtual Paused();
-      public: void virtual PhraseFinish(DWORD flags, QWORD, QWORD, PSRPHRASEW pSrPhrase, LPUNKNOWN pIUnknown);
-      public: void virtual PhraseHypothesis(DWORD, QWORD, QWORD, PSRPHRASEW, LPUNKNOWN);
-      public: void virtual PhraseStart(QWORD);
-      public: void virtual ReEvaluate(LPUNKNOWN);
-      public: void virtual Training(DWORD);
-      public: void virtual UnArchive(LPUNKNOWN);
+      void virtual BookMark(DWORD);
+      void virtual Paused();
+      void virtual PhraseFinish(DWORD flags, QWORD, QWORD, PSRPHRASEW pSrPhrase, LPUNKNOWN pIUnknown);
+      void virtual PhraseHypothesis(DWORD, QWORD, QWORD, PSRPHRASEW, LPUNKNOWN);
+      void virtual PhraseStart(QWORD);
+      void virtual ReEvaluate(LPUNKNOWN);
+      void virtual Training(DWORD);
+      void virtual UnArchive(LPUNKNOWN);
    };
 }

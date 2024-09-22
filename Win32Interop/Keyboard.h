@@ -21,9 +21,10 @@
 
 namespace Renfrew::Win32::Interop {
    public ref class Keyboard abstract sealed {
-      public: static void PlayKeys(IEnumerable<KeyChord^>^ chords);
-      public: static void PlayKeys(... array<KeyChord^>^ chords);
+      static void PlayChord(KeyChord^ chord);
 
-      private: static void PlayChord(KeyChord^ chord);
+   public:
+      static void PlayKeys(IEnumerable<KeyChord^>^ chords);
+      static void PlayKeys(... array<KeyChord^>^ chords);
    };
 }

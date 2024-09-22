@@ -17,11 +17,6 @@
 
 #include "stdafx.h"
 
-#using "PresentationFramework.dll"
-#using "PresentationCore.dll"
-#using "WindowsBase.dll"
-#using "System.Xaml.dll"
-
 using namespace System::Windows;
 using namespace System::Windows::Interop;
 using namespace System::Runtime::InteropServices;

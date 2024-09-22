@@ -19,11 +19,12 @@
 
 namespace Renfrew::Win32::Interop {
    public ref class Win32InteropException : System::Exception {
-      private: int _errorCode;
+      int _errorCode;
 
-      public: Win32InteropException(int errorCode);
+   public:
+      Win32InteropException(int errorCode);
 
-      public: property int ErrorCode {
+      property int ErrorCode {
          int get();
       }
    };

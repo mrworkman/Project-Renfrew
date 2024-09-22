@@ -32,73 +32,73 @@
 
 namespace Renfrew::NatSpeakInterop {
    public ref class NatSpeakService {
+      ::IServiceProvider *_piServiceProvider;
 
-      private: ::IServiceProvider *_piServiceProvider;
+      ISrCentral ^_isrCentral = nullptr;
+      IDgnSpeechServices  ^_idgnSpeechServices  = nullptr;
+      IDgnSrEngineControl ^_idgnSrEngineControl = nullptr;
+      IDgnSSvcOutputEvent ^_idgnSSvcOutputEvent = nullptr;
+      IDgnSSvcInterpreter ^_idgnSSvcInterpreter = nullptr;
+      IDgnSSvcTracking    ^_idgnSSvcTracking    = nullptr;
 
-      private: ISrCentral ^_isrCentral = nullptr;
-      private: IDgnSpeechServices  ^_idgnSpeechServices  = nullptr;
-      private: IDgnSrEngineControl ^_idgnSrEngineControl = nullptr;
-      private: IDgnSSvcOutputEvent ^_idgnSSvcOutputEvent = nullptr;
-      private: IDgnSSvcInterpreter ^_idgnSSvcInterpreter = nullptr;
-      private: IDgnSSvcTracking    ^_idgnSSvcTracking    = nullptr;
+      GrammarService ^_grammarService = nullptr;
 
-      private: GrammarService ^_grammarService = nullptr;
+      DWORD _key;
+      DWORD _playbackCode;
 
-      private: DWORD _key;
-      private: DWORD _playbackCode;
+      void CreateGrammarService();
+      void ReleaseGrammarService();
 
-      public: NatSpeakService();
-      public: ~NatSpeakService();
+      void InitializeIsrCentral(::IServiceProvider *pServiceProvider);
+      void InitializeSpeechServicesInterfaces();
+      void InitializeSrEngineControlInterface();
+      void RegisterEngineSink();
+      void RegisterPlaybackSink();
 
-      private: void CreateGrammarService();
-      private: void ReleaseGrammarService();
+   public:
+      NatSpeakService();
+      ~NatSpeakService();
 
-      private: void InitializeIsrCentral(::IServiceProvider *pServiceProvider);
-      private: void InitializeSpeechServicesInterfaces();
-      private: void InitializeSrEngineControlInterface();
-      private: void RegisterEngineSink();
-      private: void RegisterPlaybackSink();
+      void Connect(IntPtr serviceProviderPtr);
+      void Connect(::IServiceProvider *pServiceProvider);
+      void Disconnect();
 
-      public: void Connect(IntPtr serviceProviderPtr);
-      public: void Connect(::IServiceProvider *pServiceProvider);
-      public: void Disconnect();
-
-      public: IntPtr CreateSiteObject();
-      public: void ReleaseSiteObject(IntPtr sitePtr);
+      IntPtr CreateSiteObject();
+      void ReleaseSiteObject(IntPtr sitePtr);
 
       /// <summary>
       /// Gets the the profile name of the current Dragon user.
       /// </summary>
       /// <returns>The dragon profile name, if available. null otherwise.</returns>
-      public: String ^GetCurrentUserProfileName();
+      String ^GetCurrentUserProfileName();
 
       /// <summary>
       /// Gets the version of Dragon.
       /// </summary>
       /// <returns>The dragon version.</returns>
-      public: DragonVersion ^GetDragonVersion();
+      DragonVersion ^GetDragonVersion();
 
       /// <summary>
       /// Attempts to check if Dragon is "alive" by trying to access one of its interfaces.
       /// </summary>
       /// <returns><b>true</b>: Dragon is running. <b>false</b>: Dragon is not running.</returns>
-      public: bool IsDragonAlive();
+      bool IsDragonAlive();
 
       /// <summary>
       /// Gets the the file system path to the specified Dragon user's profile directory.
       /// </summary>
       /// <param name="userProfile">The name of the user profile to look up.</param>
       /// <returns>The dragon profile path, if available. null otherwise.</returns>
-      public: String ^GetUserDirectory(String ^userProfile);
+      String ^GetUserDirectory(String ^userProfile);
 
-      public: property IGrammarService ^GrammarService {
+      property IGrammarService ^GrammarService {
          IGrammarService ^get();
       }
 
-      public: property ISrCentral ^SrCentral {
+      property ISrCentral ^SrCentral {
          ISrCentral ^get();
       };
 
-      public: void PlayString(String ^str);
+      void PlayString(String ^str);
    };
 }

@@ -17,7 +17,9 @@
 
 #pragma once
 
-[System::Flags]
-public enum class MouseScrollDirection : int {
-   Down, Up
-};
+namespace Renfrew::Win32::Interop{
+   [System::Flags]
+   public enum class MouseScrollDirection : int {
+      Down, Up
+   };
+}
