@@ -34,8 +34,8 @@ namespace Renfrew::Win32::Interop {
          WORD get();
       }
 
-      virtual void KeyDown(LPINPUT input) sealed;
-      virtual void KeyUp(LPINPUT input) sealed;
+      void KeyDown(LPINPUT input);
+      void KeyUp(LPINPUT input);
 
    public:
       virtual bool Equals(KeyPress^ other);
