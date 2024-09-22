@@ -36,7 +36,7 @@
     <ClInclude Include="MouseScrollDirection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KeySeq.h">
+    <ClInclude Include="KeyChord.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Keyboard.h">
@@ -81,6 +81,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CharKey.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyChord.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

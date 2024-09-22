@@ -18,28 +18,23 @@
 #include "Stdafx.h"
 #include "Keyboard.h"
 
-#include "KeySeq.h"
-//#include "CharKey.h"
-
-using namespace System::Collections::Generic;
 using namespace System::Diagnostics;
-using namespace System::Linq;
 
 using namespace Renfrew::Win32::Interop;
 
-void Keyboard::PlayKeys(IEnumerable<KeySeq^>^ keySequences) {
-   for each (auto seq in keySequences) {
-      SendKeySequence(seq);
+void Keyboard::PlayKeys(IEnumerable<KeyChord^>^ chords) {
+   for each (auto chord in chords) {
+      PlayChord(chord);
    }
 }
 
-void Keyboard::PlayKeys(... array<KeySeq^>^ keySequences) {
-   return PlayKeys(safe_cast<IEnumerable<KeySeq^>^>(keySequences));
+void Keyboard::PlayKeys(... array<KeyChord^>^ chords) {
+   return PlayKeys(safe_cast<IEnumerable<KeyChord^>^>(chords));
 }
 
-void Keyboard::SendKeySequence(KeySeq^ keySequence) {
-   auto keys = keySequence->_keys;
-   auto num_inputs = keySequence->_keys->Count * 2;
+void Keyboard::PlayChord(KeyChord^ chord) {
+   auto keys = chord->_keys;
+   auto num_inputs = chord->_keys->Count * 2;
 
    if (num_inputs == 0) {
       return;

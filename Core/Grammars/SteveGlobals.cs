@@ -1,5 +1,5 @@
 ﻿// Project Renfrew
-// Copyright(C) 2017 Stephen Workman (workman.stephen@gmail.com)
+// Copyright(C) 2024 Stephen Workman (workman.stephen@gmail.com)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -28,9 +28,9 @@ namespace Renfrew.Core.Grammars {
    [GrammarExport("Steve's Grammar", "Steve's own grammar.")]
    public class SteveGlobalsGrammar : Grammar {
 
-      private IEnumerable<KeySeq> _currentCommand = new List<KeySeq>();
+      private IEnumerable<KeyChord> _currentCommand = new List<KeyChord>();
 
-      private static readonly Dictionary<string, List<KeySeq>> _commands = new();
+      private static readonly Dictionary<string, List<KeyChord>> _commands = new();
 
       private static readonly Dictionary<string, KeyPress> _numberKeys = new() {
          #region Number -> Key
@@ -181,17 +181,17 @@ namespace Renfrew.Core.Grammars {
       /// <summary>
       ///  Only to be called from the constructor.
       /// </summary>
-      private void AddCommand(string commandName, params KeyPress[] sequenceKeys) {
+      private void AddCommand(string commandName, params KeyPress[] chordKeys) {
          _commands[commandName] = new() {
-            KeySeq.Keys(sequenceKeys)
+            KeyChord.Keys(chordKeys)
          };
       }
 
       /// <summary>
       ///  Only to be called from the constructor.
       /// </summary>
-      private void AddCommand(string commandName, params KeySeq[] keySequences) {
-         _commands[commandName] = keySequences.ToList();
+      private void AddCommand(string commandName, params KeyChord[] chords) {
+         _commands[commandName] = chords.ToList();
       }
 
       public override void Initialize() {
@@ -206,10 +206,6 @@ namespace Renfrew.Core.Grammars {
                .Do(words => ExecuteCommand(words.FirstOrDefault()))
             )
          );
-
-         // .PlayKeys(chord)     // E.g., CTRL+S
-         // .PlayKeys(string)    // E.g., "some string"
-         // .PlayKeys(sequence)  // E.g., (chord+ string+)+ ? CTRL+K,CTRL+C vs CTRL+(K,C)
 
          Load();
 
@@ -232,8 +228,8 @@ namespace Renfrew.Core.Grammars {
          }
       }
 
-      private void SetCurrentCommand(IEnumerable<KeySeq> keySequences) {
-         _currentCommand = keySequences;
+      private void SetCurrentCommand(IEnumerable<KeyChord> chords) {
+         _currentCommand = chords;
       }
 
       public override void Dispose() {

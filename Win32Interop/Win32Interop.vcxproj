@@ -132,7 +132,7 @@
     <ClInclude Include="KeyPress.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Keys.h" />
-    <ClInclude Include="KeySeq.h" />
+    <ClInclude Include="KeyChord.h" />
     <ClInclude Include="MouseScrollDirection.h" />
     <ClInclude Include="Win32.h" />
     <ClInclude Include="MouseButtons.h" />
@@ -145,6 +145,7 @@
     <ClCompile Include="CharKey.cpp" />
     <ClCompile Include="ExtendedKeyPress.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="KeyChord.cpp" />
     <ClCompile Include="KeyPress.cpp" />
     <ClCompile Include="UnicodeKeyPress.cpp" />
     <ClCompile Include="Win32.cpp" />

@@ -17,21 +17,23 @@
 
 #pragma once
 
-#include "KeyPress.h"
+#include "Keys.h"
 
 using namespace System;
+using namespace System::Collections::Generic;
+using namespace System::Text;
 
 namespace Renfrew::Win32::Interop {
-   ref class KeyChord;
+   public ref class KeyChord sealed : IEquatable<KeyChord^> {
+      internal: property List<KeyPress^>^ _keys;
 
-   public ref class CharKey sealed : UnicodeKeyPress {
-      private: WORD _scanCode;
-      private: CharKey(WORD scanCode);
+      private: KeyChord(IEnumerable<KeyPress^>^ keys);
 
-      public: property WORD ScanCode {
-         WORD get() override;
-      }
+      public: static KeyChord^ Keys(... array<KeyPress^>^ keys);
+      public: static KeyChord^ Keys(IEnumerable<KeyPress^>^ keys);
 
-      public: static UnicodeKeyPress^ KeyPress(Char c);
+      public: virtual bool Equals(KeyChord^ other);
+
+      public: String^ ToString() override;
    };
 }
