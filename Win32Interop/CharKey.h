@@ -17,13 +17,21 @@
 
 #pragma once
 
-#include "KeySeq.h"
+#include "KeyPress.h"
+
+using namespace System;
 
 namespace Renfrew::Win32::Interop {
-   public ref class Keyboard abstract sealed {
-      public: static void PlayKeys(IEnumerable<KeySeq^>^ keySequences);
-      public: static void PlayKeys(... array<KeySeq^>^ keySequences);
+   ref class KeySeq;
 
-      private: static void SendKeySequence(KeySeq^ keySequence);
+   public ref class CharKey sealed : UnicodeKeyPress {
+      private: WORD _scanCode;
+      private: CharKey(WORD scanCode);
+
+      public: property WORD ScanCode {
+         WORD get() override;
+      }
+
+      public: static UnicodeKeyPress^ KeyPress(Char c);
    };
 }

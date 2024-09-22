@@ -32,7 +32,7 @@ namespace Renfrew.Core.Grammars {
 
       private static readonly Dictionary<string, List<KeySeq>> _commands = new();
 
-      private static readonly Dictionary<string, IKeyBase> _numberKeys = new() {
+      private static readonly Dictionary<string, KeyPress> _numberKeys = new() {
          #region Number -> Key
          { "zero",  Key.D0 },
          { "one",   Key.D1 },
@@ -47,7 +47,7 @@ namespace Renfrew.Core.Grammars {
          #endregion
       };
 
-      private static readonly Dictionary<string, IKeyBase> _letterKeys = new () {
+      private static readonly Dictionary<string, KeyPress> _letterKeys = new () {
          #region Letter -> Key
          { "alpha",    Key.A },
          { "bravo",    Key.B },
@@ -163,9 +163,9 @@ namespace Renfrew.Core.Grammars {
          AddCommand("delete", Key.Delete);
          AddCommand("comma", Key.OemComma);
          AddCommand("dot", Key.OemPeriod);
-         AddCommand("dot slash", KeySeq.Keys(Key.OemPeriod), KeySeq.Keys(Key.Divide));
          AddCommand("slash", Key.Divide);
-         
+         AddCommand("semi", CharKey.KeyPress(';'));
+
 
          // Window control commands.
          AddCommand("conmen", Key.Shift, Key.F10);
@@ -181,7 +181,7 @@ namespace Renfrew.Core.Grammars {
       /// <summary>
       ///  Only to be called from the constructor.
       /// </summary>
-      private void AddCommand(string commandName, params IKeyBase[] sequenceKeys) {
+      private void AddCommand(string commandName, params KeyPress[] sequenceKeys) {
          _commands[commandName] = new() {
             KeySeq.Keys(sequenceKeys)
          };

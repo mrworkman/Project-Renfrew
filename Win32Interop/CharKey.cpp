@@ -15,15 +15,19 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-#pragma once
+#include "Stdafx.h"
+#include "CharKey.h"
 
-#include "KeySeq.h"
+using namespace Renfrew::Win32::Interop;
 
-namespace Renfrew::Win32::Interop {
-   public ref class Keyboard abstract sealed {
-      public: static void PlayKeys(IEnumerable<KeySeq^>^ keySequences);
-      public: static void PlayKeys(... array<KeySeq^>^ keySequences);
+CharKey::CharKey(WORD scanCode) {
+   _scanCode = scanCode;
+}
 
-      private: static void SendKeySequence(KeySeq^ keySequence);
-   };
+WORD CharKey::ScanCode::get() {
+   return _scanCode;
+}
+
+UnicodeKeyPress^ CharKey::KeyPress(Char c) {
+   return gcnew CharKey(c);
 }

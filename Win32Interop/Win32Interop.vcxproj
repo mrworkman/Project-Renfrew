@@ -128,7 +128,8 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="IKeyBase.h" />
+    <ClInclude Include="CharKey.h" />
+    <ClInclude Include="KeyPress.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Keys.h" />
     <ClInclude Include="KeySeq.h" />
@@ -141,7 +142,11 @@
     <ClInclude Include="WindowHandle.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CharKey.cpp" />
+    <ClCompile Include="ExtendedKeyPress.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="KeyPress.cpp" />
+    <ClCompile Include="UnicodeKeyPress.cpp" />
     <ClCompile Include="Win32.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Stdafx.cpp">

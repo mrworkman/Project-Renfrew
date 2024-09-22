@@ -1,10 +1,25 @@
+// Project Renfrew
+// Copyright(C) 2024 Stephen Workman (workman.stephen@gmail.com)
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.If not, see<http://www.gnu.org/licenses/>.
+//
 
 #include "Stdafx.h"
 #include "Keyboard.h"
 
-#include <new>
-
 #include "KeySeq.h"
+//#include "CharKey.h"
 
 using namespace System::Collections::Generic;
 using namespace System::Diagnostics;
@@ -23,8 +38,8 @@ void Keyboard::PlayKeys(... array<KeySeq^>^ keySequences) {
 }
 
 void Keyboard::SendKeySequence(KeySeq^ keySequence) {
-   auto keys = keySequence->keys;
-   auto num_inputs = keySequence->keys->Count * 2;
+   auto keys = keySequence->_keys;
+   auto num_inputs = keySequence->_keys->Count * 2;
 
    if (num_inputs == 0) {
       return;
@@ -40,30 +55,24 @@ void Keyboard::SendKeySequence(KeySeq^ keySequence) {
    for (int i = 0, j = 0; i < num_inputs/2; i++, j++) {
       auto key = keys[j];
 
-      Debug::WriteLine("({0}:{1}) Key: {2}, DOWN, {3}", i, j, key->VirtCode, key->IsExtended);
+      Debug::WriteLine("({0}:{1}) Key: {2} DOWN", i, j, key);
 
-      inputs[i].type = INPUT_KEYBOARD;
-      inputs[i].ki.wVk = key->VirtCode;
-      inputs[i].ki.dwFlags = key->IsExtended ? KEYEVENTF_EXTENDEDKEY : 0;
+      key->KeyDown(&inputs[i]);
    }
 
    for (int i = num_inputs/2, j = (keys->Count - 1); i < num_inputs; i++, j--) {
       auto key = keys[j];
 
-      Debug::WriteLine("({0}:{1}) Key: {2}, UP, {3}", i, j, key->VirtCode, key->IsExtended);
+      Debug::WriteLine("({0}:{1}) Key: {2} UP", i, j, key);
 
-      inputs[i].type = INPUT_KEYBOARD;
-      inputs[i].ki.wVk = key->VirtCode;
-      inputs[i].ki.dwFlags = KEYEVENTF_KEYUP | (
-         key->IsExtended ? KEYEVENTF_EXTENDEDKEY : 0
-      );
+      key->KeyUp(&inputs[i]);
    }
 
    UINT uSent = SendInput(num_inputs, inputs, sizeof(INPUT));
    
    if (uSent != num_inputs) {
-      delete inputs;
       Debug::WriteLine("SendInput failed.");
+      delete inputs;
    }
 
    delete inputs;

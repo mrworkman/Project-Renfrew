@@ -35,6 +35,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win32InteropTests", "Win32InteropTests\Win32InteropTests.csproj", "{4A0A608C-E6CB-43D8-B675-C1568F6A83AC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{713C548E-95A4-47C9-B381-23DB5F20F091} = {713C548E-95A4-47C9-B381-23DB5F20F091}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +104,14 @@ Global
 		{0B9EF98A-0699-467A-B5E1-46C0ED31E93A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0B9EF98A-0699-467A-B5E1-46C0ED31E93A}.Release|x86.ActiveCfg = Release|Any CPU
 		{0B9EF98A-0699-467A-B5E1-46C0ED31E93A}.Release|x86.Build.0 = Release|Any CPU
+		{4A0A608C-E6CB-43D8-B675-C1568F6A83AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A0A608C-E6CB-43D8-B675-C1568F6A83AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A0A608C-E6CB-43D8-B675-C1568F6A83AC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4A0A608C-E6CB-43D8-B675-C1568F6A83AC}.Debug|x86.Build.0 = Debug|Any CPU
+		{4A0A608C-E6CB-43D8-B675-C1568F6A83AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A0A608C-E6CB-43D8-B675-C1568F6A83AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A0A608C-E6CB-43D8-B675-C1568F6A83AC}.Release|x86.ActiveCfg = Release|Any CPU
+		{4A0A608C-E6CB-43D8-B675-C1568F6A83AC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

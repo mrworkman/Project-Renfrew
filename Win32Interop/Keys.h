@@ -3,1351 +3,903 @@
 
 #pragma once
 
-#include "IKeyBase.h"
+#include "KeyPress.h"
 
 namespace Renfrew::Win32::Interop {
-    public ref class D0Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    48; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class D0Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    48; } }
     };
 
-    public ref class D1Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    49; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class D1Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    49; } }
     };
 
-    public ref class D2Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    50; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class D2Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    50; } }
     };
 
-    public ref class D3Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    51; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class D3Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    51; } }
     };
 
-    public ref class D4Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    52; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class D4Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    52; } }
     };
 
-    public ref class D5Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    53; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class D5Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    53; } }
     };
 
-    public ref class D6Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    54; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class D6Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    54; } }
     };
 
-    public ref class D7Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    55; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class D7Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    55; } }
     };
 
-    public ref class D8Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    56; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class D8Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    56; } }
     };
 
-    public ref class D9Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    57; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class D9Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    57; } }
     };
 
-    public ref class AKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    65; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class AKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    65; } }
     };
 
-    public ref class BKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    66; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class BKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    66; } }
     };
 
-    public ref class CKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    67; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class CKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    67; } }
     };
 
-    public ref class DKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    68; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class DKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    68; } }
     };
 
-    public ref class EKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    69; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class EKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    69; } }
     };
 
-    public ref class FKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    70; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class FKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    70; } }
     };
 
-    public ref class GKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    71; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    71; } }
     };
 
-    public ref class HKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    72; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class HKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    72; } }
     };
 
-    public ref class IKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    73; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class IKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    73; } }
     };
 
-    public ref class JKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    74; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class JKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    74; } }
     };
 
-    public ref class KKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    75; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class KKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    75; } }
     };
 
-    public ref class LKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    76; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class LKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    76; } }
     };
 
-    public ref class MKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    77; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class MKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    77; } }
     };
 
-    public ref class NKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    78; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class NKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    78; } }
     };
 
-    public ref class OKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    79; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    79; } }
     };
 
-    public ref class PKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    80; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class PKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    80; } }
     };
 
-    public ref class QKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    81; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class QKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    81; } }
     };
 
-    public ref class RKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    82; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class RKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    82; } }
     };
 
-    public ref class SKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    83; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class SKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    83; } }
     };
 
-    public ref class TKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    84; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class TKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    84; } }
     };
 
-    public ref class UKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    85; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class UKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    85; } }
     };
 
-    public ref class VKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    86; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class VKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    86; } }
     };
 
-    public ref class WKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    87; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class WKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    87; } }
     };
 
-    public ref class XKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    88; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class XKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    88; } }
     };
 
-    public ref class YKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    89; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class YKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    89; } }
     };
 
-    public ref class ZKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    90; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class ZKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    90; } }
     };
 
-    public ref class LButtonKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     1; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class LButtonKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return     1; } }
     };
 
-    public ref class RButtonKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     2; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class RButtonKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return     2; } }
     };
 
-    public ref class CancelKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     3; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class CancelKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return     3; } }
     };
 
-    public ref class MbuttonKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     4; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class MbuttonKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return     4; } }
     };
 
-    public ref class Xbutton1Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     5; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Xbutton1Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return     5; } }
     };
 
-    public ref class Xbutton2Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     6; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Xbutton2Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return     6; } }
     };
 
-    public ref class BackKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     8; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class BackKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return     8; } }
     };
 
-    public ref class TabKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return     9; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class TabKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return     9; } }
     };
 
-    public ref class ClearKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    12; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class ClearKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    12; } }
     };
 
-    public ref class ReturnKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    13; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class ReturnKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    13; } }
     };
 
-    public ref class ShiftKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    16; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return  true; } }
+    public ref class ShiftKey sealed : ExtendedKeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    16; } }
     };
 
-    public ref class ControlKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    17; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return  true; } }
+    public ref class ControlKey sealed : ExtendedKeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    17; } }
     };
 
-    public ref class MenuKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    18; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return  true; } }
+    public ref class MenuKey sealed : ExtendedKeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    18; } }
     };
 
-    public ref class PauseKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    19; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class PauseKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    19; } }
     };
 
-    public ref class CapitalKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    20; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class CapitalKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    20; } }
     };
 
-    public ref class KanaKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    21; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class KanaKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    21; } }
     };
 
-    public ref class HangeulKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    21; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class HangeulKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    21; } }
     };
 
-    public ref class HangulKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    21; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class HangulKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    21; } }
     };
 
-    public ref class ImeOnKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    22; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class ImeOnKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    22; } }
     };
 
-    public ref class JunjaKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    23; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class JunjaKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    23; } }
     };
 
-    public ref class FinalKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    24; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class FinalKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    24; } }
     };
 
-    public ref class HanjaKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    25; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class HanjaKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    25; } }
     };
 
-    public ref class KanjiKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    25; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class KanjiKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    25; } }
     };
 
-    public ref class ImeOffKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    26; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class ImeOffKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    26; } }
     };
 
-    public ref class EscapeKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    27; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class EscapeKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    27; } }
     };
 
-    public ref class ConvertKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    28; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class ConvertKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    28; } }
     };
 
-    public ref class NonconvertKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    29; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class NonconvertKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    29; } }
     };
 
-    public ref class AcceptKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    30; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class AcceptKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    30; } }
     };
 
-    public ref class ModechangeKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    31; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class ModechangeKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    31; } }
     };
 
-    public ref class SpaceKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    32; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class SpaceKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    32; } }
     };
 
-    public ref class PriorKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    33; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class PriorKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    33; } }
     };
 
-    public ref class NextKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    34; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class NextKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    34; } }
     };
 
-    public ref class EndKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    35; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class EndKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    35; } }
     };
 
-    public ref class HomeKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    36; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class HomeKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    36; } }
     };
 
-    public ref class LeftKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    37; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class LeftKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    37; } }
     };
 
-    public ref class UpKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    38; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class UpKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    38; } }
     };
 
-    public ref class RightKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    39; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class RightKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    39; } }
     };
 
-    public ref class DownKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    40; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class DownKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    40; } }
     };
 
-    public ref class SelectKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    41; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class SelectKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    41; } }
     };
 
-    public ref class PrintKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    42; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class PrintKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    42; } }
     };
 
-    public ref class ExecuteKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    43; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class ExecuteKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    43; } }
     };
 
-    public ref class SnapshotKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    44; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class SnapshotKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    44; } }
     };
 
-    public ref class InsertKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    45; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class InsertKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    45; } }
     };
 
-    public ref class DeleteKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    46; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class DeleteKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    46; } }
     };
 
-    public ref class HelpKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    47; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class HelpKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    47; } }
     };
 
-    public ref class LWinKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    91; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class LWinKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    91; } }
     };
 
-    public ref class RWinKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    92; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class RWinKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    92; } }
     };
 
-    public ref class AppsKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    93; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class AppsKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    93; } }
     };
 
-    public ref class SleepKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    95; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class SleepKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    95; } }
     };
 
-    public ref class Numpad0Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    96; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Numpad0Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    96; } }
     };
 
-    public ref class Numpad1Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    97; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Numpad1Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    97; } }
     };
 
-    public ref class Numpad2Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    98; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Numpad2Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    98; } }
     };
 
-    public ref class Numpad3Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return    99; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Numpad3Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    99; } }
     };
 
-    public ref class Numpad4Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   100; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Numpad4Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   100; } }
     };
 
-    public ref class Numpad5Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   101; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Numpad5Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   101; } }
     };
 
-    public ref class Numpad6Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   102; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Numpad6Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   102; } }
     };
 
-    public ref class Numpad7Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   103; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Numpad7Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   103; } }
     };
 
-    public ref class Numpad8Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   104; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Numpad8Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   104; } }
     };
 
-    public ref class Numpad9Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   105; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Numpad9Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   105; } }
     };
 
-    public ref class MultiplyKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   106; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class MultiplyKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   106; } }
     };
 
-    public ref class AddKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   107; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class AddKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   107; } }
     };
 
-    public ref class SeparatorKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   108; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class SeparatorKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   108; } }
     };
 
-    public ref class SubtractKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   109; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class SubtractKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   109; } }
     };
 
-    public ref class DecimalKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   110; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class DecimalKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   110; } }
     };
 
-    public ref class DivideKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   111; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class DivideKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   111; } }
     };
 
-    public ref class F1Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   112; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F1Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   112; } }
     };
 
-    public ref class F2Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   113; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F2Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   113; } }
     };
 
-    public ref class F3Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   114; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F3Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   114; } }
     };
 
-    public ref class F4Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   115; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F4Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   115; } }
     };
 
-    public ref class F5Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   116; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F5Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   116; } }
     };
 
-    public ref class F6Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   117; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F6Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   117; } }
     };
 
-    public ref class F7Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   118; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F7Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   118; } }
     };
 
-    public ref class F8Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   119; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F8Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   119; } }
     };
 
-    public ref class F9Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   120; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F9Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   120; } }
     };
 
-    public ref class F10Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   121; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F10Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   121; } }
     };
 
-    public ref class F11Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   122; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F11Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   122; } }
     };
 
-    public ref class F12Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   123; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F12Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   123; } }
     };
 
-    public ref class F13Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   124; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F13Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   124; } }
     };
 
-    public ref class F14Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   125; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F14Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   125; } }
     };
 
-    public ref class F15Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   126; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F15Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   126; } }
     };
 
-    public ref class F16Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   127; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F16Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   127; } }
     };
 
-    public ref class F17Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   128; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F17Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   128; } }
     };
 
-    public ref class F18Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   129; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F18Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   129; } }
     };
 
-    public ref class F19Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   130; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F19Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   130; } }
     };
 
-    public ref class F20Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   131; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F20Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   131; } }
     };
 
-    public ref class F21Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   132; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F21Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   132; } }
     };
 
-    public ref class F22Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   133; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F22Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   133; } }
     };
 
-    public ref class F23Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   134; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F23Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   134; } }
     };
 
-    public ref class F24Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   135; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class F24Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   135; } }
     };
 
-    public ref class NavigationViewKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   136; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class NavigationViewKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   136; } }
     };
 
-    public ref class NavigationMenuKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   137; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class NavigationMenuKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   137; } }
     };
 
-    public ref class NavigationUpKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   138; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class NavigationUpKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   138; } }
     };
 
-    public ref class NavigationDownKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   139; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class NavigationDownKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   139; } }
     };
 
-    public ref class NavigationLeftKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   140; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class NavigationLeftKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   140; } }
     };
 
-    public ref class NavigationRightKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   141; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class NavigationRightKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   141; } }
     };
 
-    public ref class NavigationAcceptKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   142; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class NavigationAcceptKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   142; } }
     };
 
-    public ref class NavigationCancelKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   143; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class NavigationCancelKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   143; } }
     };
 
-    public ref class NumlockKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   144; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class NumlockKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   144; } }
     };
 
-    public ref class ScrollKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   145; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class ScrollKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   145; } }
     };
 
-    public ref class OemNecEqualKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   146; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemNecEqualKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   146; } }
     };
 
-    public ref class OemFjJishoKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   146; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemFjJishoKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   146; } }
     };
 
-    public ref class OemFjMasshouKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   147; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemFjMasshouKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   147; } }
     };
 
-    public ref class OemFjTourokuKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   148; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemFjTourokuKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   148; } }
     };
 
-    public ref class OemFjLoyaKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   149; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemFjLoyaKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   149; } }
     };
 
-    public ref class OemFjRoyaKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   150; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemFjRoyaKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   150; } }
     };
 
-    public ref class BrowserBackKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   166; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class BrowserBackKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   166; } }
     };
 
-    public ref class BrowserForwardKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   167; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class BrowserForwardKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   167; } }
     };
 
-    public ref class BrowserRefreshKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   168; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class BrowserRefreshKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   168; } }
     };
 
-    public ref class BrowserStopKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   169; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class BrowserStopKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   169; } }
     };
 
-    public ref class BrowserSearchKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   170; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class BrowserSearchKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   170; } }
     };
 
-    public ref class BrowserFavoritesKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   171; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class BrowserFavoritesKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   171; } }
     };
 
-    public ref class BrowserHomeKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   172; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class BrowserHomeKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   172; } }
     };
 
-    public ref class VolumeMuteKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   173; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class VolumeMuteKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   173; } }
     };
 
-    public ref class VolumeDownKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   174; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class VolumeDownKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   174; } }
     };
 
-    public ref class VolumeUpKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   175; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class VolumeUpKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   175; } }
     };
 
-    public ref class MediaNextTrackKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   176; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class MediaNextTrackKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   176; } }
     };
 
-    public ref class MediaPrevTrackKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   177; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class MediaPrevTrackKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   177; } }
     };
 
-    public ref class MediaStopKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   178; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class MediaStopKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   178; } }
     };
 
-    public ref class MediaPlayPauseKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   179; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class MediaPlayPauseKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   179; } }
     };
 
-    public ref class LaunchMailKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   180; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class LaunchMailKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   180; } }
     };
 
-    public ref class LaunchMediaSelectKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   181; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class LaunchMediaSelectKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   181; } }
     };
 
-    public ref class LaunchApp1Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   182; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class LaunchApp1Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   182; } }
     };
 
-    public ref class LaunchApp2Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   183; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class LaunchApp2Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   183; } }
     };
 
-    public ref class Oem1Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   186; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Oem1Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   186; } }
     };
 
-    public ref class OemPlusKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   187; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemPlusKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   187; } }
     };
 
-    public ref class OemCommaKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   188; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemCommaKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   188; } }
     };
 
-    public ref class OemMinusKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   189; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemMinusKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   189; } }
     };
 
-    public ref class OemPeriodKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   190; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemPeriodKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   190; } }
     };
 
-    public ref class Oem2Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   191; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Oem2Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   191; } }
     };
 
-    public ref class Oem3Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   192; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Oem3Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   192; } }
     };
 
-    public ref class GamepadAKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   195; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadAKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   195; } }
     };
 
-    public ref class GamepadBKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   196; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadBKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   196; } }
     };
 
-    public ref class GamepadXKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   197; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadXKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   197; } }
     };
 
-    public ref class GamepadYKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   198; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadYKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   198; } }
     };
 
-    public ref class GamepadRightShoulderKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   199; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadRightShoulderKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   199; } }
     };
 
-    public ref class GamepadLeftShoulderKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   200; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadLeftShoulderKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   200; } }
     };
 
-    public ref class GamepadLeftTriggerKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   201; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadLeftTriggerKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   201; } }
     };
 
-    public ref class GamepadRightTriggerKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   202; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadRightTriggerKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   202; } }
     };
 
-    public ref class GamepadDpadUpKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   203; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadDpadUpKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   203; } }
     };
 
-    public ref class GamepadDpadDownKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   204; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadDpadDownKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   204; } }
     };
 
-    public ref class GamepadDpadLeftKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   205; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadDpadLeftKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   205; } }
     };
 
-    public ref class GamepadDpadRightKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   206; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadDpadRightKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   206; } }
     };
 
-    public ref class GamepadMenuKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   207; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadMenuKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   207; } }
     };
 
-    public ref class GamepadViewKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   208; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadViewKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   208; } }
     };
 
-    public ref class GamepadLeftThumbstickButtonKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   209; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadLeftThumbstickButtonKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   209; } }
     };
 
-    public ref class GamepadRightThumbstickButtonKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   210; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadRightThumbstickButtonKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   210; } }
     };
 
-    public ref class GamepadLeftThumbstickUpKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   211; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadLeftThumbstickUpKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   211; } }
     };
 
-    public ref class GamepadLeftThumbstickDownKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   212; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadLeftThumbstickDownKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   212; } }
     };
 
-    public ref class GamepadLeftThumbstickRightKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   213; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadLeftThumbstickRightKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   213; } }
     };
 
-    public ref class GamepadLeftThumbstickLeftKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   214; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadLeftThumbstickLeftKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   214; } }
     };
 
-    public ref class GamepadRightThumbstickUpKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   215; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadRightThumbstickUpKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   215; } }
     };
 
-    public ref class GamepadRightThumbstickDownKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   216; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadRightThumbstickDownKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   216; } }
     };
 
-    public ref class GamepadRightThumbstickRightKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   217; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadRightThumbstickRightKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   217; } }
     };
 
-    public ref class GamepadRightThumbstickLeftKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   218; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class GamepadRightThumbstickLeftKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   218; } }
     };
 
-    public ref class Oem4Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   219; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Oem4Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   219; } }
     };
 
-    public ref class Oem5Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   220; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Oem5Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   220; } }
     };
 
-    public ref class Oem6Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   221; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Oem6Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   221; } }
     };
 
-    public ref class Oem7Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   222; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Oem7Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   222; } }
     };
 
-    public ref class Oem8Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   223; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Oem8Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   223; } }
     };
 
-    public ref class OemAxKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   225; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemAxKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   225; } }
     };
 
-    public ref class Oem102Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   226; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Oem102Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   226; } }
     };
 
-    public ref class IcoHelpKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   227; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class IcoHelpKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   227; } }
     };
 
-    public ref class Ico00Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   228; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Ico00Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   228; } }
     };
 
-    public ref class ProcesskeyKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   229; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class ProcesskeyKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   229; } }
     };
 
-    public ref class IcoClearKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   230; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class IcoClearKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   230; } }
     };
 
-    public ref class PacketKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   231; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class PacketKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   231; } }
     };
 
-    public ref class OemResetKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   233; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemResetKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   233; } }
     };
 
-    public ref class OemJumpKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   234; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemJumpKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   234; } }
     };
 
-    public ref class OemPa1Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   235; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemPa1Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   235; } }
     };
 
-    public ref class OemPa2Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   236; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemPa2Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   236; } }
     };
 
-    public ref class OemPa3Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   237; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemPa3Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   237; } }
     };
 
-    public ref class OemWsctrlKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   238; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemWsctrlKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   238; } }
     };
 
-    public ref class OemCuselKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   239; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemCuselKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   239; } }
     };
 
-    public ref class OemAttnKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   240; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemAttnKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   240; } }
     };
 
-    public ref class OemFinishKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   241; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemFinishKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   241; } }
     };
 
-    public ref class OemCopyKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   242; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemCopyKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   242; } }
     };
 
-    public ref class OemAutoKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   243; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemAutoKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   243; } }
     };
 
-    public ref class OemEnlwKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   244; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemEnlwKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   244; } }
     };
 
-    public ref class OemBacktabKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   245; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemBacktabKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   245; } }
     };
 
-    public ref class AttnKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   246; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class AttnKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   246; } }
     };
 
-    public ref class CrselKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   247; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class CrselKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   247; } }
     };
 
-    public ref class ExselKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   248; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class ExselKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   248; } }
     };
 
-    public ref class EreofKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   249; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class EreofKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   249; } }
     };
 
-    public ref class PlayKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   250; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class PlayKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   250; } }
     };
 
-    public ref class ZoomKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   251; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class ZoomKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   251; } }
     };
 
-    public ref class NonameKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   252; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class NonameKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   252; } }
     };
 
-    public ref class Pa1Key sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   253; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class Pa1Key sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   253; } }
     };
 
-    public ref class OemClearKey sealed : IKeyBase {
-        public: virtual property unsigned short  VirtCode    { unsigned short get() { return   254; } }
-        public: virtual property unsigned short  ScanCode    { unsigned short get() { return     0; } }
-        public: virtual property bool            IsExtended  { bool           get() { return false; } }
+    public ref class OemClearKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return   254; } }
     };
 
     public ref class Key abstract sealed {
