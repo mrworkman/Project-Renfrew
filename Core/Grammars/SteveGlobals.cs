@@ -30,9 +30,9 @@ namespace Renfrew.Core.Grammars {
 
       private IEnumerable<KeyChord> _currentCommand = new List<KeyChord>();
 
-      private static readonly Dictionary<string, List<KeyChord>> _commands = new();
+      private static readonly Dictionary<string, List<KeyChord>> Commands = new();
 
-      private static readonly Dictionary<string, KeyPress> _numberKeys = new() {
+      private static readonly Dictionary<string, KeyPress> NumberKeys = new() {
          #region Number -> Key
          { "zero",  Key.D0 },
          { "one",   Key.D1 },
@@ -47,7 +47,7 @@ namespace Renfrew.Core.Grammars {
          #endregion
       };
 
-      private static readonly Dictionary<string, KeyPress> _letterKeys = new () {
+      private static readonly Dictionary<string, KeyPress> LetterKeys = new () {
          #region Letter -> Key
          { "alpha",    Key.A },
          { "bravo",    Key.B },
@@ -79,7 +79,7 @@ namespace Renfrew.Core.Grammars {
          #endregion
       };
 
-      private static readonly Dictionary<string, uint> _numbers = new() {
+      private static readonly Dictionary<string, uint> Numbers = new() {
          #region Numbers
          { "zero",         0 },
          { "one",          1 },
@@ -118,8 +118,9 @@ namespace Renfrew.Core.Grammars {
       public SteveGlobalsGrammar(IGrammarService grammarService)
          : base(grammarService) {
 
-         AddCommand("slap", Key.Return);
-         AddCommand("slam", Key.Control, Key.Return);
+         AddCommand("dismiss", Key.Escape);
+         AddCommand("slap",    Key.Return);
+         AddCommand("slam",    Key.Control, Key.Return);
          
          // Cursor movement commands.
          AddCommand("york",  Key.Home);
@@ -134,13 +135,17 @@ namespace Renfrew.Core.Grammars {
          AddCommand("punch", Key.Next);  // PageDown
          //AddCommand("jimmy", );
 
-         // Copy paste, etc.
+         // Common Shortcuts.
          AddCommand("copy",  Key.Control, Key.C);
          AddCommand("paste", Key.Control, Key.V);
          AddCommand("cut",   Key.Control, Key.X);
-
-         AddCommand("undo", Key.Control, Key.Z);
-         AddCommand("redo", Key.Control, Key.Y);
+         AddCommand("undo",  Key.Control, Key.Z);
+         AddCommand("redo",  Key.Control, Key.Y);
+         AddCommand("save file",     Key.Control, Key.S);
+         AddCommand("say file",      Key.Control, Key.S);
+         AddCommand("find",          Key.Control, Key.F);
+         AddCommand("find next",     Key.F3);
+         AddCommand("find previous", Key.Shift,   Key.F3);
 
          // Text selection commands.
          AddCommand("stall",  Key.Control, Key.A);
@@ -191,9 +196,55 @@ namespace Renfrew.Core.Grammars {
          AddCommand("tilde",        CharKey.KeyPress('~'));
          AddCommand("pound",        CharKey.KeyPress('#'));
 
-         // Key combinations.
+         // Multi-character commands.
          AddCommand(
-            "point", 
+            "braces",
+            KeyChord.Keys(CharKey.KeyPress('{')),
+            KeyChord.Keys(CharKey.KeyPress('}')),
+            KeyChord.Keys(Key.Left)
+         );
+         AddCommand(
+            "quotes",
+            KeyChord.Keys(CharKey.KeyPress('"')),
+            KeyChord.Keys(CharKey.KeyPress('"')),
+            KeyChord.Keys(Key.Left)
+         );
+         AddCommand(
+            "singles",
+            KeyChord.Keys(CharKey.KeyPress('\'')),
+            KeyChord.Keys(CharKey.KeyPress('\'')),
+            KeyChord.Keys(Key.Left)
+         );
+         AddCommand(
+            "brackets",
+            KeyChord.Keys(CharKey.KeyPress('[')),
+            KeyChord.Keys(CharKey.KeyPress(']')),
+            KeyChord.Keys(Key.Left)
+         );
+         AddCommand(
+            "prawns",
+            KeyChord.Keys(CharKey.KeyPress('(')),
+            KeyChord.Keys(CharKey.KeyPress(')')),
+            KeyChord.Keys(Key.Left)
+         );
+         AddCommand(
+            "angles",
+            KeyChord.Keys(CharKey.KeyPress('<')),
+            KeyChord.Keys(CharKey.KeyPress('>')),
+            KeyChord.Keys(Key.Left)
+         );
+         AddCommand(
+            "nick",
+            KeyChord.Keys(CharKey.KeyPress('\\')),
+            KeyChord.Keys(CharKey.KeyPress('n'))
+         );
+         AddCommand(
+            "rick",
+            KeyChord.Keys(CharKey.KeyPress('\\')),
+            KeyChord.Keys(CharKey.KeyPress('r'))
+         );
+         AddCommand(
+            "point",
             KeyChord.Keys(CharKey.KeyPress('-')),
             KeyChord.Keys(CharKey.KeyPress('>'))
          );
@@ -206,7 +257,10 @@ namespace Renfrew.Core.Grammars {
          // Window control commands.
          AddCommand("conmen", Key.Shift, Key.F10);
 
-
+         // Add letters as commands.
+         foreach (var entry in LetterKeys) {
+            AddCommand(entry.Key, entry.Value);
+         }
 
          //AddCommand("");
 
@@ -218,7 +272,7 @@ namespace Renfrew.Core.Grammars {
       ///  Only to be called from the constructor.
       /// </summary>
       private void AddCommand(string commandName, params KeyPress[] chordKeys) {
-         _commands[commandName] = new() {
+         Commands[commandName] = new() {
             KeyChord.Keys(chordKeys)
          };
       }
@@ -227,17 +281,17 @@ namespace Renfrew.Core.Grammars {
       ///  Only to be called from the constructor.
       /// </summary>
       private void AddCommand(string commandName, params KeyChord[] chords) {
-         _commands[commandName] = chords.ToList();
+         Commands[commandName] = chords.ToList();
       }
 
       public override void Initialize() {
 
          AddRule("globals", e =>
             e.Repeat(command => command
-               .SayOneOf(_commands.Select(c => c.Key))
-                  .Do(words => SetCurrentCommand(_commands[words.First()]))
+               .SayOneOf(Commands.Select(c => c.Key))
+                  .Do(words => SetCurrentCommand(Commands[words.First()]))
                .OptionallyOneOf(times => times
-                  .SayOneOf(_numbers.Select(n => n.Key))
+                  .SayOneOf(Numbers.Select(n => n.Key))
                )
                .Do(words => ExecuteCommand(words.FirstOrDefault()))
             )
@@ -257,7 +311,7 @@ namespace Renfrew.Core.Grammars {
       }
 
       private void ExecuteCommand(string word) {
-         uint times = word != null? _numbers[word] : 1;
+         uint times = word != null? Numbers[word] : 1;
 
          for (int i = 0; i < times; i++) {
             Keyboard.PlayKeys(_currentCommand);
