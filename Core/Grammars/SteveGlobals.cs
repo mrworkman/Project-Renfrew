@@ -122,50 +122,86 @@ namespace Renfrew.Core.Grammars {
          AddCommand("slam", Key.Control, Key.Return);
          
          // Cursor movement commands.
-         AddCommand("york", Key.Home);
-         AddCommand("pork", Key.End);
-         AddCommand("sky", Key.Up);
-         AddCommand("art", Key.Down);
-         AddCommand("leaf", Key.Left);
-         AddCommand("reef", Key.Right);
-         AddCommand("leap", Key.Control, Key.Left);
-         AddCommand("reap", Key.Control, Key.Right);
+         AddCommand("york",  Key.Home);
+         AddCommand("pork",  Key.End);
+         AddCommand("sky",   Key.Up);
+         AddCommand("art",   Key.Down);
+         AddCommand("leaf",  Key.Left);
+         AddCommand("reef",  Key.Right);
+         AddCommand("leap",  Key.Control, Key.Left);
+         AddCommand("reap",  Key.Control, Key.Right);
          AddCommand("spike", Key.Prior); // PageUp
          AddCommand("punch", Key.Next);  // PageDown
          //AddCommand("jimmy", );
 
          // Copy paste, etc.
-         AddCommand("copy", Key.Control, Key.C);
+         AddCommand("copy",  Key.Control, Key.C);
          AddCommand("paste", Key.Control, Key.V);
-         AddCommand("cut", Key.Control, Key.X);
+         AddCommand("cut",   Key.Control, Key.X);
+
+         AddCommand("undo", Key.Control, Key.Z);
+         AddCommand("redo", Key.Control, Key.Y);
 
          // Text selection commands.
-         AddCommand("stall", Key.Control, Key.A);
-         AddCommand("ski", Key.Shift, Key.Up);
-         AddCommand("heart", Key.Shift, Key.Down);
-         AddCommand("strike", Key.Shift, Key.Prior); // PageUp
-         AddCommand("munch", Key.Shift, Key.Next);   // PageDown
-         AddCommand("leap", Key.Control, Key.Left);
-         AddCommand("reap", Key.Control, Key.Right);
-         AddCommand("sleep", Key.Control, Key.Shift, Key.Left);
-         AddCommand("creep", Key.Control, Key.Shift, Key.Right);
-         AddCommand("beef", Key.Shift, Key.Left);
-         AddCommand("chief", Key.Shift, Key.Right);
-         AddCommand("lome", Key.Shift, Key.Home);
-         AddCommand("rend", Key.Shift, Key.End);
+         AddCommand("stall",  Key.Control, Key.A);
+         AddCommand("ski",    Key.Shift,   Key.Up);
+         AddCommand("heart",  Key.Shift,   Key.Down);
+         AddCommand("strike", Key.Shift,   Key.Prior); // PageUp
+         AddCommand("munch",  Key.Shift,   Key.Next);  // PageDown
+         AddCommand("leap",   Key.Control, Key.Left);
+         AddCommand("reap",   Key.Control, Key.Right);
+         AddCommand("sleep",  Key.Control, Key.Shift, Key.Left);
+         AddCommand("creep",  Key.Control, Key.Shift, Key.Right);
+         AddCommand("beef",   Key.Shift,   Key.Left);
+         AddCommand("chief",  Key.Shift,   Key.Right);
+         AddCommand("lome",   Key.Shift,   Key.Home);
+         AddCommand("rend",   Key.Shift,   Key.End);
          AddCommand("strobe", Key.Control, Key.Home);
-         AddCommand("probe", Key.Control, Key.End);
+         AddCommand("probe",  Key.Control, Key.End);
 
-         AddCommand("tab", Key.Tab);
-         AddCommand("untab", Key.Shift, Key.Tab);
-         AddCommand("space", Key.Space);
+         AddCommand("tab",       Key.Tab);
+         AddCommand("untab",     Key.Shift, Key.Tab);
+         AddCommand("space",     Key.Space);
          AddCommand("backspace", Key.Back);
-         AddCommand("delete", Key.Delete);
-         AddCommand("comma", Key.OemComma);
-         AddCommand("dot", Key.OemPeriod);
-         AddCommand("slash", Key.Divide);
-         AddCommand("semi", CharKey.KeyPress(';'));
+         AddCommand("delete",    Key.Delete);
 
+         // Specific typable characters.
+         AddCommand("comma",        CharKey.KeyPress(','));
+         AddCommand("dot",          CharKey.KeyPress('.'));
+         AddCommand("slash",        CharKey.KeyPress('/'));
+         AddCommand("backslash",    CharKey.KeyPress('\\'));
+         AddCommand("semi",         CharKey.KeyPress(';'));
+         AddCommand("colon",        CharKey.KeyPress(':'));
+         AddCommand("at",           CharKey.KeyPress('@'));
+         AddCommand("percent",      CharKey.KeyPress('%'));
+         AddCommand("bang",         CharKey.KeyPress('!'));
+         AddCommand("bar",          CharKey.KeyPress('|'));
+         AddCommand("ampersand",    CharKey.KeyPress('&'));
+         AddCommand("prequels",     CharKey.KeyPress('='));
+         AddCommand("dollar",       CharKey.KeyPress('$'));
+         AddCommand("less than",    CharKey.KeyPress('<'));
+         AddCommand("greater than", CharKey.KeyPress('>'));
+         AddCommand("question",     CharKey.KeyPress('?'));
+         AddCommand("hyphen",       CharKey.KeyPress('-'));
+         AddCommand("minus",        CharKey.KeyPress('-'));
+         AddCommand("plus",         CharKey.KeyPress('+'));
+         AddCommand("star",         CharKey.KeyPress('*'));
+         AddCommand("caret",        CharKey.KeyPress('^'));
+         AddCommand("underscore",   CharKey.KeyPress('_'));
+         AddCommand("tilde",        CharKey.KeyPress('~'));
+         AddCommand("pound",        CharKey.KeyPress('#'));
+
+         // Key combinations.
+         AddCommand(
+            "point", 
+            KeyChord.Keys(CharKey.KeyPress('-')),
+            KeyChord.Keys(CharKey.KeyPress('>'))
+         );
+         AddCommand(
+            "joint",
+            KeyChord.Keys(CharKey.KeyPress('=')),
+            KeyChord.Keys(CharKey.KeyPress('>'))
+         );
 
          // Window control commands.
          AddCommand("conmen", Key.Shift, Key.F10);

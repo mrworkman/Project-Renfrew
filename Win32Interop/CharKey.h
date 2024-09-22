@@ -22,8 +22,6 @@
 using namespace System;
 
 namespace Renfrew::Win32::Interop {
-   ref class KeyChord;
-
    public ref class CharKey sealed : UnicodeKeyPress {
       WORD _scanCode;
       CharKey(WORD scanCode);
