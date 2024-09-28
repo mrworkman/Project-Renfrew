@@ -45,7 +45,8 @@ namespace GrammarTests {
          _arrowWindowMock = new Mock<IWindow>();
 
          _grammar = new MousePlotGrammar(
-            grammarService: new Mock<IGrammarService>().Object,
+            grammarService:  new Mock<IGrammarService>().Object,
+            natSpeak:        new Mock<INatSpeak>().Object,
             screen:          _screenMock.Object,
             plotWindow:      _plotWindowMock.Object,
             zoomWindow:      _zoomWindowMock.Object,

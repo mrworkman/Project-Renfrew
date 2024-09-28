@@ -30,7 +30,7 @@ namespace GrammarTests {
 
       private class TestGrammar : Grammar {
          public TestGrammar()
-            :base (new Mock<IGrammarService>().Object) {
+            : base(new Mock<IGrammarService>().Object, new Mock<INatSpeak>().Object) {
          }
          public override void Dispose() { }
          public override void Initialize() { }

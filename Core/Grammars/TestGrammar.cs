@@ -27,8 +27,8 @@ namespace Renfrew.Core.Grammars {
    [GrammarExport("Test Grammar", "This is a test grammar.")]
    public class TestGrammar : Grammar {
 
-      public TestGrammar(IGrammarService grammarService)
-         : base(grammarService) {
+      public TestGrammar(IGrammarService grammarService, INatSpeak natSpeak)
+         : base(grammarService, natSpeak) {
 
       }
 

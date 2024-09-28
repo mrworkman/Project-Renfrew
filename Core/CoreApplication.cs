@@ -147,7 +147,7 @@ namespace Renfrew.Core {
 
             // TODO: Find a way to break a grammar's dependency on NatSpeakInterop
             var grammar = (Grammar) Activator.CreateInstance(
-               type.Type, _grammarService
+               type.Type, _grammarService, _natSpeakService
             );
 
             try {

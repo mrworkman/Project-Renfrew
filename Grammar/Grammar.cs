@@ -45,8 +45,8 @@ namespace Renfrew.Grammar {
 
       private readonly Dictionary<String, UInt32> _activeRules;
 
-      protected Grammar(IGrammarService grammarService)
-         : this(new RuleFactory(), grammarService) {
+      protected Grammar(IGrammarService grammarService, INatSpeak natSpeak)
+         : this(new RuleFactory(), grammarService, natSpeak) {
 
          // This is a list of the rules themselves (by name)
          _rules = new Dictionary<String, IRule>(StringComparer.CurrentCultureIgnoreCase);
@@ -59,11 +59,18 @@ namespace Renfrew.Grammar {
          _activeRules = new Dictionary<String, UInt32>();
       }
 
-      protected Grammar(RuleFactory ruleFactory, IGrammarService grammarService) {
+      protected Grammar(
+         RuleFactory ruleFactory, 
+         IGrammarService grammarService, 
+         INatSpeak natSpeak
+      ) {
          Debug.Assert(ruleFactory != null);
          Debug.Assert(grammarService != null);
+         Debug.Assert(natSpeak != null);
 
          _grammarService = grammarService;
+
+         NatSpeak = natSpeak;
          RuleFactory = ruleFactory;
       }
 
@@ -338,6 +345,8 @@ namespace Renfrew.Grammar {
          DeactivateRule(name);
          ActivateRule(name);
       }
+
+      protected INatSpeak NatSpeak { get; private set; }
 
       protected RuleFactory RuleFactory { get; private set; }
 

@@ -48,7 +48,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
       private Point _currentCell = Point.Empty;
 
       // TODO: Add support for determining this from windows and setting it by configuration.
-      private readonly double _displayScaleMultiplier = 1.5;
+      private readonly double _displayScaleMultiplier = 1;
 
       private readonly uint _scrollWheelDelta = 300;
 
@@ -134,10 +134,10 @@ namespace Renfrew.Core.Grammars.MousePlot {
       private static extern uint SendInput(uint cInputs, IntPtr pInputs, int cbSize);
 
       // For Testing
-      public MousePlotGrammar(IGrammarService grammarService, IScreen screen,
+      public MousePlotGrammar(IGrammarService grammarService, INatSpeak natSpeak, IScreen screen,
                               IWindow plotWindow, IZoomWindow zoomWindow, IWindow cellWindow,
                               IWindow markArrowWindow)
-         : base(grammarService) {
+         : base(grammarService, natSpeak) {
 
          _currentScreen   = screen;
          _plotWindow      = plotWindow;
@@ -146,8 +146,8 @@ namespace Renfrew.Core.Grammars.MousePlot {
          _markArrowWindow = markArrowWindow;
       }
 
-      public MousePlotGrammar(IGrammarService grammarService)
-         : this(grammarService, new TestableScreen().PrimaryScreen,
+      public MousePlotGrammar(IGrammarService grammarService, INatSpeak natSpeak)
+         : this(grammarService, natSpeak, new TestableScreen().PrimaryScreen,
               new PlotWindow(), new ZoomWindow(), new CellWindow(),
               new ArrowWindow()) {
 

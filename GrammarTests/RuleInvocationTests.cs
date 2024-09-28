@@ -39,7 +39,7 @@ namespace GrammarTests {
       private class TestGrammar : Grammar {
 
          public TestGrammar(IGrammarService grammarService)
-            : base(grammarService) {
+            : base(grammarService, new Mock<INatSpeak>().Object) {
 
          }
 
