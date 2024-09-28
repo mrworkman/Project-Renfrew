@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "INatSpeak.h"
 #include "GrammarService.h"
 
 // Native types are private by default with /clr
@@ -31,7 +32,7 @@
 #define  SRERR_GRAMMARERROR   0x80040416
 
 namespace Renfrew::NatSpeakInterop {
-   public ref class NatSpeakService {
+   public ref class NatSpeakService : INatSpeak {
       ::IServiceProvider *_piServiceProvider;
 
       ISrCentral ^_isrCentral = nullptr;
@@ -91,6 +92,16 @@ namespace Renfrew::NatSpeakInterop {
       /// <returns>The dragon profile path, if available. null otherwise.</returns>
       String ^GetUserDirectory(String ^userProfile);
 
+      /// <summary>
+      /// Sets NatSpeak's microphone state to "sleeping".
+      /// </summary>
+      virtual void MicSleep() sealed;
+
+      /// <summary>
+      /// Sets NatSpeak's microphone state to "sleeping".
+      /// </summary>
+      virtual void MicOn() sealed;
+
       property IGrammarService ^GrammarService {
          IGrammarService ^get();
       }
@@ -99,6 +110,6 @@ namespace Renfrew::NatSpeakInterop {
          ISrCentral ^get();
       };
 
-      void PlayString(String ^str);
+      virtual void PlayString(String ^str) sealed;
    };
 }

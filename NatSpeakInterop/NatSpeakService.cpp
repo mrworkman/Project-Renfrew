@@ -250,6 +250,16 @@ bool NatSpeakService::IsDragonAlive() {
    return false;
 }
 
+void NatSpeakService::MicOn() {
+   Debug::WriteLine("Enabling microphone.");
+   _idgnSrEngineControl->SetMicState(DGNMIC_ON, FALSE);
+}
+
+void NatSpeakService::MicSleep() {
+   Debug::WriteLine("Sleeping microphone.");
+   _idgnSrEngineControl->SetMicState(DGNMIC_SLEEPING, FALSE);
+}
+
 void NatSpeakService::PlayString(String ^str) {
 
    if (str == nullptr)

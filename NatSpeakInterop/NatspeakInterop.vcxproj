@@ -118,6 +118,7 @@
     <ClInclude Include="IGrammar.h" />
     <ClInclude Include="IGrammarSerializer.h" />
     <ClInclude Include="IGrammarService.h" />
+    <ClInclude Include="INatSpeak.h" />
     <ClInclude Include="InvalidStateException.h" />
     <ClInclude Include="ISpchServices.h" />
     <ClInclude Include="ISrCentral.h" />

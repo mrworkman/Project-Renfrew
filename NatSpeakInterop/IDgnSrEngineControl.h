@@ -17,6 +17,13 @@
 
 #pragma once
 
+#define DGNMIC_DISABLED	0
+#define DGNMIC_OFF 		1
+#define DGNMIC_ON		   2
+#define DGNMIC_SLEEPING	3
+#define DGNMIC_PAUSE	   4
+#define DGNMIC_RESUME	5
+
 #define IDgnSrEngineControlGUID "dd109000-6205-11cf-ae61-0000e8a28647"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
