@@ -115,177 +115,188 @@ namespace Renfrew.Core.Grammars {
          #endregion
       };
 
-      public SteveGlobalsGrammar(IGrammarService grammarService)
-         : base(grammarService) {
+      public SteveGlobalsGrammar(IGrammarService grammarService, INatSpeak natSpeak)
+         : base(grammarService, natSpeak) {
 
-         AddCommand("dismiss", Key.Escape);
-         AddCommand("slap",    Key.Return);
-         AddCommand("slam",    Key.Control, Key.Return);
+         AddChordCommand("dismiss", Key.Escape);
+         AddChordCommand("slap",    Key.Return);
+         AddChordCommand("slam",    Key.Control, Key.Return);
          
          // Cursor movement commands.
-         AddCommand("york",  Key.Home);
-         AddCommand("pork",  Key.End);
-         AddCommand("sky",   Key.Up);
-         AddCommand("art",   Key.Down);
-         AddCommand("leaf",  Key.Left);
-         AddCommand("reef",  Key.Right);
-         AddCommand("leap",  Key.Control, Key.Left);
-         AddCommand("reap",  Key.Control, Key.Right);
-         AddCommand("spike", Key.Prior); // PageUp
-         AddCommand("punch", Key.Next);  // PageDown
-         //AddCommand("jimmy", );
+         AddChordCommand("york",  Key.Home);
+         AddChordCommand("pork",  Key.End);
+         AddChordCommand("sky",   Key.Up);
+         AddChordCommand("art",   Key.Down);
+         AddChordCommand("leaf",  Key.Left);
+         AddChordCommand("reef",  Key.Right);
+         AddChordCommand("leap",  Key.Control, Key.Left);
+         AddChordCommand("reap",  Key.Control, Key.Right);
+         AddChordCommand("spike", Key.Prior); // PageUp
+         AddChordCommand("punch", Key.Next);  // PageDown
+
+         var down = Enumerable.Repeat(Key.Down, 15);
+         var up = Enumerable.Repeat(Key.Up, 15);
+
+         AddSequenceCommand("jimmy", down.Concat<KeyPress>(up));
+         AddSequenceCommand("kimmy", up.Concat<KeyPress>(down));
 
          // Common Shortcuts.
-         AddCommand("copy",  Key.Control, Key.C);
-         AddCommand("paste", Key.Control, Key.V);
-         AddCommand("cut",   Key.Control, Key.X);
-         AddCommand("undo",  Key.Control, Key.Z);
-         AddCommand("redo",  Key.Control, Key.Y);
-         AddCommand("save file",     Key.Control, Key.S);
-         AddCommand("say file",      Key.Control, Key.S);
-         AddCommand("find",          Key.Control, Key.F);
-         AddCommand("find next",     Key.F3);
-         AddCommand("find previous", Key.Shift,   Key.F3);
+         AddChordCommand("copy",  Key.Control, Key.C);
+         AddChordCommand("copy that",  Key.Control, Key.C);
+         AddChordCommand("paste", Key.Control, Key.V);
+         AddChordCommand("paste it", Key.Control, Key.V);
+         AddChordCommand("cut",   Key.Control, Key.X);
+         AddChordCommand("undo",  Key.Control, Key.Z);
+         AddChordCommand("redo",  Key.Control, Key.Y);
+         AddChordCommand("save file",     Key.Control, Key.S);
+         // Sometimes NatSpeak hears "save" as its "say" command, so
+         // instead of sending CTRL+S it inserts "file" 🙄
+         AddChordCommand("say file",      Key.Control, Key.S);
+         AddChordCommand("find",          Key.Control, Key.F);
+         AddChordCommand("find next",     Key.F3);
+         AddChordCommand("find previous", Key.Shift,   Key.F3);
 
          // Text selection commands.
-         AddCommand("stall",  Key.Control, Key.A);
-         AddCommand("ski",    Key.Shift,   Key.Up);
-         AddCommand("heart",  Key.Shift,   Key.Down);
-         AddCommand("strike", Key.Shift,   Key.Prior); // PageUp
-         AddCommand("munch",  Key.Shift,   Key.Next);  // PageDown
-         AddCommand("leap",   Key.Control, Key.Left);
-         AddCommand("reap",   Key.Control, Key.Right);
-         AddCommand("sleep",  Key.Control, Key.Shift, Key.Left);
-         AddCommand("creep",  Key.Control, Key.Shift, Key.Right);
-         AddCommand("beef",   Key.Shift,   Key.Left);
-         AddCommand("chief",  Key.Shift,   Key.Right);
-         AddCommand("lome",   Key.Shift,   Key.Home);
-         AddCommand("rend",   Key.Shift,   Key.End);
-         AddCommand("strobe", Key.Control, Key.Home);
-         AddCommand("probe",  Key.Control, Key.End);
+         AddChordCommand("stall",  Key.Control, Key.A);
+         AddChordCommand("ski",    Key.Shift,   Key.Up);
+         AddChordCommand("heart",  Key.Shift,   Key.Down);
+         AddChordCommand("strike", Key.Shift,   Key.Prior); // PageUp
+         AddChordCommand("munch",  Key.Shift,   Key.Next);  // PageDown
+         AddChordCommand("leap",   Key.Control, Key.Left);
+         AddChordCommand("reap",   Key.Control, Key.Right);
+         AddChordCommand("sleep",  Key.Control, Key.Shift, Key.Left);
+         AddChordCommand("creep",  Key.Control, Key.Shift, Key.Right);
+         AddChordCommand("beef",   Key.Shift,   Key.Left);
+         AddChordCommand("chief",  Key.Shift,   Key.Right);
+         AddChordCommand("lome",   Key.Shift,   Key.Home);
+         AddChordCommand("rend",   Key.Shift,   Key.End);
+         AddChordCommand("strobe", Key.Control, Key.Home);
+         AddChordCommand("probe",  Key.Control, Key.End);
 
-         AddCommand("tab",       Key.Tab);
-         AddCommand("untab",     Key.Shift, Key.Tab);
-         AddCommand("space",     Key.Space);
-         AddCommand("backspace", Key.Back);
-         AddCommand("delete",    Key.Delete);
+         AddChordCommand("tab",       Key.Tab);
+         AddChordCommand("untab",     Key.Shift, Key.Tab);
+         AddChordCommand("space",     Key.Space);
+         AddChordCommand("backspace", Key.Back);
+         AddChordCommand("delete",    Key.Delete);
 
          // Specific typable characters.
-         AddCommand("comma",        CharKey.KeyPress(','));
-         AddCommand("dot",          CharKey.KeyPress('.'));
-         AddCommand("slash",        CharKey.KeyPress('/'));
-         AddCommand("backslash",    CharKey.KeyPress('\\'));
-         AddCommand("semi",         CharKey.KeyPress(';'));
-         AddCommand("colon",        CharKey.KeyPress(':'));
-         AddCommand("at",           CharKey.KeyPress('@'));
-         AddCommand("percent",      CharKey.KeyPress('%'));
-         AddCommand("bang",         CharKey.KeyPress('!'));
-         AddCommand("bar",          CharKey.KeyPress('|'));
-         AddCommand("ampersand",    CharKey.KeyPress('&'));
-         AddCommand("prequels",     CharKey.KeyPress('='));
-         AddCommand("dollar",       CharKey.KeyPress('$'));
-         AddCommand("less than",    CharKey.KeyPress('<'));
-         AddCommand("greater than", CharKey.KeyPress('>'));
-         AddCommand("question",     CharKey.KeyPress('?'));
-         AddCommand("hyphen",       CharKey.KeyPress('-'));
-         AddCommand("minus",        CharKey.KeyPress('-'));
-         AddCommand("plus",         CharKey.KeyPress('+'));
-         AddCommand("star",         CharKey.KeyPress('*'));
-         AddCommand("caret",        CharKey.KeyPress('^'));
-         AddCommand("underscore",   CharKey.KeyPress('_'));
-         AddCommand("tilde",        CharKey.KeyPress('~'));
-         AddCommand("pound",        CharKey.KeyPress('#'));
+         AddChordCommand("comma",        CharKey.KeyPress(','));
+         AddChordCommand("dot",          CharKey.KeyPress('.'));
+         AddChordCommand("slash",        CharKey.KeyPress('/'));
+         AddChordCommand("backslash",    CharKey.KeyPress('\\'));
+         AddChordCommand("semi",         CharKey.KeyPress(';'));
+         AddChordCommand("colon",        CharKey.KeyPress(':'));
+         AddChordCommand("at",           CharKey.KeyPress('@'));
+         AddChordCommand("percent",      CharKey.KeyPress('%'));
+         AddChordCommand("bang",         CharKey.KeyPress('!'));
+         AddChordCommand("bar",          CharKey.KeyPress('|'));
+         AddChordCommand("ampersand",    CharKey.KeyPress('&'));
+         AddChordCommand("prequels",     CharKey.KeyPress('='));
+         AddChordCommand("dollar",       CharKey.KeyPress('$'));
+         AddChordCommand("less than",    CharKey.KeyPress('<'));
+         AddChordCommand("greater than", CharKey.KeyPress('>'));
+         AddChordCommand("question",     CharKey.KeyPress('?'));
+         AddChordCommand("hyphen",       CharKey.KeyPress('-'));
+         AddChordCommand("minus",        CharKey.KeyPress('-'));
+         AddChordCommand("plus",         CharKey.KeyPress('+'));
+         AddChordCommand("star",         CharKey.KeyPress('*'));
+         AddChordCommand("caret",        CharKey.KeyPress('^'));
+         AddChordCommand("underscore",   CharKey.KeyPress('_'));
+         AddChordCommand("tilde",        CharKey.KeyPress('~'));
+         AddChordCommand("pound",        CharKey.KeyPress('#'));
 
          // Multi-character commands.
-         AddCommand(
+         AddSequenceCommand(
             "braces",
-            KeyChord.Keys(CharKey.KeyPress('{')),
-            KeyChord.Keys(CharKey.KeyPress('}')),
-            KeyChord.Keys(Key.Left)
+            CharKey.KeyPress('{'),
+            CharKey.KeyPress('}'),
+            Key.Left
          );
-         AddCommand(
+         AddSequenceCommand(
             "quotes",
-            KeyChord.Keys(CharKey.KeyPress('"')),
-            KeyChord.Keys(CharKey.KeyPress('"')),
-            KeyChord.Keys(Key.Left)
+            CharKey.KeyPress('"'),
+            CharKey.KeyPress('"'),
+            Key.Left
          );
-         AddCommand(
+         AddSequenceCommand(
             "singles",
-            KeyChord.Keys(CharKey.KeyPress('\'')),
-            KeyChord.Keys(CharKey.KeyPress('\'')),
-            KeyChord.Keys(Key.Left)
+            CharKey.KeyPress('\''),
+            CharKey.KeyPress('\''),
+            Key.Left
          );
-         AddCommand(
+         AddSequenceCommand(
             "brackets",
-            KeyChord.Keys(CharKey.KeyPress('[')),
-            KeyChord.Keys(CharKey.KeyPress(']')),
-            KeyChord.Keys(Key.Left)
+            CharKey.KeyPress('['),
+            CharKey.KeyPress(']'),
+            Key.Left
          );
-         AddCommand(
+         AddSequenceCommand(
             "prawns",
-            KeyChord.Keys(CharKey.KeyPress('(')),
-            KeyChord.Keys(CharKey.KeyPress(')')),
-            KeyChord.Keys(Key.Left)
+            CharKey.KeyPress('('),
+            CharKey.KeyPress(')'),
+            Key.Left
          );
-         AddCommand(
+         AddSequenceCommand(
             "angles",
-            KeyChord.Keys(CharKey.KeyPress('<')),
-            KeyChord.Keys(CharKey.KeyPress('>')),
-            KeyChord.Keys(Key.Left)
+            CharKey.KeyPress('<'),
+            CharKey.KeyPress('>'),
+            Key.Left
          );
-         AddCommand(
-            "nick",
-            KeyChord.Keys(CharKey.KeyPress('\\')),
-            KeyChord.Keys(CharKey.KeyPress('n'))
-         );
-         AddCommand(
-            "rick",
-            KeyChord.Keys(CharKey.KeyPress('\\')),
-            KeyChord.Keys(CharKey.KeyPress('r'))
-         );
-         AddCommand(
-            "point",
-            KeyChord.Keys(CharKey.KeyPress('-')),
-            KeyChord.Keys(CharKey.KeyPress('>'))
-         );
-         AddCommand(
-            "joint",
-            KeyChord.Keys(CharKey.KeyPress('=')),
-            KeyChord.Keys(CharKey.KeyPress('>'))
-         );
+         AddSequenceCommand("nick", '\\', 'n');
+         AddSequenceCommand("rick", '\\', 'r');
+         AddSequenceCommand("point", '-', '>');
+         AddSequenceCommand("joint", '=', '>');
 
          // Window control commands.
-         AddCommand("conmen", Key.Shift, Key.F10);
+         AddChordCommand("conmen",       Key.Shift, Key.F10);
+         AddChordCommand("mini",         Key.LWin, Key.Down);
+         AddChordCommand("maxi",         Key.LWin, Key.Up);
+         AddChordCommand("window left",  Key.LWin, Key.Shift, Key.Left);
+         AddChordCommand("window right", Key.LWin, Key.Shift, Key.Right);
+         AddChordCommand("switchy",      Key.Menu, Key.Tab);
+         AddChordCommand("switchy boo",  Key.Menu, Key.Control, Key.Tab);
 
          // Add letters as commands.
          foreach (var entry in LetterKeys) {
-            AddCommand(entry.Key, entry.Value);
+            AddChordCommand(entry.Key, entry.Value);
          }
-
-         //AddCommand("");
-
-
-
       }
 
       /// <summary>
       ///  Only to be called from the constructor.
       /// </summary>
-      private void AddCommand(string commandName, params KeyPress[] chordKeys) {
-         Commands[commandName] = new() {
-            KeyChord.Keys(chordKeys)
-         };
+      private void AddChordCommand(string commandName, params KeyPress[] chordKeys) {
+         AddChordCommand(commandName, KeyChord.Keys(chordKeys));
       }
 
       /// <summary>
       ///  Only to be called from the constructor.
       /// </summary>
-      private void AddCommand(string commandName, params KeyChord[] chords) {
+      private void AddChordCommand(string commandName, params KeyChord[] chords) {
          Commands[commandName] = chords.ToList();
       }
 
-      public override void Initialize() {
+      /// <summary>
+      ///  Only to be called from the constructor.
+      /// </summary>
+      private void AddSequenceCommand(string commandName, params KeyPress[] sequenceOfKeyPresses) {
+         AddSequenceCommand(commandName, sequenceOfKeyPresses.AsEnumerable());
+      }
 
+      private void AddSequenceCommand(string commandName, IEnumerable<KeyPress> sequenceOfKeyPresses) {
+         Commands[commandName] = sequenceOfKeyPresses.Select(
+            keyPress => KeyChord.Keys(keyPress)
+         ).ToList();
+      }
+
+      /// <summary>
+      ///  Only to be called from the constructor.
+      /// </summary>
+      private void AddSequenceCommand(string commandName, params char[] sequenceOfChars) {
+         AddSequenceCommand(commandName, sequenceOfChars.Select(CharKey.KeyPress));
+      }
+
+      public override void Initialize() {
          AddRule("globals", e =>
             e.Repeat(command => command
                .SayOneOf(Commands.Select(c => c.Key))
@@ -297,6 +308,8 @@ namespace Renfrew.Core.Grammars {
             )
          );
 
+         AddRule("snore", e => e.Say("Snore").Do(NatSpeak.MicSleep));
+
          Load();
 
          ActivateDefaultRules();
@@ -304,10 +317,12 @@ namespace Renfrew.Core.Grammars {
 
       void ActivateDefaultRules() {
          ActivateRule("globals");
+         ActivateRule("snore");
       }
 
       void ReactivateDefaultRules() {
          ReactivateRule("globals");
+         ReactivateRule("snore");
       }
 
       private void ExecuteCommand(string word) {
