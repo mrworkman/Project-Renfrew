@@ -55,7 +55,10 @@ namespace Renfrew.Grammar.Dragon {
          var ruleDirectives = new List<IEnumerable<RuleDirective>>();
 
          _wordLookup = grammar.WordIds;
-         _ruleLookup = grammar.RuleIds;
+         //_ruleLookup = grammar.RuleIds;
+
+         var dd = grammar.RuleIds.ToDictionary(entry => entry.Key, entry => entry.Value);
+         _ruleLookup = dd.Union(grammar.ImportedRuleIds).ToDictionary(entry => entry.Key, entry => entry.Value);
 
          foreach (var rule in grammar.Rules)
             ruleDirectives.Add( CreateDefinitionTable(rule.Elements) );

@@ -42,6 +42,7 @@ namespace Renfrew.Grammar {
 
       private UInt32 _ruleCount = 1;
       private readonly Dictionary<String, UInt32> _ruleIds;
+      private readonly Dictionary<String, UInt32> _importedRuleIds;
 
       private readonly Dictionary<String, UInt32> _activeRules;
 
@@ -55,6 +56,7 @@ namespace Renfrew.Grammar {
          // These are lookups to find the numeric ids for words/rule names
          _wordIds = new Dictionary<String, UInt32>(StringComparer.CurrentCultureIgnoreCase);
          _ruleIds = new Dictionary<String, UInt32>(StringComparer.CurrentCultureIgnoreCase);
+         _importedRuleIds = new Dictionary<String, UInt32>(StringComparer.CurrentCultureIgnoreCase);
 
          _activeRules = new Dictionary<String, UInt32>();
       }
@@ -131,6 +133,35 @@ namespace Renfrew.Grammar {
          }
       }
 
+      public void ImportRule(string name) {
+         if (string.IsNullOrWhiteSpace(name) == true) {
+            throw new ArgumentException(
+               "Value cannot be null or whitespace.",
+               nameof(name)
+            );
+         }
+
+         var rule = RuleFactory.Create();
+
+         EnforceRuleNaming(name);
+
+         if (_rules.ContainsKey(name) == true) {
+            throw new ArgumentException(
+               $"Grammar already contains a rule called '{name}'.",
+               nameof(name)
+            );
+         }
+
+         var ruleId = _ruleCount++;
+
+         if (_importedRuleIds.ContainsKey(name) == false) {
+            _importedRuleIds.Add(name, ruleId);
+         }
+
+         _rules.Add(name, rule);
+         _rulesById.Add(ruleId, rule);
+      }
+
       public abstract void Initialize();
 
       protected void Load() {
@@ -167,10 +198,12 @@ namespace Renfrew.Grammar {
             if (element is IGrammarAction)
                continue;
 
-            // Get the word from the element/sub-elements
-            if (element is IElementContainer == false) {
+            if (element is IWordElement) {
                yield return element.ToString();
-            } else {
+            }
+
+            // Get the word from the element/sub-elements
+            if (element is IElementContainer) {
                foreach (var word in GetWordsFromRuleElements((element as IElementContainer).Elements))
                   yield return word;
             }
@@ -351,6 +384,8 @@ namespace Renfrew.Grammar {
       protected RuleFactory RuleFactory { get; private set; }
 
       public IReadOnlyDictionary<String, UInt32> RuleIds => _ruleIds;
+
+      public IReadOnlyDictionary<String, UInt32> ImportedRuleIds => _importedRuleIds;
 
       // Expose internally for serialization
       internal IReadOnlyList<IRule> Rules =>

@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -32,6 +33,7 @@ namespace Renfrew.Grammar {
    public class GrammarSerializer : IGrammarSerializer {
 
       private static Logger _logger = LogManager.GetCurrentClassLogger();
+      private static bool _useUnicode;
 
       #region Speech Recognition Constants
       private const UInt32 SRHDRTYPE_CFG     = 0;
@@ -44,8 +46,12 @@ namespace Renfrew.Grammar {
       private const UInt32 SRCKCFG_IMPORTRULES = 5;
       #endregion
 
-      public GrammarSerializer() {
+      public GrammarSerializer() : this(useUnicode: true) {
 
+      }
+
+      public GrammarSerializer(bool useUnicode) {
+         _useUnicode = useUnicode;
       }
 
       private byte[] BuildRulesChunk(Grammar grammar) {
@@ -67,6 +73,7 @@ namespace Renfrew.Grammar {
 
             foreach (var row in table) {
                _logger.Trace(row);
+               Console.WriteLine(row);
 
                stream.Write((UInt16) row.DirectiveType);
                stream.Write((UInt16) 0); // Assume probability of Zero
@@ -95,7 +102,13 @@ namespace Renfrew.Grammar {
 
          foreach (var w in words) {
             var length = GetPaddedStringLength(w.Key);
-            var nameBytes = Encoding.Unicode.GetBytes(w.Key);
+            byte[] nameBytes;
+
+            if (_useUnicode) {
+               nameBytes = Encoding.Unicode.GetBytes(w.Key);
+            } else {
+               nameBytes = Encoding.ASCII.GetBytes(w.Key);
+            }
 
             stream.Write(length + sizeof(Int32) * 2);
             stream.Write(w.Value);
@@ -116,7 +129,15 @@ namespace Renfrew.Grammar {
       }
 
       private Int32 GetPaddedStringLength(String s) {
-         var numBytes = Encoding.Unicode.GetByteCount(s) + 2;
+         int numBytes;
+
+         if (_useUnicode) {
+            numBytes = Encoding.Unicode.GetByteCount(s) + 2;
+         } else {
+            numBytes = Encoding.ASCII.GetByteCount(s) + 1;
+         }
+
+
          var diff = numBytes % sizeof(Int32);
 
          // Pad to 4-byte boundary
@@ -136,29 +157,46 @@ namespace Renfrew.Grammar {
          stream.Write(SRHDRTYPE_CFG);
          stream.Write(SRHDRFLAG_UNICODE);
 
-         // Export Rules Chunk
-         stream.Write(SRCKCFG_EXPORTRULES);
+         if (grammar.RuleIds.Any()) {
+            // Export Rules Chunk
+            stream.Write(SRCKCFG_EXPORTRULES);
 
-         // Rule/Word chunks have the same format
-         bytes = BuildWordsChunk(grammar.RuleIds);
-         stream.Write(bytes.Length); // Chunk Size
-         stream.Write(bytes);        // Chunk
+            // Rule/Word chunks have the same format
+            bytes = BuildWordsChunk(grammar.RuleIds);
+            stream.Write(bytes.Length); // Chunk Size
+            stream.Write(bytes);        // Chunk
+         }
 
-         // Words Chunk
-         stream.Write(SRCKCFG_WORDS);
+         if (grammar.ImportedRuleIds.Any()) {
+            // Import Rules Chunk
+            stream.Write(SRCKCFG_IMPORTRULES);
 
-         // Rule/Word chunks have the same format
-         bytes = BuildWordsChunk(grammar.WordIds);
-         stream.Write(bytes.Length); // Chunk Size
-         stream.Write(bytes);        // Chunk
+            // Rule/Word chunks have the same format
+            bytes = BuildWordsChunk(grammar.ImportedRuleIds);
+            stream.Write(bytes.Length); // Chunk Size
+            stream.Write(bytes);        // Chunk
+         }
 
-         // Rule Definition (Symbol) Chunk
-         stream.Write(SRCKCFG_RULES);
+         if (grammar.WordIds.Any()) {
+            // Words Chunk
+            stream.Write(SRCKCFG_WORDS);
 
-         // This chunk has its own special format
-         bytes = BuildRulesChunk(grammar as Grammar);
-         stream.Write(bytes.Length); // Chunk Size
-         stream.Write(bytes);        // Chunk
+            // Rule/Word chunks have the same format
+            bytes = BuildWordsChunk(grammar.WordIds);
+            stream.Write(bytes.Length); // Chunk Size
+            stream.Write(bytes);        // Chunk
+         }
+
+         if (grammar.RuleIds.Any()) {
+            // TODO: Add conditionally if any rules are defined.
+            // Rule Definition (Symbol) Chunk
+            stream.Write(SRCKCFG_RULES);
+
+            // This chunk has its own special format
+            bytes = BuildRulesChunk(grammar as Grammar);
+            stream.Write(bytes.Length); // Chunk Size
+            stream.Write(bytes);        // Chunk
+         }
 
          stream.Flush();
 

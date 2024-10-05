@@ -19,13 +19,17 @@
 
 namespace Renfrew::NatSpeakInterop {
    public interface class IGrammar {
+      property IReadOnlyDictionary<String^, UInt32>^ ImportedRuleIds {
+         IReadOnlyDictionary<String^, UInt32>^ get();
+      }
+
       property IReadOnlyDictionary<String^, UInt32> ^RuleIds {
          IReadOnlyDictionary<String^, UInt32> ^get();
-      };
+      }
 
       property IReadOnlyDictionary<String^, UInt32> ^WordIds {
          IReadOnlyDictionary<String^, UInt32> ^get();
-      };
+      }
 
       void InvokeRule(IEnumerable<String^> ^words);
    };

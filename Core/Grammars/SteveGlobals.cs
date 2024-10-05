@@ -297,18 +297,22 @@ namespace Renfrew.Core.Grammars {
       }
 
       public override void Initialize() {
-         AddRule("globals", e =>
-            e.Repeat(command => command
-               .SayOneOf(Commands.Select(c => c.Key))
-                  .Do(words => SetCurrentCommand(Commands[words.First()]))
-               .OptionallyOneOf(times => times
-                  .SayOneOf(Numbers.Select(n => n.Key))
-               )
-               .Do(words => ExecuteCommand(words.FirstOrDefault()))
-            )
-         );
+         //AddRule("globals", e =>
+         //   e.Repeat(command => command
+         //      .SayOneOf(Commands.Select(c => c.Key))
+         //         .Do(words => SetCurrentCommand(Commands[words.First()]))
+         //      .OptionallyOneOf(times => times
+         //         .SayOneOf(Numbers.Select(n => n.Key))
+         //      )
+         //      .Do(words => ExecuteCommand(words.FirstOrDefault()))
+         //   )
+         //);
 
-         AddRule("snore", e => e.Say("Snore").Do(NatSpeak.MicSleep));
+         //AddRule("snore", e => e.Say("snore").Do(NatSpeak.MicSleep));
+
+         ImportRule("dgndictation");
+         AddRule("naming_scheme_x", rule => rule.Say("ape").WithRule("dgndictation"));
+         //AddRule("literal", rule => rule.WithRule("dgndictation"));
 
          Load();
 
@@ -316,8 +320,8 @@ namespace Renfrew.Core.Grammars {
       }
 
       void ActivateDefaultRules() {
-         ActivateRule("globals");
-         ActivateRule("snore");
+         //ActivateRule("globals");
+         //ActivateRule("snore");
       }
 
       void ReactivateDefaultRules() {
