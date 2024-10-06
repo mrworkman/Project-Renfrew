@@ -31,34 +31,29 @@ using Renfrew.NatSpeakInterop;
 namespace Renfrew.Grammar {
 
    public abstract class Grammar : IGrammar, IDisposable {
+      private readonly IGrammarService _grammarService;
 
-      private IGrammarService _grammarService;
+      private readonly Dictionary<string, Id<IRule>> _allRules = 
+         new (StringComparer.CurrentCultureIgnoreCase);
 
-      private readonly Dictionary<String, IRule> _rules;
-      private readonly Dictionary<UInt32, IRule> _rulesById;
+      private readonly Dictionary<string, Id<IRule>> _exportedRules = 
+         new (StringComparer.CurrentCultureIgnoreCase);
 
-      private UInt32 _wordCount = 1;
-      private readonly Dictionary<String, UInt32> _wordIds;
+      private readonly Dictionary<string, Id<IRule>> _importedRules = 
+         new (StringComparer.CurrentCultureIgnoreCase);
 
-      private UInt32 _ruleCount = 1;
-      private readonly Dictionary<String, UInt32> _ruleIds;
-      private readonly Dictionary<String, UInt32> _importedRuleIds;
+      private readonly Dictionary<string, Id<string>> _allWords = new ();
 
-      private readonly Dictionary<String, UInt32> _activeRules;
+      private uint _nextRuleId = 1;
+      private uint _nextWordId = 1;
+
+      private readonly RuleFactory _ruleFactory = new ();
+
+      private readonly Dictionary<string, IRule> _activeRules = new ();
 
       protected Grammar(IGrammarService grammarService, INatSpeak natSpeak)
          : this(new RuleFactory(), grammarService, natSpeak) {
 
-         // This is a list of the rules themselves (by name)
-         _rules = new Dictionary<String, IRule>(StringComparer.CurrentCultureIgnoreCase);
-         _rulesById = new Dictionary<UInt32, IRule>();
-
-         // These are lookups to find the numeric ids for words/rule names
-         _wordIds = new Dictionary<String, UInt32>(StringComparer.CurrentCultureIgnoreCase);
-         _ruleIds = new Dictionary<String, UInt32>(StringComparer.CurrentCultureIgnoreCase);
-         _importedRuleIds = new Dictionary<String, UInt32>(StringComparer.CurrentCultureIgnoreCase);
-
-         _activeRules = new Dictionary<String, UInt32>();
       }
 
       protected Grammar(
@@ -71,95 +66,114 @@ namespace Renfrew.Grammar {
          Debug.Assert(natSpeak != null);
 
          _grammarService = grammarService;
-
          NatSpeak = natSpeak;
-         RuleFactory = ruleFactory;
       }
 
-      public void ActivateRule(String name) {
+      protected INatSpeak NatSpeak { get; }
+
+      internal IReadOnlyDictionary<string, Id<IRule>> AllRules => _allRules;
+      internal IReadOnlyDictionary<string, Id<IRule>> ExportedRules => _exportedRules;
+      internal IReadOnlyDictionary<string, Id<IRule>> ImportedRules => _importedRules;
+
+      // Expose internally for serialization
+      //internal IReadOnlyList<IRule> Rules =>
+      //   _rulesById.OrderBy(e => e.Key).Select(e => e.Value).ToList();
+
+      public IReadOnlyDictionary<string, Id<string>> Words => _allWords;
+
+      public void ActivateRule(string name) {
          _grammarService.ActivateRule(this, IntPtr.Zero, name);
 
-         if (_activeRules.ContainsKey(name) == false)
-            _activeRules.Add(name, _ruleIds[name]);
-      }
-
-      public void AddRule(String name, IRule rule) {
-         if (String.IsNullOrWhiteSpace(name) == true)
-            throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
-
-         if (rule == null)
-            throw new ArgumentNullException(nameof(rule));
-
-         EnforceRuleNaming(name);
-
-         if (_rules.ContainsKey(name) == true)
-            throw new ArgumentException($"Grammar already contains a rule called '{name}'.", nameof(name));
-
-         foreach (var word in GetWordsFromRule(rule)) {
-            if (_wordIds.ContainsKey(word) == false)
-               _wordIds.Add(word, _wordCount++);
-         }
-
-         var ruleId = _ruleCount++;
-
-         if (_ruleIds.ContainsKey(name) == false)
-            _ruleIds.Add(name, ruleId);
-
-         _rules.Add(name, rule);
-         _rulesById.Add(ruleId, rule);
-      }
-
-      public void AddRule(String name, Func<IRule, IRule> ruleFunc) =>
-         AddRule(name, ruleFunc?.Invoke(RuleFactory.Create()));
-
-      public void DeactivateRule(String name) {
-         _grammarService.DeactivateRule(this, name);
-
-         if (_activeRules.ContainsKey(name) == true)
-            _activeRules.Remove(name);
-      }
-
-      public abstract void Dispose();
-
-      private void EnforceRuleNaming(String ruleName) {
-         var validChars = @"[a-zA-Z0-9_]";
-
-         if (Regex.IsMatch(ruleName, $@"^{validChars}+$") == false) {
-            throw new ArgumentOutOfRangeException(nameof(ruleName),
-               $@"Rule name '{ruleName}' contains invalid character(s): '{
-                  Regex.Replace(ruleName, validChars, String.Empty)
-               }'"
-            );
+         if (!_activeRules.ContainsKey(name)) {
+            _activeRules.Add(name, _exportedRules[name].Inner);
          }
       }
 
-      public void ImportRule(string name) {
-         if (string.IsNullOrWhiteSpace(name) == true) {
+      public void AddRule(string name, IRule rule) {
+         if (string.IsNullOrWhiteSpace(name)) {
             throw new ArgumentException(
                "Value cannot be null or whitespace.",
                nameof(name)
             );
          }
 
-         var rule = RuleFactory.Create();
+         if (rule == null) {
+            throw new ArgumentNullException(nameof(rule));
+         }
 
          EnforceRuleNaming(name);
 
-         if (_rules.ContainsKey(name) == true) {
+         if (_allRules.ContainsKey(name)) {
             throw new ArgumentException(
                $"Grammar already contains a rule called '{name}'.",
                nameof(name)
             );
          }
 
-         var ruleId = _ruleCount++;
-
-         if (_importedRuleIds.ContainsKey(name) == false) {
-            _importedRuleIds.Add(name, ruleId);
+         foreach (var word in GetWordsFromRule(rule)) {
+            if (!_allWords.ContainsKey(word)) {
+               _allWords.Add(word, Id<string>.Wrap(word, _nextWordId++));
+            }
          }
 
-         _rules.Add(name, rule);
-         _rulesById.Add(ruleId, rule);
+         var id = Id<IRule>.Wrap(rule, _nextRuleId);
+
+         _allRules.Add(name, id);
+         _exportedRules.Add(name, id);
+
+         _nextRuleId++;
+      }
+
+      public void AddRule(string name, Func<IRule, IRule> ruleFunc) =>
+         AddRule(name, ruleFunc?.Invoke(_ruleFactory.Create(name)));
+
+      public void DeactivateRule(string name) {
+         _grammarService.DeactivateRule(this, name);
+
+         if (_activeRules.ContainsKey(name)) {
+            _activeRules.Remove(name);
+         }
+      }
+
+      public abstract void Dispose();
+
+      private void EnforceRuleNaming(string ruleName) {
+         var validChars = @"[a-zA-Z0-9_]";
+
+         if (!Regex.IsMatch(ruleName, $@"^{validChars}+$")) {
+            throw new ArgumentOutOfRangeException(nameof(ruleName),
+               $@"Rule name '{ruleName}' contains invalid character(s): '{
+                  Regex.Replace(ruleName, validChars, string.Empty)
+               }'"
+            );
+         }
+      }
+
+      public void ImportRule(string name) {
+         if (string.IsNullOrWhiteSpace(name)) {
+            throw new ArgumentException(
+               "Value cannot be null or whitespace.",
+               nameof(name)
+            );
+         }
+
+         var rule = _ruleFactory.Create(name);
+
+         EnforceRuleNaming(name);
+
+         if (_allRules.ContainsKey(name)) {
+            throw new ArgumentException(
+               $"Grammar already contains a rule called '{name}'.",
+               nameof(name)
+            );
+         }
+
+         var id = Id<IRule>.Wrap(rule, _nextRuleId);
+
+         _allRules.Add(name, id);
+         _importedRules.Add(name, id);
+
+         _nextRuleId++;
       }
 
       public abstract void Initialize();
@@ -176,58 +190,66 @@ namespace Renfrew.Grammar {
          _grammarService.SetExclusiveGrammar(this, false);
       }
 
-      protected void RemoveRule(String name) {
-         if (String.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
+      protected void RemoveRule(string name) {
+         if (string.IsNullOrWhiteSpace(name)) {
+            throw new ArgumentException(
+               "Value cannot be null or whitespace.",
+               nameof(name)
+            );
+         }
 
-         _rules.Remove(name);
-
-         _rulesById.Remove(_ruleIds[name]);
-         _ruleIds.Remove(name);
-
+         _exportedRules.Remove(name);
+         _importedRules.Remove(name);
+         _allRules.Remove(name);
       }
 
-      private IEnumerable<String> GetWordsFromRule(IRule rule) {
+      private IEnumerable<string> GetWordsFromRule(IRule rule) {
          return GetWordsFromRuleElements(rule.Elements.Elements);
       }
 
-      private IEnumerable<String> GetWordsFromRuleElements(IEnumerable<IElement> elements) {
+      private IEnumerable<string> GetWordsFromRuleElements(
+         IEnumerable<IElement> elements
+      ) {
          foreach (var element in elements) {
-
-            // Ignore action elements
-            if (element is IGrammarAction)
+            if (element is IGrammarAction) {
                continue;
+            }
 
             if (element is IWordElement) {
                yield return element.ToString();
             }
 
-            // Get the word from the element/sub-elements
-            if (element is IElementContainer) {
-               foreach (var word in GetWordsFromRuleElements((element as IElementContainer).Elements))
+            if (element is IElementContainer container) {
+               var words = GetWordsFromRuleElements(container.Elements);
+
+               foreach (var word in words) {
                   yield return word;
+               }
             }
+
+            throw new ArgumentException("Unexpected element type.");
          }
       }
 
-      public void InvokeRule(IEnumerable<String> spokenWords) {
-
-         if (spokenWords == null)
+      // TODO: Refactor this to use the rule number returned from NatSpeak.
+      public void InvokeRule(IEnumerable<string> spokenWords) {
+         if (spokenWords == null) {
             throw new ArgumentNullException(nameof(spokenWords));
+         }
 
-         // Make sure there is at least one rule activated
-         if (_activeRules.Any() == false)
+         // Make sure there is at least one rule activated.
+         if (!_activeRules.Any()) {
             throw new NoActiveRulesException();
+         }
 
-         bool result = false;
+         var result = false;
 
-         // Enumerate each rule in the grammar, trying to invoke each one.
+         // Iterate over each rule in the grammar, trying to invoke each one.
          // The one that "works" will be assumed to be the correct rule.
-         foreach (var ruleNumber in _activeRules.Values.OrderBy(e => e)) {
-            var rule = _rulesById[ruleNumber];
+         foreach (var rule in _activeRules.Values.OrderBy(e => e)) {
 
-            var spokenWordsStack = new Stack<String>(spokenWords.Reverse());
-            var callbacks = new List<KeyValuePair<IGrammarAction, IEnumerable<String>>>();
+            var spokenWordsStack = new Stack<string>(spokenWords.Reverse());
+            var callbacks = new List<KeyValuePair<IGrammarAction, IEnumerable<string>>>();
 
             // Check the word sequence to see if it's a match.
             result = ProcessSpokenWords(
@@ -237,9 +259,9 @@ namespace Renfrew.Grammar {
             );
 
             // Make sure there are no words left in the stack
-            if (spokenWordsStack.Any() == true) {
+            if (spokenWordsStack.Any()) {
                Debug.WriteLine(
-                  $"There are extra words in the callback: {String.Join(", ", spokenWords)}"
+                  $"There are extra words in the callback: {string.Join(", ", spokenWords)}"
                );
 
                // The result of ProcessSpokenWords above could be "true", but
@@ -250,41 +272,49 @@ namespace Renfrew.Grammar {
             }
 
             // Invoke callback(s)
-            if (result == true) {
-               foreach (var callback in callbacks)
-                  callback.Key.InvokeAction(callback.Value);
-               break;
+            if (!result) {
+               continue;
             }
+
+            foreach (var callback in callbacks) {
+               callback.Key.InvokeAction(callback.Value);
+            }
+
+            break;
          }
 
          // Did the spoken words match the rule's structure?
-         if (result == false)
+         if (!result) {
             throw new InvalidSequenceInCallbackException();
-
+         }
       }
 
       private bool ProcessSpokenWords(
-         IElementContainer elementContainer, Stack<String> spokenWordsStack,
-         List<KeyValuePair<IGrammarAction, IEnumerable<String>>> callbacks,
-         List<String> aw = null
-         ) {
+         IElementContainer elementContainer, Stack<string> spokenWordsStack,
+         List<KeyValuePair<IGrammarAction, IEnumerable<string>>> callbacks,
+         List<string> aw = null
+      ) {
 
-         if (callbacks == null)
+         if (callbacks == null) {
             throw new ArgumentNullException(nameof(callbacks));
+         }
 
-         var sc = StringComparison.CurrentCultureIgnoreCase;
-         var actionWords = new List<String>();
+         var actionWords = new List<string>();
 
          foreach (var element in elementContainer.Elements) {
 
-            if (element is IWordElement) {
-               var wordElement = element as IWordElement;
-
+            if (element is IWordElement wordElement) {
                var spokenWord = spokenWordsStack.FirstOrDefault();
 
                // If the words don't match, then this sub-rule doesn't match.
-               if (spokenWord == null || String.Equals(spokenWord, element.ToString(), sc) == false)
+               if (spokenWord == null || 
+                  !string.Equals(
+                     spokenWord, wordElement.ToString(),
+                     StringComparison.CurrentCultureIgnoreCase
+                  )
+               ) {
                   return false;
+               }
 
                // Add word to callback stack
                spokenWordsStack.Pop();
@@ -294,10 +324,9 @@ namespace Renfrew.Grammar {
             }
 
             // This rule refers to another rule, so we need to
-            // look it up and traverse it as well...a
-            if (element is IRuleElement) {
-               var ruleElement = element as IRuleElement;
-               var nestedRule = _rules[ruleElement.ToString()];
+            // look it up and traverse it as well...
+            if (element is IRuleElement ruleElement) {
+               var nestedRule = _allRules[ruleElement.ToString()].Inner;
 
                var nestedResult = ProcessSpokenWords(
                   nestedRule.Elements,
@@ -306,60 +335,64 @@ namespace Renfrew.Grammar {
                   actionWords
                );
 
-               if (nestedResult == false)
+               if (!nestedResult) {
                   return false;
+               }
 
                continue;
             }
 
             // Check if we need to descend into a sub-rule (Optional, Repeats, Alternatives...)
-            if (element is IElementContainer) {
-               var subRule = (element as IElementContainer);
+            if (element is IElementContainer subRule) {
                var subRuleResult = false;
 
                if (subRule is IOptionals) {
                   ProcessSpokenWords(subRule, spokenWordsStack, callbacks, actionWords);
                   subRuleResult = true;
-               } else if (subRule is IAlternatives) {
-                  var alternatives = (subRule as IAlternatives)?.Elements;
+               } else if (subRule is IAlternatives rule) {
+                  var alternatives = rule?.Elements;
 
                   foreach (var alternative in alternatives) {
 
                      // Encapsulate in a sequence
-                     var s = new Sequence();
-                     s.AddElement(alternative);
+                     var sequence = new Sequence();
+                     sequence.AddElement(alternative);
 
-                     subRuleResult = ProcessSpokenWords(s, spokenWordsStack, callbacks, actionWords);
+                     subRuleResult = ProcessSpokenWords(
+                        sequence,
+                        spokenWordsStack,
+                        callbacks,
+                        actionWords
+                     );
 
-                     if (subRuleResult == true)
+                     if (subRuleResult) {
                         break;
+                     }
                   }
 
-               } else if (subRule is IRepeats) {
-                  var repeatable = (subRule as IRepeats)?.Elements;
-
-                  while (ProcessSpokenWords(subRule, spokenWordsStack, callbacks, actionWords))
+               } else if (subRule is IRepeats repeats) {
+                  while (ProcessSpokenWords(repeats, spokenWordsStack, callbacks, actionWords)) {
                      subRuleResult = true;
-
+                  }
                } else { // Must be an ISequence
                   subRuleResult = ProcessSpokenWords(subRule, spokenWordsStack, callbacks, actionWords);
                }
 
-               if (subRuleResult == false)
+               if (!subRuleResult) {
                   return false;
+               }
 
                continue;
             }
 
-            if (element is IGrammarAction) {
-
+            if (element is IGrammarAction action) {
                callbacks.Add(
                   new KeyValuePair<IGrammarAction, IEnumerable<string>>(
-                     element as IGrammarAction, actionWords
+                     action, actionWords
                   )
                );
 
-               actionWords = new List<String>();
+               actionWords = new List<string>();
             }
          }
 
@@ -374,25 +407,10 @@ namespace Renfrew.Grammar {
       /// need to be explicitly re-activated when another is de-activated.
       /// </summary>
       /// <param name="name">The name of the rule</param>
-      public void ReactivateRule(String name) {
+      public void ReactivateRule(string name) {
          DeactivateRule(name);
          ActivateRule(name);
       }
-
-      protected INatSpeak NatSpeak { get; private set; }
-
-      protected RuleFactory RuleFactory { get; private set; }
-
-      public IReadOnlyDictionary<String, UInt32> RuleIds => _ruleIds;
-
-      public IReadOnlyDictionary<String, UInt32> ImportedRuleIds => _importedRuleIds;
-
-      // Expose internally for serialization
-      internal IReadOnlyList<IRule> Rules =>
-         _rulesById.OrderBy(e => e.Key).Select(e => e.Value).ToList();
-
-      public IReadOnlyDictionary<String, UInt32> WordIds => _wordIds;
-
    }
 
 }

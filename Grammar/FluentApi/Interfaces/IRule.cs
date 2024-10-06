@@ -23,6 +23,7 @@ namespace Renfrew.Grammar.FluentApi {
    using Elements;
 
    public interface IRule {
+      string Name { get; }
       IElementContainer Elements { get; }
 
       IActionableRule Say(String word);

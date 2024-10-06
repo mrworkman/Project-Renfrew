@@ -60,15 +60,18 @@ namespace Renfrew.Grammar {
 
          var definitionFactory = new RuleDefinitionFactory(new RuleDirectiveFactory());
 
+         // One "table" per rule...
          var tables = definitionFactory.CreateDefinitionTables(grammar);
 
          Int32 ruleNumber = 1;
          foreach (var table in tables) {
 
             // The SRCFGRULE struct is 8 bytes long
-            var length = table.Count() * (sizeof(Int32) * 2);
+            const int srCfgRuleSize = 8;
 
-            stream.Write(length + sizeof(Int32) * 2);
+            var length = table.Count() * srCfgRuleSize;
+
+            stream.Write(length + srCfgRuleSize);
             stream.Write(ruleNumber);
 
             foreach (var row in table) {
@@ -96,7 +99,7 @@ namespace Renfrew.Grammar {
          }
       }
 
-      private byte[] BuildWordsChunk(IReadOnlyDictionary<String, UInt32> words) {
+      private byte[] BuildWordsChunk(IReadOnlyDictionary<string, int> words) {
          var memoryStream = new MemoryStream();
          var stream = new BinaryWriter(memoryStream);
 
@@ -146,7 +149,9 @@ namespace Renfrew.Grammar {
          return numBytes;
       }
 
-      public byte[] Serialize(IGrammar grammar) {
+      public byte[] Serialize(IGrammar iGrammar) {
+         var grammar = (Grammar)iGrammar;
+
          var memoryStream = new MemoryStream();
          var stream = new BinaryWriter(memoryStream);
 
@@ -156,43 +161,42 @@ namespace Renfrew.Grammar {
          stream.Write(SRHDRTYPE_CFG);
          stream.Write(_useUnicode ? SRHDRFLAG_UNICODE : 0);
 
-         if (grammar.RuleIds.Any()) {
+         if (grammar.ExportedRules.Any()) {
             // Export Rules Chunk
             stream.Write(SRCKCFG_EXPORTRULES);
 
             // Rule/Word chunks have the same format
-            bytes = BuildWordsChunk(grammar.RuleIds);
+            bytes = BuildWordsChunk(grammar.ExportedRules);
             stream.Write(bytes.Length); // Chunk Size
             stream.Write(bytes);        // Chunk
          }
 
-         if (grammar.ImportedRuleIds.Any()) {
+         if (grammar.ImportedRules.Any()) {
             // Import Rules Chunk
             stream.Write(SRCKCFG_IMPORTRULES);
 
             // Rule/Word chunks have the same format
-            bytes = BuildWordsChunk(grammar.ImportedRuleIds);
+            bytes = BuildWordsChunk(grammar.ImportedRules);
             stream.Write(bytes.Length); // Chunk Size
             stream.Write(bytes);        // Chunk
          }
 
-         if (grammar.WordIds.Any()) {
+         if (grammar.Words.Any()) {
             // Words Chunk
             stream.Write(SRCKCFG_WORDS);
 
             // Rule/Word chunks have the same format
-            bytes = BuildWordsChunk(grammar.WordIds);
+            bytes = BuildWordsChunk(grammar.Words);
             stream.Write(bytes.Length); // Chunk Size
             stream.Write(bytes);        // Chunk
          }
 
-         if (grammar.RuleIds.Any()) {
-            // TODO: Add conditionally if any rules are defined.
+         if (grammar.AllRules.Any()) {
             // Rule Definition (Symbol) Chunk
             stream.Write(SRCKCFG_RULES);
 
             // This chunk has its own special format
-            bytes = BuildRulesChunk(grammar as Grammar);
+            bytes = BuildRulesChunk(grammar);
             stream.Write(bytes.Length); // Chunk Size
             stream.Write(bytes);        // Chunk
          }

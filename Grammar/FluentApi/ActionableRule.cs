@@ -24,10 +24,18 @@ namespace Renfrew.Grammar.FluentApi {
 
    internal class ActionableRule : IActionableRule {
 
-      Rule _rule;
+      private Rule _rule;
+      private string _name;
 
-      private ActionableRule(Rule baseRule) {
+      private ActionableRule(Rule baseRule, string name) {
          _rule = baseRule;
+         _name = name;
+      }
+
+      public string Name => _name;
+
+      public IElementContainer Elements {
+         get { return _rule.Elements; }
       }
 
       public IRule Do(Action action) {
@@ -41,10 +49,6 @@ namespace Renfrew.Grammar.FluentApi {
       }
 
       #region Defer to Base Rule
-      public IElementContainer Elements {
-         get { return _rule.Elements; }
-      }
-
       public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) =>
          _rule.OneOf(actions);
 

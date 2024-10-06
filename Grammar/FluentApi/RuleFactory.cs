@@ -20,17 +20,22 @@ using System.Linq.Expressions;
 
 namespace Renfrew.Grammar.FluentApi {
    public class RuleFactory {
-      public IRule Create() =>
-         new Rule();
+      public IRule Create(string name) => new Rule(name);
 
-      public IRule Create(Expression<Action<IRule>> expression) {
-         Rule rule = new Rule();
+      public IRule Create(
+         string name,
+         Expression<Action<IRule>> expression
+      ) {
+         Rule rule = new Rule(name);
          expression.Compile()(rule);
          return rule;
       }
 
-      public IActionableRule CreateActionableRule(Expression<Action<IRule>> expression) {
-         IActionableRule rule = (ActionableRule) new Rule();
+      public IActionableRule CreateActionableRule(
+         string name,
+         Expression<Action<IRule>> expression
+      ) {
+         IActionableRule rule = (ActionableRule) new Rule(name);
          expression.Compile()(rule);
          return rule;
       }

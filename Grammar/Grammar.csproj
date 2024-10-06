@@ -64,7 +64,6 @@
     <Compile Include="Elements\Element Type Interfaces\IGrammarAction.cs" />
     <Compile Include="Elements\Element Type Interfaces\IListElement.cs" />
     <Compile Include="Elements\Base Implementation\ElementContainerBase.cs" />
-    <Compile Include="Elements\Elements.cs" />
     <Compile Include="Elements\Base Implementation\GroupingBase.cs" />
     <Compile Include="Elements\Element Container Interfaces\IAlternatives.cs" />
     <Compile Include="Elements\Element Interfaces\IElement.cs" />
@@ -81,10 +80,16 @@
     <Compile Include="Grammar.cs" />
     <Compile Include="GrammarExportAttribute.cs" />
     <Compile Include="GrammarSerializer.cs" />
+    <Compile Include="Id.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FluentApi\Rule.cs" />
     <Compile Include="FluentApi\RuleFactory.cs" />
     <Compile Include="Elements\WordElement.cs" />
+    <Compile Include="GrammarRuleConverter.cs" />
+    <Compile Include="Dragon\SymbolOperation.cs" />
+    <Compile Include="Dragon\RuleInfo.cs" />
+    <Compile Include="Dragon\RuleSymbol.cs" />
+    <Compile Include="Dragon\SymbolType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NatSpeakInterop\NatspeakInterop.vcxproj">

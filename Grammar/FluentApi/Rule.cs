@@ -24,6 +24,8 @@ namespace Renfrew.Grammar.FluentApi {
    using Elements;
 
    internal class Rule : IRule {
+      private string _name;
+
       private IElementContainer _container;
       private Stack<IElementContainer> _containerStack;
 
@@ -31,7 +33,9 @@ namespace Renfrew.Grammar.FluentApi {
       private UInt32 _countInChain;
       private Stack<dynamic> _chainStack;
 
-      internal Rule() {
+      internal Rule(string name) {
+         _name = name;
+
          _container = new Sequence();
          _containerStack = new Stack<IElementContainer>();
 
@@ -39,6 +43,8 @@ namespace Renfrew.Grammar.FluentApi {
          _countInChain = 0;
          _chainStack = new Stack<dynamic>();
       }
+
+      public string Name => _name;
 
       public IElementContainer Elements {
          get { return _container; }

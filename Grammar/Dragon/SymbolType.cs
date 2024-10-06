@@ -1,5 +1,5 @@
-// Project Renfrew
-// Copyright(C) 2017 Stephen Workman (workman.stephen@gmail.com)
+﻿// Project Renfrew
+// Copyright(C) 2024 Stephen Workman (workman.stephen@gmail.com)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,10 +15,13 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-#pragma once
-
-namespace Renfrew::NatSpeakInterop {
-   public interface class IGrammar {
-      void InvokeRule(IEnumerable<String^> ^words);
-   };
+namespace Renfrew.Grammar.Dragon {
+   public enum SymbolType {
+      StartOperation = 1,
+      EndOperation   = 2,
+      Word           = 3,
+      Rule           = 4,
+      Wildcard       = 5,
+      List           = 6,
+   }
 }
