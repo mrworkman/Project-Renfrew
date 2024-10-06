@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using DiffMatchPatch;
 
 using GrammarTests.Util;
 
@@ -15,7 +7,6 @@ using Moq;
 using NUnit.Framework;
 
 using Renfrew.Grammar;
-using Renfrew.Grammar.FluentApi;
 using Renfrew.NatSpeakInterop;
 
 namespace GrammarTests.SerializerTests {

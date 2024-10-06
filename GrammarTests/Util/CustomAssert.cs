@@ -127,36 +127,36 @@ namespace GrammarTests.Util {
             clusters.Add((string)enumerator.Current);
          }
 
-         var mainBuilder = new StringBuilder();
-         mainBuilder.AppendLine();
-         mainBuilder.AppendLine($"{label}:");
+         var builder = new StringBuilder();
+         builder.AppendLine();
+         builder.AppendLine($"{label}:");
 
          var marker = operation == Operation.Delete ?
             CombiningLongStrokeOverlay : CombiningDiaeresis;
 
          const int bytesPerLine = 16;
 
-         mainBuilder.AppendLine(
+         builder.AppendLine(
             "         00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F"
          );
 
          for (int i = 0; i < clusters.Count; i += (bytesPerLine * 2)) {
             var clusterLine = clusters.Skip(i).Take(bytesPerLine * 2).ToList();
 
-            mainBuilder.Append($"{i / 2:x8} ");
+            builder.Append($"{i / 2:x8} ");
 
             for (int j = 0; j < clusterLine.Count; j += 2) {
-               mainBuilder.Append($"{string.Join("", clusterLine.Skip(j).Take(2))} ");
+               builder.Append($"{string.Join("", clusterLine.Skip(j).Take(2))} ");
             }
 
             if (clusterLine.Count / 2 != bytesPerLine) {
                var padding = bytesPerLine - clusterLine.Count / 2;
                for (int j = 0; j < padding; j++) {
-                  mainBuilder.Append("   ");
+                  builder.Append("   ");
                }
             }
 
-            mainBuilder.Append("  ");
+            builder.Append("  ");
 
             for (
                int j = i / 2, k = 0;
@@ -165,7 +165,6 @@ namespace GrammarTests.Util {
             ) {
                var c = sourceBytes[j];
                var addMarker = differenceIndeces.Contains(j);
-               var builder = new StringBuilder();
 
                if (c is > 31 and < 127) {
                   builder.Append((char)c);
@@ -176,14 +175,12 @@ namespace GrammarTests.Util {
                if (addMarker) {
                   builder.Append(marker);
                }
-
-               mainBuilder.Append(builder.ToString());
             }
 
-            mainBuilder.AppendLine();
+            builder.AppendLine();
          }
 
-         return mainBuilder.ToString();
+         return builder.ToString();
       }
 
       static string ToHexString(byte[] bytes) {

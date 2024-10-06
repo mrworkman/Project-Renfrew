@@ -137,7 +137,6 @@ namespace Renfrew.Grammar {
             numBytes = Encoding.ASCII.GetByteCount(s) + 1;
          }
 
-
          var diff = numBytes % sizeof(Int32);
 
          // Pad to 4-byte boundary
@@ -155,7 +154,7 @@ namespace Renfrew.Grammar {
 
          // Start off with the necessary header and flags
          stream.Write(SRHDRTYPE_CFG);
-         stream.Write(SRHDRFLAG_UNICODE);
+         stream.Write(_useUnicode ? SRHDRFLAG_UNICODE : 0);
 
          if (grammar.RuleIds.Any()) {
             // Export Rules Chunk
