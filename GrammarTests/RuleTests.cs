@@ -36,7 +36,7 @@ namespace GrammarTests {
 
       [Test]
       public void OneWordGrammarNestedInSequenceGrouping() {
-         var rule = _factory.Create();
+         var rule = _factory.Create("foo");
 
          rule.Say("test");
 

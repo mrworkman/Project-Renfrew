@@ -84,6 +84,6 @@ namespace Renfrew.Grammar.FluentApi {
       #endregion
 
       public static explicit operator ActionableRule(Rule rule) =>
-         new ActionableRule(rule);
+         new ActionableRule(rule, rule.Name);
    }
 }

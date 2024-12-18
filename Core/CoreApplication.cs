@@ -161,7 +161,7 @@ namespace Renfrew.Core {
             }
 
             _logger.Info($"Grammar, '{a.Name}', initialized.");
-            _logger.Debug($"Grammar's words: {String.Join(", ", grammar.WordIds.Keys)}");
+            _logger.Debug($"Grammar's words: {String.Join(", ", grammar.Words.Keys)}");
 
          }
       }

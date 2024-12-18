@@ -15,11 +15,11 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-namespace Renfrew.Grammar.Dragon {
-   public enum SymbolOperation {
-      Sequence    = 1,
-      Alternative = 2,
-      Repeat      = 3,
-      Optional    = 4,
+using System.Collections.Generic;
+
+namespace Renfrew.Grammar.Dragon.SpeechRecognition {
+   public class RuleInfo {
+      public uint Id { get; set; }
+      public List<Symbol> Symbols { get; set; }
    }
 }

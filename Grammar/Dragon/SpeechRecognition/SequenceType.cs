@@ -15,10 +15,11 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-namespace Renfrew.Grammar.Dragon {
-   public class RuleSymbol {
-      public SymbolType Type { get; set; }
-      public ushort Probability { get; } = 0;
-      public uint Value { get; set; }
+namespace Renfrew.Grammar.Dragon.SpeechRecognition {
+   public enum SequenceType {
+      Sequence    = 1,
+      Alternative = 2,
+      Repeat      = 3,
+      Optional    = 4,
    }
 }

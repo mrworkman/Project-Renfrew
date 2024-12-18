@@ -16,24 +16,24 @@
 //
 
 namespace Renfrew.Grammar {
-   public class Id<TId, TInner> {
-      protected Id(TId id, TInner inner) {
-         Discriminant = id;
-         Inner = inner;
+   public class Identity<TId, TSubject> {
+      protected Identity(TId id, TSubject subject) {
+         Id = id;
+         Subject = subject;
       }
 
-      public static Id<TId, TInner> Wrap(TInner obj, TId id) => new(id, obj);
+      public static Identity<TId, TSubject> Wrap(TSubject obj, TId id) => new(id, obj);
 
-      public TId Discriminant { get; }
+      public TId Id { get; }
 
-      public TInner Inner { get; }
+      public TSubject Subject { get; }
    }
 
-   public class Id<TInner> : Id<uint, TInner> {
-      private Id(uint id, TInner inner)
-         : base(id, inner) {
+   public class Identity<TSubject> : Identity<uint, TSubject> {
+      private Identity(uint id, TSubject subject)
+         : base(id, subject) {
       }
 
-      public new static Id<TInner> Wrap(TInner obj, uint id) => new(id, obj);
+      public new static Identity<TSubject> Wrap(TSubject obj, uint id) => new(id, obj);
    }
 }

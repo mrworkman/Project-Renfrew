@@ -15,10 +15,12 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using Renfrew.Grammar.Dragon;
+using Renfrew.Grammar.Dragon.SpeechRecognition;
 using Renfrew.Grammar.Elements;
 using Renfrew.Grammar.Exceptions;
 
@@ -37,26 +39,26 @@ namespace Renfrew.Grammar {
       public List<RuleInfo> Convert() {
          return _grammar.AllRules.Values.Select(rule => 
             new RuleInfo {
-               Id = rule.Discriminant,
-               Symbols = ConvertRule(rule.Inner.Elements),
+               Id = rule.Id,
+               Symbols = ConvertRule(rule.Subject.Elements),
             }
          ).ToList();
       }
 
-      public List<RuleSymbol> ConvertRule(IElementContainer ruleContainer) {
-         var symbols = new List<RuleSymbol>();
+      public List<Symbol> ConvertRule(IElementContainer ruleContainer) {
+         var symbols = new List<Symbol>();
 
          foreach (var ruleElement in ruleContainer.Elements) {
             if (ruleElement is IElementContainer container) {
                if (container.HasElements) {
-                  CreateOperationSymbols(container);
+                  //CreateOperationSymbols(container);
                } else {
                   symbols.AddRange(ConvertRule(container));
                }
                continue;
             }
 
-            if (CreateRuleSymbol(ruleElement) is RuleSymbol symbol) {
+            if (CreateRuleSymbol(ruleElement) is Symbol symbol) {
                symbols.Add(symbol);
             }
          }
@@ -64,37 +66,55 @@ namespace Renfrew.Grammar {
          return symbols;
       }
 
-      public List<RuleSymbol> CreateOperationSymbols(IElementContainer container) {
-         var symbols = new List<RuleSymbol>();
+      //public List<Symbol> CreateOperationSymbols(IElementContainer container) {
+      //   var ruleSymbols = ConvertRule(container);
 
-         symbols.Add(new RuleSymbol {
-            Type = SymbolType.StartOperation,
-            Value = (uint)SymbolOperation.Sequence,
-         });
-         symbols.AddRange(ConvertRule(container));
-         symbols.Add(new RuleSymbol {
-            Type = SymbolType.EndOperation,
-            Value = (uint)SymbolOperation.Sequence,
-         });
+      //   if (container.Elements.Count() > 1) {
+      //      var operation = new List<Symbol>();
+      //      var sequenceType = (uint) GetSequenceType(container);
 
-         return symbols;
-      }
+      //      operation.Add(new Symbol {
+      //         Type = SymbolType.StartOperation,
+      //         Value = sequenceType,
+      //      });
+      //      operation.AddRange(ruleSymbols);
+      //      operation.Add(new Symbol {
+      //         Type = SymbolType.EndOperation,
+      //         Value = sequenceType,
+      //      });
 
-      public RuleSymbol CreateRuleSymbol(IElement ruleElement) =>
+      //      return operation;
+      //   }
+
+      //   return ruleSymbols;
+      //}
+
+      public Symbol CreateRuleSymbol(IElement ruleElement) =>
          ruleElement switch {
             IGrammarAction => null,
-            IRuleElement element => new RuleSymbol {
+            IRuleElement element => new Symbol {
                Type = SymbolType.Rule,
-               Value = _grammar.Words[element.ToString()].Discriminant,
+               Value = _grammar.Words[element.ToString()].Id,
             },
-            IWordElement element => new RuleSymbol {
+            IWordElement element => new Symbol {
                Type = SymbolType.Word,
-               Value = _grammar.Words[element.ToString()].Discriminant,
+               Value = _grammar.Words[element.ToString()].Id,
             },
             _ => throw new InvalidGrammarElementException(
                $"Unrecognized grammar element type '{ruleElement.GetType().Name}'"
             )
          };
 
+      // I don't really like having to do this. Should def refactor!
+      public SequenceType GetSequenceType(IElementContainer container) =>
+         container switch {
+            IAlternatives => SequenceType.Alternative,
+            IOptionals => SequenceType.Optional,
+            IRepeats => SequenceType.Repeat,
+            ISequence => SequenceType.Sequence,
+            _ => throw new ArgumentException(
+               $"Unexpected type '{container.GetType()}'", nameof(container)
+            )
+         };
    }
 }

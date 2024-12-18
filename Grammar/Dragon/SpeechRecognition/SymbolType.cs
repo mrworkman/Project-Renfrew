@@ -15,7 +15,7 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-namespace Renfrew.Grammar.Dragon {
+namespace Renfrew.Grammar.Dragon.SpeechRecognition {
    public enum SymbolType {
       StartOperation = 1,
       EndOperation   = 2,

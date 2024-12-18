@@ -33,16 +33,16 @@ namespace Renfrew.Grammar {
    public abstract class Grammar : IGrammar, IDisposable {
       private readonly IGrammarService _grammarService;
 
-      private readonly Dictionary<string, Id<IRule>> _allRules = 
+      private readonly Dictionary<string, Identity<IRule>> _allRules = 
          new (StringComparer.CurrentCultureIgnoreCase);
 
-      private readonly Dictionary<string, Id<IRule>> _exportedRules = 
+      private readonly Dictionary<string, Identity<IRule>> _exportedRules = 
          new (StringComparer.CurrentCultureIgnoreCase);
 
-      private readonly Dictionary<string, Id<IRule>> _importedRules = 
+      private readonly Dictionary<string, Identity<IRule>> _importedRules = 
          new (StringComparer.CurrentCultureIgnoreCase);
 
-      private readonly Dictionary<string, Id<string>> _allWords = new ();
+      private readonly Dictionary<string, Identity<string>> _allWords = new ();
 
       private uint _nextRuleId = 1;
       private uint _nextWordId = 1;
@@ -71,21 +71,21 @@ namespace Renfrew.Grammar {
 
       protected INatSpeak NatSpeak { get; }
 
-      internal IReadOnlyDictionary<string, Id<IRule>> AllRules => _allRules;
-      internal IReadOnlyDictionary<string, Id<IRule>> ExportedRules => _exportedRules;
-      internal IReadOnlyDictionary<string, Id<IRule>> ImportedRules => _importedRules;
+      internal IReadOnlyDictionary<string, Identity<IRule>> AllRules => _allRules;
+      internal IReadOnlyDictionary<string, Identity<IRule>> ExportedRules => _exportedRules;
+      internal IReadOnlyDictionary<string, Identity<IRule>> ImportedRules => _importedRules;
 
       // Expose internally for serialization
       //internal IReadOnlyList<IRule> Rules =>
       //   _rulesById.OrderBy(e => e.Key).Select(e => e.Value).ToList();
 
-      public IReadOnlyDictionary<string, Id<string>> Words => _allWords;
+      public IReadOnlyDictionary<string, Identity<string>> Words => _allWords;
 
       public void ActivateRule(string name) {
          _grammarService.ActivateRule(this, IntPtr.Zero, name);
 
          if (!_activeRules.ContainsKey(name)) {
-            _activeRules.Add(name, _exportedRules[name].Inner);
+            _activeRules.Add(name, _exportedRules[name].Subject);
          }
       }
 
@@ -112,11 +112,11 @@ namespace Renfrew.Grammar {
 
          foreach (var word in GetWordsFromRule(rule)) {
             if (!_allWords.ContainsKey(word)) {
-               _allWords.Add(word, Id<string>.Wrap(word, _nextWordId++));
+               _allWords.Add(word, Identity<string>.Wrap(word, _nextWordId++));
             }
          }
 
-         var id = Id<IRule>.Wrap(rule, _nextRuleId);
+         var id = Identity<IRule>.Wrap(rule, _nextRuleId);
 
          _allRules.Add(name, id);
          _exportedRules.Add(name, id);
@@ -168,7 +168,7 @@ namespace Renfrew.Grammar {
             );
          }
 
-         var id = Id<IRule>.Wrap(rule, _nextRuleId);
+         var id = Identity<IRule>.Wrap(rule, _nextRuleId);
 
          _allRules.Add(name, id);
          _importedRules.Add(name, id);
@@ -211,23 +211,23 @@ namespace Renfrew.Grammar {
          IEnumerable<IElement> elements
       ) {
          foreach (var element in elements) {
-            if (element is IGrammarAction) {
-               continue;
+            switch (element) {
+               case IGrammarAction: 
+               case IRuleElement:
+                  continue;
+               case IWordElement: 
+                  yield return element.ToString();
+                  break;
+               case IElementContainer container:
+                  var words = GetWordsFromRuleElements(container.Elements);
+
+                  foreach (var word in words) {
+                     yield return word;
+                  }
+                  break;
+               default:
+                  throw new ArgumentException($"Unexpected element type '{element.GetType()}'.");
             }
-
-            if (element is IWordElement) {
-               yield return element.ToString();
-            }
-
-            if (element is IElementContainer container) {
-               var words = GetWordsFromRuleElements(container.Elements);
-
-               foreach (var word in words) {
-                  yield return word;
-               }
-            }
-
-            throw new ArgumentException("Unexpected element type.");
          }
       }
 
@@ -326,7 +326,7 @@ namespace Renfrew.Grammar {
             // This rule refers to another rule, so we need to
             // look it up and traverse it as well...
             if (element is IRuleElement ruleElement) {
-               var nestedRule = _allRules[ruleElement.ToString()].Inner;
+               var nestedRule = _allRules[ruleElement.ToString()].Subject;
 
                var nestedResult = ProcessSpokenWords(
                   nestedRule.Elements,
