@@ -1,5 +1,5 @@
 ﻿// Project Renfrew
-// Copyright(C) 2016  Stephen Workman (workman.stephen@gmail.com)
+// Copyright(C) 2024 Stephen Workman (workman.stephen@gmail.com)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,12 +15,11 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-using System;
-using System.Collections.Generic;
-
-namespace Renfrew.Grammar.FluentApi.Interfaces {
-   public interface IActionableRule : IRule {
-      IRule Do(Action action);
-      IRule Do(Action<IEnumerable<string>> action);
+namespace Renfrew.Grammar.Dragon.SpeechRecognition {
+   public enum OperationType {
+      Sequence    = 1,
+      Alternative = 2,
+      Repeat      = 3,
+      Optional    = 4,
    }
 }

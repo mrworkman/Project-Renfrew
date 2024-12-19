@@ -19,28 +19,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Renfrew.Grammar.FluentApi {
-   using Elements;
-
+namespace Renfrew.Grammar.FluentApi.Interfaces {
    public interface IRule {
       string Name { get; }
-      IElementContainer Elements { get; }
+      IExpression Expression { get; }
 
-      IActionableRule Say(String word);
-      IActionableRule SayOneOf(IEnumerable<String> words);
-      IActionableRule SayOneOf(params String[] words);
+      IActionableRule Say(string word);
+      IActionableRule SayOneOf(IEnumerable<string> words);
+      IActionableRule SayOneOf(params string[] words);
 
       IActionableRule OneOf(params Expression<Action<IRule>>[] actions);
 
       IActionableRule Optionally(Expression<Action<IRule>> action);
       IActionableRule OptionallyOneOf(params Expression<Action<IRule>>[] actions);
 
-      IActionableRule OptionallySay(String word);
+      IActionableRule OptionallySay(string word);
 
       IActionableRule Repeat(Expression<Action<IRule>> action);
       IActionableRule RepeatOneOf(params Expression<Action<IRule>>[] actions);
 
-      IActionableRule OptionallyWithRule(String ruleName);
-      IActionableRule WithRule(String ruleName);
+      IActionableRule OptionallyWithRule(string ruleName);
+      IActionableRule WithRule(string ruleName);
    }
 }

@@ -15,33 +15,33 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-using System.Linq;
+using System;
+using System.Collections.Generic;
 
-using NUnit.Framework;
-using NUnit.Framework.Internal;
+namespace Renfrew.Grammar {
+   public class GrammarAction {
+      private Action _action;
+      private Action<IEnumerable<String>> _actionWithWords;
 
-using Renfrew.Grammar.Exceptions;
-using Renfrew.Grammar.FluentApi;
-
-namespace GrammarTests {
-   [TestFixture()]
-   public class RuleTests {
-      private RuleFactory _factory;
-
-      [SetUp]
-      public void Initialize() {
-         _factory = new RuleFactory();
+      public GrammarAction(Action action) {
+         _action = action;
       }
 
-      [Test]
-      public void OneWordGrammarNestedInSequenceGrouping() {
-         var rule = _factory.Create("foo");
-
-         rule.Say("test");
-
-         Assert.That(rule.Elements, Is.InstanceOf<ISequence>());
-         Assert.That(rule.Elements.Elements.First(), Is.InstanceOf<IWordElement>());
+      public GrammarAction(Action<IEnumerable<String>> action) {
+         _actionWithWords = action;
       }
 
+      public void InvokeAction(IEnumerable<String> words) {
+         // Call the parameterless form?
+         if (_action != null) {
+            _action();
+            return;
+         }
+
+         // Call the parametered form
+         _actionWithWords(words);
+      }
+
+      public override String ToString() => "Grammar Action";
    }
 }

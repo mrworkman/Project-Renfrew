@@ -18,6 +18,8 @@
 using System;
 using System.Linq.Expressions;
 
+using Renfrew.Grammar.FluentApi.Interfaces;
+
 namespace Renfrew.Grammar.FluentApi {
    public class RuleFactory {
       public IRule Create(string name) => new Rule(name);

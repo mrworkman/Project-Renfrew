@@ -89,65 +89,6 @@ namespace Renfrew.Grammar {
          SerializeNamesChunk(ChunkType.Words, grammar.Words, stream);
       }
 
-      private void SerializeRulesChunk(Grammar grammar, BinaryWriter stream) {
-         if (!grammar.AllRules.Any()) {
-            return;
-         }
-
-         var bytes = SerializeRulesChunk(grammar);
-
-         // Write SRCHUNK struct.
-         stream.Write((uint) ChunkType.Rules); // dwChunkId
-         stream.Write(bytes.Length);           // dwChunkSize
-         stream.Write(bytes);                  // avInfo
-      }
-
-      private byte[] SerializeRulesChunk(Grammar grammar) {
-         var memoryStream = new MemoryStream();
-         var stream = new BinaryWriter(memoryStream);
-
-         // TODO: Refactor
-         //var definitionFactory = new RuleDefinitionFactory(new RuleDirectiveFactory());
-
-         //// One "table" per rule...
-         //var tables = definitionFactory.CreateDefinitionTables(grammar);
-
-         //Int32 ruleNumber = 1;
-         //foreach (var table in tables) {
-
-         //   // The SRCFGRULE struct is 8 bytes long
-         //   const int srCfgRuleSize = 8;
-
-         //   var length = table.Count() * srCfgRuleSize;
-
-         //   stream.Write(length + srCfgRuleSize);
-         //   stream.Write(ruleNumber);
-
-         //   foreach (var row in table) {
-         //      _logger.Trace(row);
-         //      Console.WriteLine(row);
-
-         //      stream.Write((UInt16) row.DirectiveType);
-         //      stream.Write((UInt16) 0); // Assume probability of Zero
-
-         //      if (row.ElementGrouping == ElementGroupings.NOT_APPLICABLE) {
-         //         stream.Write((UInt32) row.Id);
-         //      } else {
-         //         stream.Write((UInt32) row.ElementGrouping);
-         //      }
-         //   }
-
-         //   ruleNumber++;
-         //}
-
-         try {
-            return memoryStream.ToArray();
-         } finally {
-            stream.Dispose();
-            memoryStream.Dispose();
-         }
-      }
-
       private void SerializeNamesChunk<T>(
          ChunkType chunkType,
          IReadOnlyDictionary<string, Identity<T>> identifiedNames,
@@ -193,11 +134,70 @@ namespace Renfrew.Grammar {
             stream.Write(id);         // dwRuleNum
             stream.Write(nameBytes);  // szString
 
-            // Make sure that the word/rule name is padded to a 4-byte boundary
+            // Make sure that the word/rule name is padded to a 4-byte boundary.
             stream.Write(new byte[length - nameBytes.Length]);
          }
 
          stream.Flush();
+
+         try {
+            return memoryStream.ToArray();
+         } finally {
+            stream.Dispose();
+            memoryStream.Dispose();
+         }
+      }
+
+      private void SerializeRulesChunk(Grammar grammar, BinaryWriter stream) {
+         if (!grammar.AllRules.Any()) {
+            return;
+         }
+
+         var bytes = SerializeRulesChunk(grammar);
+
+         // Write SRCHUNK struct.
+         stream.Write((uint)ChunkType.Rules); // dwChunkId
+         stream.Write(bytes.Length);          // dwChunkSize
+         stream.Write(bytes);                 // avInfo
+      }
+
+      private byte[] SerializeRulesChunk(Grammar grammar) {
+         var memoryStream = new MemoryStream();
+         var stream = new BinaryWriter(memoryStream);
+
+         // TODO: Refactor
+         //var definitionFactory = new RuleDefinitionFactory(new RuleDirectiveFactory());
+
+         //// One "table" per rule...
+         //var tables = definitionFactory.CreateDefinitionTables(grammar);
+
+         //Int32 ruleNumber = 1;
+         //foreach (var table in tables) {
+
+         //   // The SRCFGRULE struct is 8 bytes long
+         //   const int srCfgRuleSize = 8;
+
+         //   var length = table.Count() * srCfgRuleSize;
+
+         //   stream.Write(length + srCfgRuleSize);
+         //   stream.Write(ruleNumber);
+
+         //   foreach (var row in table) {
+         //      _logger.Trace(row);
+         //      Console.WriteLine(row);
+
+         //      stream.Write((UInt16) row.DirectiveType);
+         //      stream.Write((UInt16) 0); // Assume probability of Zero
+
+         //      if (row.ElementGrouping == ElementGroupings.NOT_APPLICABLE) {
+         //         stream.Write((UInt32) row.Id);
+         //      } else {
+         //         stream.Write((UInt32) row.ElementGrouping);
+         //      }
+         //   }
+
+         //   ruleNumber++;
+         //}
 
          try {
             return memoryStream.ToArray();

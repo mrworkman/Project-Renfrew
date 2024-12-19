@@ -19,33 +19,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Renfrew.Grammar.FluentApi {
-   using Elements;
+using Renfrew.Grammar.FluentApi.Interfaces;
 
+namespace Renfrew.Grammar.FluentApi {
    internal class ActionableRule : IActionableRule {
 
       private Rule _rule;
-      private string _name;
 
       private ActionableRule(Rule baseRule, string name) {
          _rule = baseRule;
-         _name = name;
+         Name = name;
       }
 
-      public string Name => _name;
+      public string Name { get; }
 
-      public IElementContainer Elements {
-         get { return _rule.Elements; }
-      }
+      public IExpression Expression => _rule.Expression;
 
       public IRule Do(Action action) {
-         _rule.AddElementToContainer( new GrammarAction(action) );
-         return _rule;
+         //_rule.AddElementToContainer( new GrammarAction(action) );
+         //return _rule;
+         throw new NotImplementedException();
       }
 
       public IRule Do(Action<IEnumerable<String>> action) {
-         _rule.AddElementToContainer( new GrammarAction(action) );
-         return _rule;
+         //_rule.AddElementToContainer( new GrammarAction(action) );
+         //return _rule;
+         throw new NotImplementedException();
       }
 
       #region Defer to Base Rule
