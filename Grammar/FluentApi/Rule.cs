@@ -26,20 +26,8 @@ namespace Renfrew.Grammar.FluentApi {
    internal class Rule : IRule {
       private CompositeExpression _expression;
 
-      //private Stack<IElementContainer> _containerStack;
-
-      //private ISequence _currentSequence;
-      //private UInt32 _countInChain;
-      //private Stack<dynamic> _chainStack;
-
       internal Rule(string name) {
-         Name = name;
-
-         //_containerStack = new Stack<IElementContainer>();
-
-         //_currentSequence = _container as ISequence;
-         //_countInChain = 0;
-         //_chainStack = new Stack<dynamic>();
+         Name = name ?? throw new ArgumentNullException(nameof(name));
       }
 
       public string Name { get; }
@@ -47,72 +35,72 @@ namespace Renfrew.Grammar.FluentApi {
       public IExpression Expression => _expression;
 
       public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
-         //OneOf(null, actions);
-         //return (ActionableRule) this;
-         throw new NotImplementedException();
+         var nestedRule = new Rule("-") {
+            _expression = CompositeExpression.Create(
+               ExpressionModifier.Alternatives
+            )
+         };
+
+         foreach (var action in actions) {
+            action.Compile()(nestedRule);
+         }
+
+         _expression.AddExpression(nestedRule._expression);
+
+         return (ActionableRule) this;
       }
 
-      //private void OneOf(IElementContainer subContainer, params Expression<Action<IRule>>[] actions) {
-      //   IAlternatives alternatives = new Alternatives();
-
-      //   SaveCurrentContainer();
-      //   SetContainer(subContainer ?? alternatives);
-
-      //   // If there is more than one action, then
-      //   // we need to "alternate" between them
-      //   if (actions.Length > 1 && subContainer != null) {
-      //      subContainer.AddElement(alternatives);
-      //      SetContainer(alternatives);
-      //   }
-
-      //   SaveCurrentSequence();
-
-      //   foreach (var action in actions) {
-      //      ResetSequence();
-      //      action.Compile()(this);
-      //   }
-
-      //   RestoreSequence();
-
-      //   RestoreContainer();
-      //   AddElementToContainer(subContainer ?? alternatives);
-      //}
-
       public IActionableRule Optionally(Expression<Action<IRule>> action) {
-         return OptionallyOneOf(action);
+         var nestedRule = new Rule("-") {
+            _expression = CompositeExpression.Create(
+               ExpressionModifier.Optionals
+            )
+         };
+
+         action.Compile()(nestedRule);
+
+         _expression.AddExpression(nestedRule._expression);
+
+         return (ActionableRule) this;
       }
 
       public IActionableRule OptionallyOneOf(
          params Expression<Action<IRule>>[] actions
       ) {
-         //OneOf(new Optionals(), actions);
-         //return (ActionableRule) this;
-         throw new NotImplementedException();
+         return Optionally(r => r.OneOf(actions));
       }
 
-      public IActionableRule OptionallySay(String word) {
+      public IActionableRule OptionallySay(string word) {
          return Optionally(r => r.Say(word));
       }
 
-      public IActionableRule OptionallyWithRule(String ruleName) {
+      public IActionableRule OptionallyWithRule(string ruleName) {
          return Optionally(r => r.WithRule(ruleName));
       }
 
       // Repeats: A+
       public IActionableRule Repeat(Expression<Action<IRule>> action) {
-         return RepeatOneOf(action);
+         var nestedRule = new Rule("-") {
+            _expression = CompositeExpression.Create(
+               ExpressionModifier.Repeated
+            )
+         };
+
+         action.Compile()(nestedRule);
+
+         _expression.AddExpression(nestedRule._expression);
+
+         return (ActionableRule) this;
       }
 
       // Repeats + Alternatives: ( A | B | C )+
-      public IActionableRule RepeatOneOf(params Expression<Action<IRule>>[] actions) {
-         //OneOf(new Repeats(), actions);
-         //return (ActionableRule) this;
-         throw new NotImplementedException();
+      public IActionableRule RepeatOneOf(
+         params Expression<Action<IRule>>[] actions
+      ) {
+         return Repeat(r => r.OneOf(actions));
       }
 
       public IActionableRule Say(string word) {
-         //AddElementToContainer(new Word(word));
-
          _expression ??= CompositeExpression.Create(
             ExpressionModifier.Sequence
          );
@@ -128,26 +116,25 @@ namespace Renfrew.Grammar.FluentApi {
       }
 
       public IActionableRule SayOneOf(IEnumerable<string> words) {
-         //var alternatives = new Alternatives();
-
-         //alternatives.AddElements(words.Select(w => new Word(w)));
-
-         //AddElementToContainer(alternatives);
-
-         _expression ??= CompositeExpression.Create(
+         var alternatives = CompositeExpression.Create(
             ExpressionModifier.Alternatives
          );
 
          // FIXME: Needs an ID generator.
-         _expression.AddExpressions(
+         alternatives.AddExpressions(
             words.Select(word => Word.Create(0, word))
          );
+
+         if (_expression == null) {
+            _expression = alternatives;
+         } else {
+            _expression.AddExpression(alternatives);
+         }
 
          return (ActionableRule)this;
       }
 
       public IActionableRule WithRule(string ruleName) {
-         //AddElementToContainer(new RuleName(ruleName));
          _expression ??= CompositeExpression.Create(
             ExpressionModifier.Sequence
          );
@@ -157,74 +144,6 @@ namespace Renfrew.Grammar.FluentApi {
 
          return (ActionableRule)this;
       }
-
-      //private void ResetSequence() {
-      //   _countInChain = 0;
-      //   _currentSequence = null;
-      //}
-
-      //private void RestoreContainer() {
-      //   _container = _containerStack.Pop();
-      //}
-
-      //private void RestoreSequence() {
-      //   var cs = _chainStack.Pop();
-      //   _countInChain = cs.Count;
-      //   _currentSequence = cs.Sequence;
-      //}
-
-      //private void SaveCurrentContainer() {
-      //   _containerStack.Push(_container);
-      //}
-
-      //private void SaveCurrentSequence() {
-      //   _chainStack.Push(new {
-      //      Count = _countInChain,
-      //      Sequence = _currentSequence
-      //   });
-      //}
-
-      //private void SetContainer(IElementContainer container) =>
-      //   _container = container;
-
-
-      //internal void AddElementToContainer(IElement element) {
-
-      //   // Because we can't tell ahead of time if there will be
-      //   // more than one element added to an element container,
-      //   // we need to check at run-time.
-      //   //
-      //   // If the provided element is the first in the chain, we
-      //   // assume it's the only one, and simply add it to the
-      //   // container (whatever type that may be).
-      //   // If a second element comes along, and it needs to go
-      //   // in that container, then that means there is a
-      //   // "sequence" of elements. Remove the first element
-      //   // that was added earlier, add it and the new element
-      //   // to a new sequence object, and put the sequence
-      //   // into the container.
-      //   //
-      //   // Example of a "chain" (probably not the best term):
-      //   //
-      //   // |-- 0 --|------------ 1 ------------|-- 2 --| // <-- Chain #
-      //   // Say("X").Optionally(r => r.Say("Y")).Say("Z")
-
-      //   if (_countInChain == 1) {
-      //      ISequence sequence = new Sequence();
-
-      //      sequence.AddElement(_container.Pop());
-      //      sequence.AddElement(element);
-
-      //      _container.AddElement(sequence);
-      //      _currentSequence = sequence;
-      //   } else if (_countInChain > 1) {
-      //      _currentSequence.AddElement(element);
-      //   } else {
-      //      _container.AddElement(element);
-      //   }
-
-      //   _countInChain++;
-      //}
 
    }
 }
