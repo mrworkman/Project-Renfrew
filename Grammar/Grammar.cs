@@ -18,10 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text.RegularExpressions;
 
-using Renfrew.Grammar.Exceptions;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.NatSpeakInterop;
@@ -45,23 +43,33 @@ namespace Renfrew.Grammar {
       private uint _nextRuleId = 1;
       private uint _nextWordId = 1;
 
-      private readonly RuleFactory _ruleFactory = new ();
+      private readonly RuleFactory _ruleFactory;
+      private readonly IIdGenerator _idGenerator;
 
       private readonly Dictionary<string, IRule> _activeRules = new ();
 
       protected Grammar(IGrammarService grammarService, INatSpeak natSpeak)
-         : this(new RuleFactory(), grammarService, natSpeak) {
+         : this(
+            new RuleFactory(), 
+            new GrammarIdGenerator(), 
+            grammarService, 
+            natSpeak
+      ) {
 
       }
 
       protected Grammar(
          RuleFactory ruleFactory, 
+         IIdGenerator idGenerator,
          IGrammarService grammarService, 
          INatSpeak natSpeak
       ) {
          Debug.Assert(ruleFactory != null);
          Debug.Assert(grammarService != null);
          Debug.Assert(natSpeak != null);
+
+         _ruleFactory = ruleFactory;
+         _idGenerator = idGenerator;
 
          _grammarService = grammarService;
          NatSpeak = natSpeak;
@@ -123,7 +131,10 @@ namespace Renfrew.Grammar {
       }
 
       public void AddRule(string name, Func<IRule, IRule> ruleFunc) =>
-         AddRule(name, ruleFunc?.Invoke(_ruleFactory.Create(name)));
+         AddRule(
+            name,
+            rule: ruleFunc?.Invoke(_ruleFactory.Create(name, _idGenerator))
+         );
 
       public void DeactivateRule(string name) {
          _grammarService.DeactivateRule(this, name);
@@ -155,7 +166,7 @@ namespace Renfrew.Grammar {
             );
          }
 
-         var rule = _ruleFactory.Create(name);
+         var rule = _ruleFactory.Create(name, _idGenerator);
 
          EnforceRuleNaming(name);
 

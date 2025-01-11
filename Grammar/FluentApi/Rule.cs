@@ -25,17 +25,25 @@ using Renfrew.Grammar.FluentApi.Interfaces;
 namespace Renfrew.Grammar.FluentApi {
    internal class Rule : IRule {
       private CompositeExpression _expression;
+      private readonly IIdGenerator _idGenerator;
 
-      internal Rule(string name) {
+      internal Rule(string name, IIdGenerator idGenerator) {
+         _idGenerator = idGenerator ?? throw new ArgumentNullException(
+            nameof(idGenerator)
+         );
+         
          Name = name ?? throw new ArgumentNullException(nameof(name));
+         Id = _idGenerator.GetRuleId(Name);
       }
-
-      public string Name { get; }
 
       public IExpression Expression => _expression;
 
+      public int Id { get; }
+
+      public string Name { get; }
+
       public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
-         var nestedRule = new Rule("-") {
+         var nestedRule = new Rule("-", _idGenerator) {
             _expression = CompositeExpression.Create(
                ExpressionModifier.Alternatives
             )
@@ -45,13 +53,17 @@ namespace Renfrew.Grammar.FluentApi {
             action.Compile()(nestedRule);
          }
 
-         _expression.AddExpression(nestedRule._expression);
+         if (_expression == null) {
+            _expression = nestedRule._expression;
+         } else {
+            _expression.AddExpression(nestedRule._expression);
+         }
 
          return (ActionableRule) this;
       }
 
       public IActionableRule Optionally(Expression<Action<IRule>> action) {
-         var nestedRule = new Rule("-") {
+         var nestedRule = new Rule("-", _idGenerator) {
             _expression = CompositeExpression.Create(
                ExpressionModifier.Optionals
             )
@@ -59,7 +71,11 @@ namespace Renfrew.Grammar.FluentApi {
 
          action.Compile()(nestedRule);
 
-         _expression.AddExpression(nestedRule._expression);
+         if (_expression == null) {
+            _expression = nestedRule._expression;
+         } else {
+            _expression.AddExpression(nestedRule._expression);
+         }
 
          return (ActionableRule) this;
       }
@@ -80,7 +96,7 @@ namespace Renfrew.Grammar.FluentApi {
 
       // Repeats: A+
       public IActionableRule Repeat(Expression<Action<IRule>> action) {
-         var nestedRule = new Rule("-") {
+         var nestedRule = new Rule("-", _idGenerator) {
             _expression = CompositeExpression.Create(
                ExpressionModifier.Repeated
             )
@@ -88,7 +104,11 @@ namespace Renfrew.Grammar.FluentApi {
 
          action.Compile()(nestedRule);
 
-         _expression.AddExpression(nestedRule._expression);
+         if (_expression == null) {
+            _expression = nestedRule._expression;
+         } else {
+            _expression.AddExpression(nestedRule._expression);
+         }
 
          return (ActionableRule) this;
       }
@@ -105,8 +125,9 @@ namespace Renfrew.Grammar.FluentApi {
             ExpressionModifier.Sequence
          );
          
-         // FIXME: Needs an ID generator.
-         _expression.AddExpression(Word.Create(0, word));
+         _expression.AddExpression(
+            Word.Create(_idGenerator.GetWordId(word), word)
+         );
 
          return (ActionableRule)this;
       }
@@ -120,9 +141,10 @@ namespace Renfrew.Grammar.FluentApi {
             ExpressionModifier.Alternatives
          );
 
-         // FIXME: Needs an ID generator.
          alternatives.AddExpressions(
-            words.Select(word => Word.Create(0, word))
+            words.Select(word => Word.Create(
+               _idGenerator.GetWordId(word), word)
+            )
          );
 
          if (_expression == null) {
@@ -139,8 +161,9 @@ namespace Renfrew.Grammar.FluentApi {
             ExpressionModifier.Sequence
          );
 
-         // FIXME: Needs an ID generator.
-         _expression.AddExpression(RuleName.Create(0, ruleName));
+         _expression.AddExpression(
+            RuleName.Create(_idGenerator.GetRuleId(ruleName), ruleName)
+         );
 
          return (ActionableRule)this;
       }

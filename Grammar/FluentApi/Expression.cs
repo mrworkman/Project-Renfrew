@@ -15,14 +15,20 @@
 // along with this program. If not, see<http://www.gnu.org/licenses/>.
 //
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Renfrew.Grammar.FluentApi {
    public interface IExpression {
 
    }
 
-   internal class CompositeExpression : IExpression {
+   internal class CompositeExpression : 
+      IExpression, IEquatable<CompositeExpression> {
+
       /// <summary>
       /// Indicates the type of expression.
       /// </summary>
@@ -47,6 +53,15 @@ namespace Renfrew.Grammar.FluentApi {
          expressionModifier
       );
 
+      internal static CompositeExpression Create(
+         ExpressionModifier expressionModifier,
+         params IExpression[] expressions
+      ) {
+         var compositeExpression = new CompositeExpression(expressionModifier);
+         compositeExpression._subExpressions.AddRange(expressions);
+         return compositeExpression;
+      }
+
       public void AddExpression(IExpression expression) {
          _subExpressions.Add(expression);
       }
@@ -54,9 +69,65 @@ namespace Renfrew.Grammar.FluentApi {
       public void AddExpressions(IEnumerable<IExpression> expressions) {
          _subExpressions.AddRange(expressions);
       }
+
+      public bool Equals(CompositeExpression other) {
+         if (other == null) {
+            return false;
+         }
+
+         if (_subExpressions.Count != other._subExpressions.Count) {
+            return false;
+         }
+
+         for (int i = 0; i < _subExpressions.Count; i++) {
+            var left = _subExpressions[i];
+            var right = other._subExpressions[i];
+
+            if (left.GetType() != right.GetType()) {
+               return false;
+            }
+
+            if (left is Term term) {
+               if (!term.Equals(right as Term)) {
+                  return false;
+               }
+            } else if (left is CompositeExpression exp) {
+               if (!exp.Equals(right as CompositeExpression)) {
+                  return false;
+               }
+            } else if (!left.Equals(right)) {
+               return false;
+            }
+         }
+
+         return _expressionModifier == other._expressionModifier;
+      }
+
+      public override string ToString() {
+         var sb = new StringBuilder();
+
+         sb.Append("{\r\n");
+         sb.Append($@"  ""ExpressionModifier"": ""{_expressionModifier}"",");
+         sb.Append("\r\n");
+         sb.Append(@"  ""SubExpressions"": [");
+         sb.Append("\r\n");
+
+         var exprStrs = _subExpressions.Select(e => 
+            Regex.Replace(e.ToString(), @"^", "    ", RegexOptions.Multiline)
+         );
+
+         //sb.Append("  ");
+         sb.Append(string.Join(",\r\n", exprStrs));
+         sb.Append("\r\n");
+
+         sb.Append("  ]\r\n");
+         sb.Append("}");
+
+         return sb.ToString();
+      }
    }
 
-   internal abstract class Term : IExpression {
+   internal abstract class Term : IExpression, IEquatable<Term> {
       protected Term(int id, string value) {
          Id = id;
          Value = value;
@@ -64,6 +135,29 @@ namespace Renfrew.Grammar.FluentApi {
 
       public int Id { get; private set; }
       public string Value { get; private set; }
+
+      public bool Equals(Term other) {
+         if (other == null) {
+            return false;
+         }
+
+         return Id == other.Id && Value == other.Value;
+      }
+
+      public override string ToString() {
+         var sb = new StringBuilder();
+
+         sb.Append("{\r\n");
+         sb.Append($@"  ""Id"": {Id},");
+         sb.Append("\r\n");
+         sb.Append($@"  ""Value"": ""{Value}"",");
+         sb.Append("\r\n");
+         sb.Append($@"  ""@Type"": ""{GetType()}"",");
+         sb.Append("\r\n");
+         sb.Append("}");
+
+         return sb.ToString();
+      }
    }
 
    internal class Word : Term {

@@ -21,8 +21,9 @@ using System.Linq.Expressions;
 
 namespace Renfrew.Grammar.FluentApi.Interfaces {
    public interface IRule {
-      string Name { get; }
       IExpression Expression { get; }
+      int Id { get; }
+      string Name { get; }
 
       IActionableRule Say(string word);
       IActionableRule SayOneOf(IEnumerable<string> words);

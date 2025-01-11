@@ -22,22 +22,26 @@ using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace Renfrew.Grammar.FluentApi {
    public class RuleFactory {
-      public IRule Create(string name) => new Rule(name);
+      public IRule Create(string name, IIdGenerator idGenerator) {
+         return new Rule(name, idGenerator);
+      }
 
       public IRule Create(
          string name,
+         IIdGenerator idGenerator,
          Expression<Action<IRule>> expression
       ) {
-         Rule rule = new Rule(name);
+         var rule = new Rule(name, idGenerator);
          expression.Compile()(rule);
          return rule;
       }
 
       public IActionableRule CreateActionableRule(
          string name,
+         IIdGenerator idGenerator,
          Expression<Action<IRule>> expression
       ) {
-         IActionableRule rule = (ActionableRule) new Rule(name);
+         IActionableRule rule = (ActionableRule) new Rule(name, idGenerator);
          expression.Compile()(rule);
          return rule;
       }

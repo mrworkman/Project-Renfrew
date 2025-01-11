@@ -31,9 +31,11 @@ namespace Renfrew.Grammar.FluentApi {
          Name = name;
       }
 
-      public string Name { get; }
-
       public IExpression Expression => _rule.Expression;
+
+      public int Id { get; }
+
+      public string Name { get; }
 
       public IRule Do(Action action) {
          //_rule.AddElementToContainer( new GrammarAction(action) );

@@ -15,32 +15,59 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-using System.Linq;
+
+using Moq;
 
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
-using Renfrew.Grammar.Exceptions;
+using Renfrew.Grammar;
 using Renfrew.Grammar.FluentApi;
+using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace GrammarTests {
-   [TestFixture()]
+
+   [TestFixture]
    public class RuleTests {
       private RuleFactory _factory;
+      private IIdGenerator _idGenerator;
 
       [SetUp]
       public void Initialize() {
          _factory = new RuleFactory();
+         _idGenerator = new GrammarIdGenerator();
       }
 
       [Test]
-      public void OneWordGrammarNestedInSequenceGrouping() {
-         var rule = _factory.Create("foo");
+      public void ShouldProduceSimpleSequence() {
+         var testRule = new Rule("some_rule", _idGenerator);
 
-         rule.Say("test");
+         testRule.Say("hello");
 
-         Assert.That(rule.Elements, Is.InstanceOf<ISequence>());
-         Assert.That(rule.Elements.Elements.First(), Is.InstanceOf<IWordElement>());
+         var expectedExpression = CompositeExpression.Create(
+            ExpressionModifier.Sequence,
+            Word.Create(0, "hello")
+         );
+
+         Assert.That(testRule.Expression, Is.EqualTo(expectedExpression));
+      }
+
+      [Test]
+      public void Foo2() {
+         var testRule = new Rule("some_rule", _idGenerator);
+
+         testRule.Optionally(e => e.SayOneOf("cheese", "cheese"));
+         testRule.Say("Hello").OneOf(r => r.Say("Hi"), r => r.Say("Boo"));
+
+         var expectedExpression = CompositeExpression.Create(
+            ExpressionModifier.Sequence,
+            Word.Create(0, "Hello"),
+            CompositeExpression.Create(
+               ExpressionModifier.Alternatives,
+               Word.Create(1, "Hi")
+            )
+         );
+
+         Assert.That(testRule.Expression, Is.EqualTo(expectedExpression));
       }
 
    }

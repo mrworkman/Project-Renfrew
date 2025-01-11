@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="FluentApi\Expression.cs" />
     <Compile Include="FluentApi\ExpressionModifier.cs" />
+    <Compile Include="FluentApi\Interfaces\IIdGenerator.cs" />
     <Compile Include="GrammarAction.cs" />
     <Compile Include="Exceptions\InvalidSequenceInCallbackException.cs" />
     <Compile Include="Exceptions\NoActiveRulesException.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="FluentApi\Interfaces\IRule.cs" />
     <Compile Include="Grammar.cs" />
     <Compile Include="GrammarExportAttribute.cs" />
+    <Compile Include="GrammarIdGenerator.cs" />
     <Compile Include="GrammarSerializer.cs" />
     <Compile Include="Identity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
