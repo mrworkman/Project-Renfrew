@@ -25,9 +25,9 @@ namespace Renfrew.Grammar {
       private readonly Dictionary<string, int> _ruleNames = new();
       private readonly Dictionary<string, int> _words = new();
 
-      private int _currentListNameId = 0;
-      private int _currentRuleNameId = 0;
-      private int _currentWordId = 0;
+      private int _currentListNameId = 1;
+      private int _currentRuleNameId = 1;
+      private int _currentWordId = 1;
 
       public int GetListId(string listName) {
          var lower = listName.ToLowerInvariant();

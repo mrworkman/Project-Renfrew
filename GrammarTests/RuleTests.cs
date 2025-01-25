@@ -16,7 +16,7 @@
 //
 
 
-using Moq;
+using System.Collections.Generic;
 
 using NUnit.Framework;
 
@@ -38,7 +38,65 @@ namespace GrammarTests {
       }
 
       [Test]
-      public void ShouldProduceSimpleSequence() {
+      public void ShouldProduceSimpleAlternativeRule() {
+         var testRule = new Rule("some_rule", _idGenerator);
+
+         testRule.SayOneOf("hello", "jello");
+
+         var expectedExpression = CompositeExpression.Create(
+            ExpressionModifier.Alternatives,
+            Word.Create(0, "hello"),
+            Word.Create(1, "jello")
+         );
+
+         Assert.That(testRule.Expression, Is.EqualTo(expectedExpression));
+      }
+
+      [Test]
+      public void ShouldProduceSimpleAlternativeRuleFromEnumerable() {
+         var testRule = new Rule("some_rule", _idGenerator);
+
+         testRule.SayOneOf(new List<string> { "hello", "jello" });
+
+         var expectedExpression = CompositeExpression.Create(
+            ExpressionModifier.Alternatives,
+            Word.Create(0, "hello"),
+            Word.Create(1, "jello")
+         );
+
+         Assert.That(testRule.Expression, Is.EqualTo(expectedExpression));
+      }
+
+      [Test]
+      public void ShouldProduceSimpleOptionalRule() {
+         var testRule = new Rule("some_rule", _idGenerator);
+
+         testRule.Optionally(r => r.Say("hello"));
+
+         var expectedExpression = CompositeExpression.Create(
+            ExpressionModifier.Optionals,
+            Word.Create(0, "hello")
+         );
+
+         Assert.That(testRule.Expression, Is.EqualTo(expectedExpression));
+      }
+
+      [Test]
+      public void ShouldProduceSimpleRepetitionRule() {
+         var testRule = new Rule("some_rule", _idGenerator);
+
+         testRule.Repeat(r => r.Say("hello"));
+
+         var expectedExpression = CompositeExpression.Create(
+            ExpressionModifier.Repeated,
+            Word.Create(0, "hello")
+         );
+
+         Assert.That(testRule.Expression, Is.EqualTo(expectedExpression));
+      }
+
+      [Test]
+      public void ShouldProduceSimpleSequenceRule() {
          var testRule = new Rule("some_rule", _idGenerator);
 
          testRule.Say("hello");

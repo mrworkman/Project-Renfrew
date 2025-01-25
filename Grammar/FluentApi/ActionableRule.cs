@@ -18,24 +18,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-
 using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace Renfrew.Grammar.FluentApi {
    internal class ActionableRule : IActionableRule {
+      private readonly Rule _rule;
 
-      private Rule _rule;
-
-      private ActionableRule(Rule baseRule, string name) {
-         _rule = baseRule;
-         Name = name;
-      }
+      public int Id => _rule.Id;
+      public string String => _rule.String;
 
       public IExpression Expression => _rule.Expression;
+      public IReadOnlyList<Word> Words => _rule.Words;
 
-      public int Id { get; }
-
-      public string Name { get; }
+      private ActionableRule(Rule baseRule) {
+         _rule = baseRule;
+      }
 
       public IRule Do(Action action) {
          //_rule.AddElementToContainer( new GrammarAction(action) );
@@ -50,14 +47,17 @@ namespace Renfrew.Grammar.FluentApi {
       }
 
       #region Defer to Base Rule
-      public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) =>
+
+      public IActionableRule
+         OneOf(params Expression<Action<IRule>>[] actions) =>
          _rule.OneOf(actions);
 
       public IActionableRule Optionally(Expression<Action<IRule>> action) =>
          _rule.Optionally(action);
 
-      public IActionableRule OptionallyOneOf(params Expression<Action<IRule>>[] actions) =>
-         _rule.OptionallyOneOf(actions);
+      public IActionableRule OptionallyOneOf(
+         params Expression<Action<IRule>>[] actions
+      ) => _rule.OptionallyOneOf(actions);
 
       public IActionableRule OptionallySay(String word) =>
          _rule.OptionallySay(word);
@@ -68,11 +68,11 @@ namespace Renfrew.Grammar.FluentApi {
       public IActionableRule Repeat(Expression<Action<IRule>> action) =>
          _rule.Repeat(action);
 
-      public IActionableRule RepeatOneOf(params Expression<Action<IRule>>[] actions) =>
-         _rule.RepeatOneOf(actions);
+      public IActionableRule RepeatOneOf(
+         params Expression<Action<IRule>>[] actions
+      ) => _rule.RepeatOneOf(actions);
 
-      public IActionableRule Say(String word) =>
-         _rule.Say(word);
+      public IActionableRule Say(String word) => _rule.Say(word);
 
       public IActionableRule SayOneOf(params String[] words) =>
          _rule.SayOneOf(words);
@@ -82,9 +82,15 @@ namespace Renfrew.Grammar.FluentApi {
 
       public IActionableRule WithRule(String ruleName) =>
          _rule.WithRule(ruleName);
+
       #endregion
 
-      public static explicit operator ActionableRule(Rule rule) =>
-         new ActionableRule(rule, rule.Name);
+      public static explicit operator ActionableRule(Rule rule) {
+         return new ActionableRule(rule);
+      }
+
+      public bool Equals(IIdString other) {
+         return Id == other?.Id && String == other.String;
+      }
    }
 }

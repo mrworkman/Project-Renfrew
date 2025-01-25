@@ -20,10 +20,9 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Renfrew.Grammar.FluentApi.Interfaces {
-   public interface IRule {
-      IExpression Expression { get; }
-      int Id { get; }
-      string Name { get; }
+   public interface IRule : IIdString {
+      IExpression Expression { get; } 
+      IReadOnlyList<Word> Words { get; }
 
       IActionableRule Say(string word);
       IActionableRule SayOneOf(IEnumerable<string> words);

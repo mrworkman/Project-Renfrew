@@ -19,28 +19,42 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-
 using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace Renfrew.Grammar.FluentApi {
    internal class Rule : IRule {
-      private CompositeExpression _expression;
       private readonly IIdGenerator _idGenerator;
+      private CompositeExpression _expression;
 
-      internal Rule(string name, IIdGenerator idGenerator) {
-         _idGenerator = idGenerator ?? throw new ArgumentNullException(
-            nameof(idGenerator)
-         );
-         
-         Name = name ?? throw new ArgumentNullException(nameof(name));
-         Id = _idGenerator.GetRuleId(Name);
-      }
+      private readonly Dictionary<string, Word> _words = new(
+         StringComparer.CurrentCultureIgnoreCase
+      );
+
+      /// <summary>
+      /// Numeric rule identifier.
+      /// </summary>
+      public int Id { get; }
+
+      /// <summary>
+      /// The rule's name.
+      /// </summary>
+      public string String { get; }
 
       public IExpression Expression => _expression;
 
-      public int Id { get; }
+      public IReadOnlyList<Word> Words => _words.Select(entry => entry.Value)
+         .OrderBy(word => word.String.ToLowerInvariant())
+         .ToList();
 
-      public string Name { get; }
+      internal Rule(string name, IIdGenerator idGenerator) {
+         _idGenerator = idGenerator
+                        ?? throw new ArgumentNullException(
+                           nameof(idGenerator)
+                        );
+
+         String = name ?? throw new ArgumentNullException(nameof(name));
+         Id = _idGenerator.GetRuleId(String);
+      }
 
       public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
          var nestedRule = new Rule("-", _idGenerator) {
@@ -124,12 +138,16 @@ namespace Renfrew.Grammar.FluentApi {
          _expression ??= CompositeExpression.Create(
             ExpressionModifier.Sequence
          );
-         
-         _expression.AddExpression(
-            Word.Create(_idGenerator.GetWordId(word), word)
-         );
 
-         return (ActionableRule)this;
+         var wordExpr = Word.Create(_idGenerator.GetWordId(word), word);
+
+         if (!_words.ContainsKey(word)) {
+            _words.Add(word, wordExpr);
+         }
+
+         _expression.AddExpression(wordExpr);
+
+         return (ActionableRule) this;
       }
 
       public IActionableRule SayOneOf(params string[] words) {
@@ -141,11 +159,15 @@ namespace Renfrew.Grammar.FluentApi {
             ExpressionModifier.Alternatives
          );
 
-         alternatives.AddExpressions(
-            words.Select(word => Word.Create(
-               _idGenerator.GetWordId(word), word)
-            )
-         );
+         foreach (var word in words) {
+            var wordExpr = Word.Create(_idGenerator.GetWordId(word), word);
+
+            if (!_words.ContainsKey(word)) {
+               _words.Add(word, wordExpr);
+            }
+
+            alternatives.AddExpression(wordExpr);
+         }
 
          if (_expression == null) {
             _expression = alternatives;
@@ -153,7 +175,7 @@ namespace Renfrew.Grammar.FluentApi {
             _expression.AddExpression(alternatives);
          }
 
-         return (ActionableRule)this;
+         return (ActionableRule) this;
       }
 
       public IActionableRule WithRule(string ruleName) {
@@ -165,8 +187,11 @@ namespace Renfrew.Grammar.FluentApi {
             RuleName.Create(_idGenerator.GetRuleId(ruleName), ruleName)
          );
 
-         return (ActionableRule)this;
+         return (ActionableRule) this;
       }
 
+      public bool Equals(IIdString other) {
+         return Id == other?.Id && String == other.String;
+      }
    }
 }

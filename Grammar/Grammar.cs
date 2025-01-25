@@ -18,50 +18,44 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.RegularExpressions;
-
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.NatSpeakInterop;
 
 namespace Renfrew.Grammar {
-
    public abstract class Grammar : IGrammar, IDisposable {
       private readonly IGrammarService _grammarService;
 
-      private readonly Dictionary<string, Identity<IRule>> _allRules = 
-         new (StringComparer.CurrentCultureIgnoreCase);
+      private readonly Dictionary<string, IRule> _allRules =
+         new(StringComparer.CurrentCultureIgnoreCase);
 
-      private readonly Dictionary<string, Identity<IRule>> _exportedRules = 
-         new (StringComparer.CurrentCultureIgnoreCase);
+      private readonly Dictionary<string, IRule> _exportedRules =
+         new(StringComparer.CurrentCultureIgnoreCase);
 
-      private readonly Dictionary<string, Identity<IRule>> _importedRules = 
-         new (StringComparer.CurrentCultureIgnoreCase);
+      private readonly Dictionary<string, IRule> _importedRules =
+         new(StringComparer.CurrentCultureIgnoreCase);
 
-      private readonly Dictionary<string, Identity<string>> _allWords = new ();
-
-      private uint _nextRuleId = 1;
-      private uint _nextWordId = 1;
+      private readonly Dictionary<string, Word> _allWords = new();
 
       private readonly RuleFactory _ruleFactory;
       private readonly IIdGenerator _idGenerator;
 
-      private readonly Dictionary<string, IRule> _activeRules = new ();
+      private readonly Dictionary<string, IRule> _activeRules = new();
 
       protected Grammar(IGrammarService grammarService, INatSpeak natSpeak)
          : this(
-            new RuleFactory(), 
-            new GrammarIdGenerator(), 
-            grammarService, 
+            new RuleFactory(),
+            new GrammarIdGenerator(),
+            grammarService,
             natSpeak
-      ) {
-
-      }
+         ) { }
 
       protected Grammar(
-         RuleFactory ruleFactory, 
+         RuleFactory ruleFactory,
          IIdGenerator idGenerator,
-         IGrammarService grammarService, 
+         IGrammarService grammarService,
          INatSpeak natSpeak
       ) {
          Debug.Assert(ruleFactory != null);
@@ -77,21 +71,24 @@ namespace Renfrew.Grammar {
 
       protected INatSpeak NatSpeak { get; }
 
-      internal IReadOnlyDictionary<string, Identity<IRule>> AllRules => _allRules;
-      internal IReadOnlyDictionary<string, Identity<IRule>> ExportedRules => _exportedRules;
-      internal IReadOnlyDictionary<string, Identity<IRule>> ImportedRules => _importedRules;
+      internal IReadOnlyDictionary<string, IRule> AllRules => _allRules;
 
-      // Expose internally for serialization
-      //internal IReadOnlyList<IRule> Rules =>
-      //   _rulesById.OrderBy(e => e.Key).Select(e => e.Value).ToList();
+      internal IReadOnlyDictionary<string, IRule> ExportedRules =>
+         _exportedRules;
 
-      public IReadOnlyDictionary<string, Identity<string>> Words => _allWords;
+      internal IReadOnlyDictionary<string, IRule> ImportedRules =>
+         _importedRules;
+
+      internal IReadOnlyDictionary<string, Word> Words => _allWords;
+
+      public IReadOnlyList<string> WordList =>
+         _allWords.Keys.OrderBy(word => word.ToLowerInvariant()).ToList();
 
       public void ActivateRule(string name) {
          _grammarService.ActivateRule(this, IntPtr.Zero, name);
 
          if (!_activeRules.ContainsKey(name)) {
-            _activeRules.Add(name, _exportedRules[name].Subject);
+            _activeRules.Add(name, _exportedRules[name]);
          }
       }
 
@@ -116,25 +113,29 @@ namespace Renfrew.Grammar {
             );
          }
 
-         foreach (var word in GetWordsFromRule(rule)) {
-            if (!_allWords.ContainsKey(word)) {
-               _allWords.Add(word, Identity<string>.Wrap(word, _nextWordId++));
+         //foreach (var word in GetWordsFromRule(rule)) {
+         //   var wordId = _idGenerator.GetWordId(word);
+
+         //   if (!_allWords.ContainsKey(word)) {
+         //      _allWords.Add(word, Word.Create(wordId, word));
+         //   }
+         //}
+         foreach (var word in rule.Words) {
+            if (!_allWords.ContainsKey(word.String)) {
+               _allWords.Add(word.String, word);
             }
          }
 
-         var id = Identity<IRule>.Wrap(rule, _nextRuleId);
-
-         _allRules.Add(name, id);
-         _exportedRules.Add(name, id);
-
-         _nextRuleId++;
+         _allRules.Add(rule.String, rule);
+         _exportedRules.Add(rule.String, rule);
       }
 
-      public void AddRule(string name, Func<IRule, IRule> ruleFunc) =>
+      public void AddRule(string name, Func<IRule, IRule> ruleFunc) {
          AddRule(
             name,
             rule: ruleFunc?.Invoke(_ruleFactory.Create(name, _idGenerator))
          );
+      }
 
       public void DeactivateRule(string name) {
          _grammarService.DeactivateRule(this, name);
@@ -150,7 +151,8 @@ namespace Renfrew.Grammar {
          var validChars = @"[a-zA-Z0-9_]";
 
          if (!Regex.IsMatch(ruleName, $@"^{validChars}+$")) {
-            throw new ArgumentOutOfRangeException(nameof(ruleName),
+            throw new ArgumentOutOfRangeException(
+               nameof(ruleName),
                $@"Rule name '{ruleName}' contains invalid character(s): '{
                   Regex.Replace(ruleName, validChars, string.Empty)
                }'"
@@ -177,12 +179,8 @@ namespace Renfrew.Grammar {
             );
          }
 
-         var id = Identity<IRule>.Wrap(rule, _nextRuleId);
-
-         _allRules.Add(name, id);
-         _importedRules.Add(name, id);
-
-         _nextRuleId++;
+         _allRules.Add(rule.String, rule);
+         _importedRules.Add(rule.String, rule);
       }
 
       public abstract void Initialize();
@@ -212,10 +210,10 @@ namespace Renfrew.Grammar {
          _allRules.Remove(name);
       }
 
-      private IEnumerable<string> GetWordsFromRule(IRule rule) {
-         //return GetWordsFromRuleElements(rule.Elements.Elements);
-         throw new NotImplementedException();
-      }
+      //private IEnumerable<string> GetWordsFromRule(IRule rule) {
+      //   //return GetWordsFromRuleElements(rule.Elements.Elements);
+      //   throw new NotImplementedException();
+      //}
 
       //private IEnumerable<string> GetWordsFromRuleElements(
       //   IEnumerable<IElement> elements
@@ -423,5 +421,4 @@ namespace Renfrew.Grammar {
          ActivateRule(name);
       }
    }
-
 }
