@@ -62,7 +62,7 @@ namespace Renfrew.Grammar {
          foreach (var subExpression in compositeExpression.SubExpressions) {
             switch (subExpression) {
                case CompositeExpression composite: {
-                  ConvertCompositeExpression(composite);
+                  symbols.AddRange(ConvertCompositeExpression(composite));
                   break;
                }
                case RuleName rule: {
