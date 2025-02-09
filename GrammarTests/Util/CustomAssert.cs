@@ -1,138 +1,63 @@
-﻿using System;
+﻿// Project Renfrew
+// Copyright(C) 2025 Stephen Workman (workman.stephen@gmail.com)
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see<http://www.gnu.org/licenses/>.
+//
+
+using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
-
 using DiffMatchPatch;
-
 using NUnit.Framework;
 
 namespace GrammarTests.Util {
    internal static class CustomAssert {
-      // Characters for "highlighting" differences in black & white "consoles".
-      const char CombiningLongStrokeOverlay = '\u0336'; // e.g. A̶
-      const char CombiningDiaeresis = '\u0308';         // e.g. 1̈
-
       public static void ByteArraysAreEqual(
          byte[] expected,
          byte[] actual,
          string message = "",
-         params object[] args) {
+         params object[] args
+      ) {
          Assert.AreEqual(
-            expected, 
-            actual, 
-            $"{message}\r\n{DumpDiffToString(expected, actual)}", 
+            expected,
+            actual,
+            $"{message}\r\n{DumpDiffToString(expected, actual)}",
             args
          );
       }
 
-      static string DumpDiffToString(byte[] expectedBytes, byte[] actualBytes) {
+      static string DumpDiffToString(
+         byte[] expectedBytes,
+         byte[] actualBytes
+      ) {
          var expectedHex = ToHexString(expectedBytes);
          var actualHex = ToHexString(actualBytes);
 
          var diffs = Diff.Compute(expectedHex, actualHex);
 
-         var (expectedDumpHex, deletions) = GetMarkedUpDiff(
-            diffs, Operation.Delete
-         );
-         var (actualDumpHex, insertions) = GetMarkedUpDiff(
-            diffs, Operation.Insert
-         );
-
-         var expectedDumpStr = HexDumpDiff(
-            expectedDumpHex,
-            expectedBytes,
-            deletions,
-            Operation.Delete,
-            "Expected"
-         );
-         var actualDumpStr = HexDumpDiff(
-            actualDumpHex,
-            actualBytes,
-            insertions,
-            Operation.Insert,
-            "Actual"
-         );
+         string expectedDumpStr = GetMarkedUpDiff(diffs, Operation.Delete);
+         string actualDumpStr = GetMarkedUpDiff(diffs, Operation.Insert);
 
          return $"{expectedDumpStr}{actualDumpStr}";
       }
 
-      static (string, HashSet<int>) GetMarkedUpDiff(
+      static string GetMarkedUpDiff(
          List<Diff> diffs,
          Operation operation
       ) {
-         var changes = new HashSet<int>();
          var builder = new StringBuilder();
-
-         var currentIndex = 0;
-         var markNext = false;
-         var marker = operation == Operation.Delete ?
-            CombiningLongStrokeOverlay : CombiningDiaeresis;
-
-         foreach (var diff in diffs) {
-            if (diff.Operation == Operation.Equal) {
-               currentIndex += diff.Text.Length;
-
-               if (markNext) {
-                  builder.Append(diff.Text[0]);
-                  builder.Append(marker);
-                  builder.Append(string.Join("", diff.Text.Skip(1)));
-                  markNext = false;
-               } else {
-                  builder.Append(diff.Text);
-               }
-
-               if (currentIndex % 2 != 0) {
-                  builder.Append(marker);
-               }
-            } else if (diff.Operation == operation) {
-               builder.Append(MarkUp(diff.Text, marker));
-
-               markNext = currentIndex % 2 == 0 && diff.Text.Length % 2 != 0;
-
-               foreach (var _ in diff.Text) {
-                  changes.Add(
-                     (currentIndex % 2 == 0 ? currentIndex : currentIndex - 1) / 2
-                  );
-                  currentIndex++;
-               }
-            }
-         }
-
-         var expectedDumpHex = builder.ToString();
-
-         return (expectedDumpHex, changes);
-      }
-
-
-      static string MarkUp(string s, char marker) {
-         return String.Join(
-            "",
-            s.Select(c => (c > 31 && c < 127) ? $"{c}{marker}" : $"{c}")
-         );
-      }
-
-      static string HexDumpDiff(
-         string diffText,
-         byte[] sourceBytes,
-         HashSet<int> differenceIndeces,
-         Operation operation,
-         string label
-      ) {
-         var enumerator = StringInfo.GetTextElementEnumerator(diffText);
-         var clusters = new List<string>();
-
-         while (enumerator.MoveNext()) {
-            clusters.Add((string)enumerator.Current);
-         }
-
-         var builder = new StringBuilder();
-         builder.AppendLine();
-         builder.AppendLine($"{label}:");
-
-         var marker = operation == Operation.Delete ?
-            CombiningLongStrokeOverlay : CombiningDiaeresis;
 
          const int bytesPerLine = 16;
 
@@ -140,45 +65,81 @@ namespace GrammarTests.Util {
             "         00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F"
          );
 
-         for (int i = 0; i < clusters.Count; i += (bytesPerLine * 2)) {
-            var clusterLine = clusters.Skip(i).Take(bytesPerLine * 2).ToList();
+         var filteredDiffs = diffs
+            .Where(
+               diff => diff.Operation == Operation.Equal
+                       || diff.Operation == operation
+            );
+
+         var pairs = new List<(string, Operation)>();
+
+         foreach (var diff in filteredDiffs) {
+            foreach (var c in diff.Text) {
+               pairs.Add((c.ToString(), diff.Operation));
+            }
+         }
+
+         for (var i = 0; i < pairs.Count(); i += (bytesPerLine * 2)) {
+            var line = pairs.Skip(i)
+               .Take(bytesPerLine * 2)
+               .Select(pair => pair.Item1)
+               .ToList();
+
+            var ops = pairs.Skip(i)
+               .Take(bytesPerLine * 2)
+               .Select(pair => pair.Item2)
+               .ToList();
 
             builder.Append($"{i / 2:x8} ");
 
-            for (int j = 0; j < clusterLine.Count; j += 2) {
-               builder.Append($"{string.Join("", clusterLine.Skip(j).Take(2))} ");
+            var decoded = new StringBuilder();
+
+            for (var j = 0; j < line.Count(); j += 2) {
+               var byteDigits = string.Join("", line.Skip(j).Take(2));
+
+               builder.Append($"{byteDigits} ");
+
+               var c = Convert.ToByte(byteDigits, 16);
+
+               if (c is > 31 and < 127) {
+                  decoded.Append((char) c);
+               } else {
+                  decoded.Append('.');
+               }
             }
 
-            if (clusterLine.Count / 2 != bytesPerLine) {
-               var padding = bytesPerLine - clusterLine.Count / 2;
-               for (int j = 0; j < padding; j++) {
+            if (line.Count / 2 != bytesPerLine) {
+               var padding = bytesPerLine - line.Count / 2;
+               for (var j = 0; j < padding; j++) {
                   builder.Append("   ");
                }
             }
 
             builder.Append("  ");
+            builder.Append(string.Join("", decoded));
 
-            for (
-               int j = i / 2, k = 0;
-               j < sourceBytes.Length && k < bytesPerLine;
-               j++, k++
-            ) {
-               var c = sourceBytes[j];
-               var addMarker = differenceIndeces.Contains(j);
+            if (ops.Any(op => op != Operation.Equal)) {
+               builder.AppendLine();
+               builder.Append(">>>>>>>> ");
 
-               if (c is > 31 and < 127) {
-                  builder.Append((char)c);
-               } else {
-                  builder.Append('.');
-               }
-
-               if (addMarker) {
-                  builder.Append(marker);
+               for (var j = 0;
+                    j < ops.Count();
+                    j += 2
+                   ) {
+                  var marks = string.Join(
+                     "",
+                     ops.Skip(j)
+                        .Take(2)
+                        .Select(op => op == Operation.Equal ? " " : "^")
+                  );
+                  builder.Append($"{marks} ");
                }
             }
 
             builder.AppendLine();
          }
+
+         builder.AppendLine();
 
          return builder.ToString();
       }
