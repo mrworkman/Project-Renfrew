@@ -16,20 +16,19 @@
 //
 
 using System.Collections.Generic;
-
 using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace Renfrew.Grammar {
    internal class GrammarIdGenerator : IIdGenerator {
-      private readonly Dictionary<string, int> _listNames = new();
-      private readonly Dictionary<string, int> _ruleNames = new();
-      private readonly Dictionary<string, int> _words = new();
+      private readonly Dictionary<string, uint> _listNames = new();
+      private readonly Dictionary<string, uint> _ruleNames = new();
+      private readonly Dictionary<string, uint> _words = new();
 
-      private int _currentListNameId = 1;
-      private int _currentRuleNameId = 1;
-      private int _currentWordId = 1;
+      private uint _currentListNameId = 1;
+      private uint _currentRuleNameId = 1;
+      private uint _currentWordId = 1;
 
-      public int GetListId(string listName) {
+      public uint GetListId(string listName) {
          var lower = listName.ToLowerInvariant();
 
          if (!_listNames.ContainsKey(lower)) {
@@ -39,7 +38,7 @@ namespace Renfrew.Grammar {
          return _listNames[lower];
       }
 
-      public int GetRuleId(string ruleName) {
+      public uint GetRuleId(string ruleName) {
          var lower = ruleName.ToLowerInvariant();
 
          if (!_ruleNames.ContainsKey(lower)) {
@@ -49,7 +48,7 @@ namespace Renfrew.Grammar {
          return _ruleNames[lower];
       }
 
-      public int GetWordId(string word) {
+      public uint GetWordId(string word) {
          var lower = word.ToLowerInvariant();
 
          if (!_words.ContainsKey(lower)) {

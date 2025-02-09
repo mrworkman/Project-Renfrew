@@ -24,7 +24,7 @@ namespace Renfrew.Grammar.FluentApi {
    internal class ActionableRule : IActionableRule {
       private readonly Rule _rule;
 
-      public int Id => _rule.Id;
+      public uint Id => _rule.Id;
       public string String => _rule.String;
 
       public IExpression Expression => _rule.Expression;

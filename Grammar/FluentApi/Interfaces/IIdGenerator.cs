@@ -17,8 +17,8 @@
 
 namespace Renfrew.Grammar.FluentApi.Interfaces {
    public interface IIdGenerator {
-      int GetListId(string listName);
-      int GetRuleId(string ruleName);
-      int GetWordId(string word);
+      uint GetListId(string listName);
+      uint GetRuleId(string ruleName);
+      uint GetWordId(string word);
    }
 }

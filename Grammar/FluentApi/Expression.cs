@@ -25,7 +25,8 @@ namespace Renfrew.Grammar.FluentApi {
    public interface IExpression { }
 
    internal class CompositeExpression :
-      IExpression, IEquatable<CompositeExpression> {
+      IExpression,
+      IEquatable<CompositeExpression> {
       /// <summary>
       /// Indicates the type of expression.
       /// </summary>
@@ -36,8 +37,10 @@ namespace Renfrew.Grammar.FluentApi {
       /// </summary>
       private readonly List<IExpression> _subExpressions = new();
 
-      public IReadOnlyList<IExpression> SubExpressions
-         => _subExpressions.AsReadOnly();
+      public ExpressionModifier Modifier => _expressionModifier;
+
+      public IReadOnlyList<IExpression> SubExpressions =>
+         _subExpressions.AsReadOnly();
 
       private CompositeExpression(ExpressionModifier expressionModifier) {
          _expressionModifier = expressionModifier;
@@ -120,8 +123,9 @@ namespace Renfrew.Grammar.FluentApi {
          sb.Append(@"  ""SubExpressions"": [");
          sb.Append("\r\n");
 
-         var exprStrs = _subExpressions.Select(e =>
-            Regex.Replace(e.ToString(), @"^", "    ", RegexOptions.Multiline)
+         var exprStrs = _subExpressions.Select(
+            e =>
+               Regex.Replace(e.ToString(), @"^", "    ", RegexOptions.Multiline)
          );
 
          //sb.Append("  ");
@@ -136,20 +140,20 @@ namespace Renfrew.Grammar.FluentApi {
    }
 
    public interface IIdString : IExpression, IEquatable<IIdString> {
-      int Id { get; }
+      uint Id { get; }
       string String { get; }
    }
 
    public class Word : IIdString {
-      public int Id { get; }
+      public uint Id { get; }
       public string String { get; }
 
-      private Word(int id, string str) {
+      private Word(uint id, string str) {
          Id = id;
          String = str;
       }
 
-      internal static Word Create(int id, string value) {
+      internal static Word Create(uint id, string value) {
          return new Word(id, value);
       }
 
@@ -159,15 +163,15 @@ namespace Renfrew.Grammar.FluentApi {
    }
 
    public class ListName : IIdString {
-      public int Id { get; }
+      public uint Id { get; }
       public string String { get; }
 
-      private ListName(int id, string str) {
+      private ListName(uint id, string str) {
          Id = id;
          String = str;
       }
 
-      internal static ListName Create(int id, string value) {
+      internal static ListName Create(uint id, string value) {
          return new ListName(id, value);
       }
 
@@ -177,15 +181,15 @@ namespace Renfrew.Grammar.FluentApi {
    }
 
    public class RuleName : IIdString {
-      public int Id { get; }
+      public uint Id { get; }
       public string String { get; }
 
-      private RuleName(int id, string str) {
+      private RuleName(uint id, string str) {
          Id = id;
          String = str;
       }
 
-      internal static RuleName Create(int id, string value) {
+      internal static RuleName Create(uint id, string value) {
          return new RuleName(id, value);
       }
 

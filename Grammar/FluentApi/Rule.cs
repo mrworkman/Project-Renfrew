@@ -33,7 +33,7 @@ namespace Renfrew.Grammar.FluentApi {
       /// <summary>
       /// Numeric rule identifier.
       /// </summary>
-      public int Id { get; }
+      public uint Id { get; }
 
       /// <summary>
       /// The rule's name.
