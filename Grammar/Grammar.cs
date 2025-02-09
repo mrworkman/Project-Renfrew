@@ -71,18 +71,19 @@ namespace Renfrew.Grammar {
 
       protected INatSpeak NatSpeak { get; }
 
-      internal IReadOnlyDictionary<string, IRule> AllRules => _allRules;
+      internal IReadOnlyList<IRule> AllRules => _allRules.Values.ToList();
 
-      internal IReadOnlyDictionary<string, IRule> ExportedRules =>
-         _exportedRules;
+      internal IReadOnlyList<IRule> ExportedRules =>
+         _exportedRules.Values.ToList();
 
-      internal IReadOnlyDictionary<string, IRule> ImportedRules =>
-         _importedRules;
+      internal IReadOnlyList<IRule> ImportedRules =>
+         _importedRules.Values.ToList();
 
-      internal IReadOnlyDictionary<string, Word> Words => _allWords;
+      internal IReadOnlyList<Word> Words => _allWords.Values.ToList();
 
-      public IReadOnlyList<string> WordList =>
-         _allWords.Keys.OrderBy(word => word.ToLowerInvariant()).ToList();
+      public IReadOnlyList<string> WordList => _allWords.Keys
+         .OrderBy(word => word.ToLowerInvariant())
+         .ToList();
 
       public void ActivateRule(string name) {
          _grammarService.ActivateRule(this, IntPtr.Zero, name);
@@ -113,13 +114,6 @@ namespace Renfrew.Grammar {
             );
          }
 
-         //foreach (var word in GetWordsFromRule(rule)) {
-         //   var wordId = _idGenerator.GetWordId(word);
-
-         //   if (!_allWords.ContainsKey(word)) {
-         //      _allWords.Add(word, Word.Create(wordId, word));
-         //   }
-         //}
          foreach (var word in rule.Words) {
             if (!_allWords.ContainsKey(word.String)) {
                _allWords.Add(word.String, word);
@@ -209,35 +203,6 @@ namespace Renfrew.Grammar {
          _importedRules.Remove(name);
          _allRules.Remove(name);
       }
-
-      //private IEnumerable<string> GetWordsFromRule(IRule rule) {
-      //   //return GetWordsFromRuleElements(rule.Elements.Elements);
-      //   throw new NotImplementedException();
-      //}
-
-      //private IEnumerable<string> GetWordsFromRuleElements(
-      //   IEnumerable<IElement> elements
-      //) {
-      //   foreach (var element in elements) {
-      //      switch (element) {
-      //         case IGrammarAction:
-      //         case IRuleElement:
-      //            continue;
-      //         case IWordElement:
-      //            yield return element.ToString();
-      //            break;
-      //         case IElementContainer container:
-      //            var words = GetWordsFromRuleElements(container.Elements);
-
-      //            foreach (var word in words) {
-      //               yield return word;
-      //            }
-      //            break;
-      //         default:
-      //            throw new ArgumentException($"Unexpected element type '{element.GetType()}'.");
-      //      }
-      //   }
-      //}
 
       // TODO: Refactor this to use the rule number returned from NatSpeak.
       public void InvokeRule(IEnumerable<string> spokenWords) {

@@ -15,105 +15,174 @@
 //// along with this program.If not, see<http://www.gnu.org/licenses/>.
 ////
 
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Renfrew.Grammar.Dragon;
+using Renfrew.Grammar.Dragon.SpeechRecognition;
+using Renfrew.Grammar.Exceptions;
+using Renfrew.Grammar.FluentApi;
 
-//using Renfrew.Grammar.Dragon;
-//using Renfrew.Grammar.Dragon.SpeechRecognition;
-//using Renfrew.Grammar.Exceptions;
+namespace Renfrew.Grammar {
+   /// <summary>
+   /// Converts from fluent rule structure to a structure NatSpeak understands.
+   /// </summary>
+   public class GrammarRuleConverter {
+      private readonly Grammar _grammar;
 
-//namespace Renfrew.Grammar {
+      public GrammarRuleConverter(Grammar grammar) {
+         _grammar = grammar;
+      }
 
-//   /// <summary>
-//   /// Converts from fluent rule structure to a structure NatSpeak understands.
-//   /// </summary>
-//   public class GrammarRuleConverter {
-//      private readonly Grammar _grammar;
+      public List<RuleInfo> Convert() {
+         return _grammar.ExportedRules.Select(
+               rule =>
+                  new RuleInfo {
+                     Id = rule.Id,
+                     Symbols = ConvertCompositeExpression(
+                        // FIXME: Remove cast.
+                        (CompositeExpression) rule.Expression
+                     ),
+                  }
+            )
+            .ToList();
+      }
 
-//      public GrammarRuleConverter(Grammar grammar) {
-//         _grammar = grammar;
-//      }
+      internal List<Symbol> ConvertCompositeExpression(
+         CompositeExpression compositeExpression
+      ) {
+         var symbols = new List<Symbol>();
 
-//      public List<RuleInfo> Convert() {
-//         return _grammar.AllRules.Values.Select(rule =>
-//            new RuleInfo {
-//               Id = rule.Id,
-//               Symbols = ConvertRule(rule.Subject.Elements),
-//            }
-//         ).ToList();
-//      }
+         var operationType = ConvertModifierToOperationType(
+            compositeExpression.Modifier
+         );
 
-//      public List<Symbol> ConvertRule(IElementContainer ruleContainer) {
-//         var symbols = new List<Symbol>();
+         symbols.Add(
+            new Symbol {
+               Type = SymbolType.StartOperation,
+               Value = (uint) operationType,
+            }
+         );
 
-//         foreach (var ruleElement in ruleContainer.Elements) {
-//            if (ruleElement is IElementContainer container) {
-//               if (container.HasElements) {
-//                  //CreateOperationSymbols(container);
-//               } else {
-//                  symbols.AddRange(ConvertRule(container));
-//               }
-//               continue;
-//            }
+         foreach (var subExpression in compositeExpression.SubExpressions) {
+            switch (subExpression) {
+               case CompositeExpression composite: {
+                  ConvertCompositeExpression(composite);
+                  break;
+               }
+               case RuleName rule: {
+                  symbols.Add(
+                     new Symbol {
+                        Type = SymbolType.Rule,
+                        Value = rule.Id,
+                     }
+                  );
+                  break;
+               }
+               case Word word: {
+                  symbols.Add(
+                     new Symbol {
+                        Type = SymbolType.Word,
+                        Value = word.Id,
+                     }
+                  );
+                  break;
+               }
+            }
+         }
 
-//            if (CreateRuleSymbol(ruleElement) is Symbol symbol) {
-//               symbols.Add(symbol);
-//            }
-//         }
+         symbols.Add(
+            new Symbol {
+               Type = SymbolType.EndOperation,
+               Value = (uint) operationType,
+            }
+         );
 
-//         return symbols;
-//      }
+         return symbols;
+      }
 
-//      //public List<Symbol> CreateOperationSymbols(IElementContainer container) {
-//      //   var ruleSymbols = ConvertRule(container);
+      public OperationType ConvertModifierToOperationType(
+         ExpressionModifier modifier
+      ) {
+         return modifier switch {
+            ExpressionModifier.Alternatives => OperationType.Alternative,
+            ExpressionModifier.Sequence => OperationType.Sequence,
+            ExpressionModifier.Optionals => OperationType.Optional,
+            ExpressionModifier.Repeated => OperationType.Repeat,
+            _ => throw new ArgumentException($"Unexpected type {modifier}")
+         };
+      }
 
-//      //   if (container.Elements.Count() > 1) {
-//      //      var operation = new List<Symbol>();
-//      //      var sequenceType = (uint) GetSequenceType(container);
+      //      public List<Symbol> ConvertRule(IElementContainer ruleContainer) {
+      //         var symbols = new List<Symbol>();
 
-//      //      operation.Add(new Symbol {
-//      //         Type = SymbolType.StartOperation,
-//      //         Value = sequenceType,
-//      //      });
-//      //      operation.AddRange(ruleSymbols);
-//      //      operation.Add(new Symbol {
-//      //         Type = SymbolType.EndOperation,
-//      //         Value = sequenceType,
-//      //      });
+      //         foreach (var ruleElement in ruleContainer.Elements) {
+      //            if (ruleElement is IElementContainer container) {
+      //               if (container.HasElements) {
+      //                  //CreateOperationSymbols(container);
+      //               } else {
+      //                  symbols.AddRange(ConvertRule(container));
+      //               }
+      //               continue;
+      //            }
 
-//      //      return operation;
-//      //   }
+      //            if (CreateRuleSymbol(ruleElement) is Symbol symbol) {
+      //               symbols.Add(symbol);
+      //            }
+      //         }
 
-//      //   return ruleSymbols;
-//      //}
+      //         return symbols;
+      //      }
 
-//      public Symbol CreateRuleSymbol(IElement ruleElement) =>
-//         ruleElement switch {
-//            IGrammarAction => null,
-//            IRuleElement element => new Symbol {
-//               Type = SymbolType.Rule,
-//               Value = _grammar.Words[element.ToString()].Id,
-//            },
-//            IWordElement element => new Symbol {
-//               Type = SymbolType.Word,
-//               Value = _grammar.Words[element.ToString()].Id,
-//            },
-//            _ => throw new InvalidGrammarElementException(
-//               $"Unrecognized grammar element type '{ruleElement.GetType().Name}'"
-//            )
-//         };
+      //      //public List<Symbol> CreateOperationSymbols(IElementContainer container) {
+      //      //   var ruleSymbols = ConvertRule(container);
 
-//      // I don't really like having to do this. Should def refactor!
-//      public OperationType GetSequenceType(IElementContainer container) =>
-//         container switch {
-//            IAlternatives => OperationType.Alternative,
-//            IOptionals => OperationType.Optional,
-//            IRepeats => OperationType.Repeat,
-//            ISequence => OperationType.Sequence,
-//            _ => throw new ArgumentException(
-//               $"Unexpected type '{container.GetType()}'", nameof(container)
-//            )
-//         };
-//   }
-//}
+      //      //   if (container.Elements.Count() > 1) {
+      //      //      var operation = new List<Symbol>();
+      //      //      var sequenceType = (uint) GetSequenceType(container);
+
+      //      //      operation.Add(new Symbol {
+      //      //         Type = SymbolType.StartOperation,
+      //      //         Value = sequenceType,
+      //      //      });
+      //      //      operation.AddRange(ruleSymbols);
+      //      //      operation.Add(new Symbol {
+      //      //         Type = SymbolType.EndOperation,
+      //      //         Value = sequenceType,
+      //      //      });
+
+      //      //      return operation;
+      //      //   }
+
+      //      //   return ruleSymbols;
+      //      //}
+
+      //      public Symbol CreateRuleSymbol(IElement ruleElement) =>
+      //         ruleElement switch {
+      //            IGrammarAction => null,
+      //            IRuleElement element => new Symbol {
+      //               Type = SymbolType.Rule,
+      //               Value = _grammar.Words[element.ToString()].Id,
+      //            },
+      //            IWordElement element => new Symbol {
+      //               Type = SymbolType.Word,
+      //               Value = _grammar.Words[element.ToString()].Id,
+      //            },
+      //            _ => throw new InvalidGrammarElementException(
+      //               $"Unrecognized grammar element type '{ruleElement.GetType().Name}'"
+      //            )
+      //         };
+
+      //      // I don't really like having to do this. Should def refactor!
+      //      public OperationType GetSequenceType(IElementContainer container) =>
+      //         container switch {
+      //            IAlternatives => OperationType.Alternative,
+      //            IOptionals => OperationType.Optional,
+      //            IRepeats => OperationType.Repeat,
+      //            ISequence => OperationType.Sequence,
+      //            _ => throw new ArgumentException(
+      //               $"Unexpected type '{container.GetType()}'", nameof(container)
+      //            )
+      //         };
+   }
+}

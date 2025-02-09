@@ -21,6 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NLog;
+using Renfrew.Grammar.Dragon.SpeechRecognition;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.NatSpeakInterop;
 
@@ -95,7 +96,7 @@ namespace Renfrew.Grammar {
 
       private void SerializeStrings<T>(
          ChunkType chunkType,
-         IReadOnlyDictionary<string, T> names,
+         IReadOnlyList<T> names,
          BinaryWriter stream
       )
          where T: IIdString {
@@ -117,26 +118,23 @@ namespace Renfrew.Grammar {
          stream.Write(bytes); // avInfo
       }
 
-      private byte[] SerializeStrings<T>(
-         IReadOnlyDictionary<string, T> identifiedNames
-      )
+      private byte[] SerializeStrings<T>(IReadOnlyList<T> idStrings)
          where T: IIdString {
          var memoryStream = new MemoryStream();
          var stream = new BinaryWriter(memoryStream);
 
-         foreach (var idString in identifiedNames.Values) {
+         foreach (var idString in idStrings) {
             var name = idString.String;
             var id = idString.Id;
 
             var length = GetPaddedStringLength(name);
-            byte[] nameBytes;
 
-            nameBytes = _encoding == NameEncoding.Unicode ?
+            var nameBytes = _encoding == NameEncoding.Unicode ?
                Encoding.Unicode.GetBytes(name) :
                Encoding.ASCII.GetBytes(name);
 
             // Write SRCFGXRULE struct.
-            stream.Write(length + 8); // dwSize - sizeof(SRCFGXRULE)
+            stream.Write(length + 8); // dwSize + sizeof(SRCFGXRULE)
             stream.Write(id); // dwRuleNum
             stream.Write(nameBytes); // szString
 
@@ -170,6 +168,20 @@ namespace Renfrew.Grammar {
       private byte[] SerializeRules(Grammar grammar) {
          var memoryStream = new MemoryStream();
          var stream = new BinaryWriter(memoryStream);
+
+         // TODO:
+         var ruleData = new GrammarRuleConverter(grammar).Convert();
+
+         foreach (var rule in ruleData) {
+            // The SRCFGRULE struct is 8 bytes long
+            const int srCfgRuleSize = 8;
+
+            var length = ruleData.Count * srCfgRuleSize;
+            stream.Write(length + srCfgRuleSize); // dwSize
+            stream.Write(rule.Id); // dwRuleNum
+
+            // Serialize the rule's symbols.
+         }
 
          // TODO: Refactor
          //var definitionFactory = new RuleDefinitionFactory(new RuleDirectiveFactory());

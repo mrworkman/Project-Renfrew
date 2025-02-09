@@ -15,11 +15,11 @@
 //// along with this program.If not, see<http://www.gnu.org/licenses/>.
 ////
 
-//using System.Collections.Generic;
+using System.Collections.Generic;
 
-//namespace Renfrew.Grammar.Dragon.SpeechRecognition {
-//   public class RuleInfo {
-//      public uint Id { get; set; }
-//      public List<Symbol> Symbols { get; set; }
-//   }
-//}
+namespace Renfrew.Grammar.Dragon.SpeechRecognition {
+   public class RuleInfo {
+      public uint Id { get; set; }
+      public List<Symbol> Symbols { get; set; }
+   }
+}
