@@ -21,7 +21,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NLog;
-using Renfrew.Grammar.Dragon.SpeechRecognition;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.NatSpeakInterop;
 
@@ -30,6 +29,9 @@ namespace Renfrew.Grammar {
       private static Logger _logger = LogManager.GetCurrentClassLogger();
 
       #region Speech Recognition Constants
+
+      private const int SrCfgXRuleSize = 8;
+      private const int SrCfgRuleSize = 8;
 
       private enum HeaderTypes : uint {
          Cfg = 0,
@@ -134,7 +136,7 @@ namespace Renfrew.Grammar {
                Encoding.ASCII.GetBytes(name);
 
             // Write SRCFGXRULE struct.
-            stream.Write(length + 8); // dwSize + sizeof(SRCFGXRULE)
+            stream.Write(length + SrCfgXRuleSize); // dwSize
             stream.Write(id); // dwRuleNum
             stream.Write(nameBytes); // szString
 
@@ -169,53 +171,22 @@ namespace Renfrew.Grammar {
          var memoryStream = new MemoryStream();
          var stream = new BinaryWriter(memoryStream);
 
-         // TODO:
          var ruleData = new GrammarRuleConverter(grammar).Convert();
 
          foreach (var rule in ruleData) {
-            // The SRCFGRULE struct is 8 bytes long
-            const int srCfgRuleSize = 8;
+            var length = rule.Symbols.Count * SrCfgRuleSize;
 
-            var length = ruleData.Count * srCfgRuleSize;
-            stream.Write(length + srCfgRuleSize); // dwSize
+            // Write SRCFGRULEx struct.
+            stream.Write(length + SrCfgRuleSize); // dwSize
             stream.Write(rule.Id); // dwRuleNum
 
-            // Serialize the rule's symbols.
+            // Write SRCFGSYMBOL structs.
+            foreach (var symbol in rule.Symbols) {
+               stream.Write((ushort) symbol.Type); // wType
+               stream.Write(symbol.Probability); // wProbability
+               stream.Write(symbol.Value); // dwValue
+            }
          }
-
-         // TODO: Refactor
-         //var definitionFactory = new RuleDefinitionFactory(new RuleDirectiveFactory());
-
-         //// One "table" per rule...
-         //var tables = definitionFactory.CreateDefinitionTables(grammar);
-
-         //Int32 ruleNumber = 1;
-         //foreach (var table in tables) {
-
-         //   // The SRCFGRULE struct is 8 bytes long
-         //   const int srCfgRuleSize = 8;
-
-         //   var length = table.Count() * srCfgRuleSize;
-
-         //   stream.Write(length + srCfgRuleSize);
-         //   stream.Write(ruleNumber);
-
-         //   foreach (var row in table) {
-         //      _logger.Trace(row);
-         //      Console.WriteLine(row);
-
-         //      stream.Write((UInt16) row.DirectiveType);
-         //      stream.Write((UInt16) 0); // Assume probability of Zero
-
-         //      if (row.ElementGrouping == ElementGroupings.NOT_APPLICABLE) {
-         //         stream.Write((UInt32) row.Id);
-         //      } else {
-         //         stream.Write((UInt32) row.ElementGrouping);
-         //      }
-         //   }
-
-         //   ruleNumber++;
-         //}
 
          try {
             return memoryStream.ToArray();

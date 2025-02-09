@@ -260,7 +260,7 @@ namespace Renfrew.Grammar {
          //if (!result) {
          //   throw new InvalidSequenceInCallbackException();
          //}
-         throw new NotImplementedException();
+         //throw new NotImplementedException();
       }
 
       //private bool ProcessSpokenWords(

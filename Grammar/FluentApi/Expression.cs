@@ -24,7 +24,7 @@ using System.Text.RegularExpressions;
 namespace Renfrew.Grammar.FluentApi {
    public interface IExpression { }
 
-   internal class CompositeExpression :
+   public class CompositeExpression :
       IExpression,
       IEquatable<CompositeExpression> {
       /// <summary>
@@ -37,16 +37,16 @@ namespace Renfrew.Grammar.FluentApi {
       /// </summary>
       private readonly List<IExpression> _subExpressions = new();
 
-      public ExpressionModifier Modifier => _expressionModifier;
+      internal ExpressionModifier Modifier => _expressionModifier;
 
-      public IReadOnlyList<IExpression> SubExpressions =>
+      internal IReadOnlyList<IExpression> SubExpressions =>
          _subExpressions.AsReadOnly();
 
       private CompositeExpression(ExpressionModifier expressionModifier) {
          _expressionModifier = expressionModifier;
       }
 
-      public static CompositeExpression Create(
+      internal static CompositeExpression Create(
          ExpressionModifier expressionModifier
       ) => new(
          expressionModifier
@@ -61,11 +61,11 @@ namespace Renfrew.Grammar.FluentApi {
          return compositeExpression;
       }
 
-      public void AddExpression(IExpression expression) {
+      internal void AddExpression(IExpression expression) {
          _subExpressions.Add(expression);
       }
 
-      public void AddExpressions(IEnumerable<IExpression> expressions) {
+      internal void AddExpressions(IEnumerable<IExpression> expressions) {
          _subExpressions.AddRange(expressions);
       }
 

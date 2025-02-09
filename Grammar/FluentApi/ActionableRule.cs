@@ -27,7 +27,7 @@ namespace Renfrew.Grammar.FluentApi {
       public uint Id => _rule.Id;
       public string String => _rule.String;
 
-      public IExpression Expression => _rule.Expression;
+      public CompositeExpression Expression => _rule.Expression;
       public IReadOnlyList<Word> Words => _rule.Words;
 
       private ActionableRule(Rule baseRule) {
@@ -35,15 +35,15 @@ namespace Renfrew.Grammar.FluentApi {
       }
 
       public IRule Do(Action action) {
+         // FIXME: Support actions.
          //_rule.AddElementToContainer( new GrammarAction(action) );
-         //return _rule;
-         throw new NotImplementedException();
+         return _rule;
       }
 
       public IRule Do(Action<IEnumerable<String>> action) {
+         // FIXME: Support actions.
          //_rule.AddElementToContainer( new GrammarAction(action) );
-         //return _rule;
-         throw new NotImplementedException();
+         return _rule;
       }
 
       #region Defer to Base Rule

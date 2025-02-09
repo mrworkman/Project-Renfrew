@@ -40,7 +40,7 @@ namespace Renfrew.Grammar.FluentApi {
       /// </summary>
       public string String { get; }
 
-      public IExpression Expression => _expression;
+      public CompositeExpression Expression => _expression;
 
       public IReadOnlyList<Word> Words => _words.Select(entry => entry.Value)
          .OrderBy(word => word.String.ToLowerInvariant())

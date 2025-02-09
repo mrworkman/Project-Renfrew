@@ -21,7 +21,7 @@ using System.Linq.Expressions;
 
 namespace Renfrew.Grammar.FluentApi.Interfaces {
    public interface IRule : IIdString {
-      IExpression Expression { get; } 
+      CompositeExpression Expression { get; }
       IReadOnlyList<Word> Words { get; }
 
       IActionableRule Say(string word);
@@ -31,7 +31,10 @@ namespace Renfrew.Grammar.FluentApi.Interfaces {
       IActionableRule OneOf(params Expression<Action<IRule>>[] actions);
 
       IActionableRule Optionally(Expression<Action<IRule>> action);
-      IActionableRule OptionallyOneOf(params Expression<Action<IRule>>[] actions);
+
+      IActionableRule OptionallyOneOf(
+         params Expression<Action<IRule>>[] actions
+      );
 
       IActionableRule OptionallySay(string word);
 
