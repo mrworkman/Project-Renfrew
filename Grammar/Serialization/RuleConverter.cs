@@ -18,29 +18,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Renfrew.Grammar.Dragon.SpeechRecognition;
 using Renfrew.Grammar.FluentApi;
+using Renfrew.Grammar.FluentApi.Interfaces;
+using Renfrew.Grammar.Serialization.Dragon.SpeechRecognition;
 
-namespace Renfrew.Grammar {
+namespace Renfrew.Grammar.Serialization {
    /// <summary>
    /// Converts from fluent rule structure to a structure NatSpeak understands.
    /// </summary>
-   public class GrammarRuleConverter {
-      private readonly Grammar _grammar;
-
-      public GrammarRuleConverter(Grammar grammar) {
-         _grammar = grammar;
+   public class RuleConverter {
+      public List<RuleInfo> Convert(Grammar grammar) {
+         return grammar.ExportedRules.Select(ConvertRule).ToList();
       }
 
-      public List<RuleInfo> Convert() {
-         return _grammar.ExportedRules.Select(
-               rule =>
-                  new RuleInfo {
-                     Id = rule.Id,
-                     Symbols = ConvertCompositeExpression(rule.Expression),
-                  }
-            )
-            .ToList();
+      public RuleInfo ConvertRule(IRule rule) {
+         return new RuleInfo {
+            Id = rule.Id,
+            Symbols = ConvertCompositeExpression(rule.Expression),
+         };
       }
 
       internal List<Symbol> ConvertCompositeExpression(

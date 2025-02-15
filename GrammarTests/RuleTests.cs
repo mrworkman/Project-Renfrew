@@ -17,15 +17,12 @@
 
 
 using System.Collections.Generic;
-
 using NUnit.Framework;
-
 using Renfrew.Grammar;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace GrammarTests {
-
    [TestFixture]
    public class RuleTests {
       private RuleFactory _factory;
@@ -34,7 +31,7 @@ namespace GrammarTests {
       [SetUp]
       public void Initialize() {
          _factory = new RuleFactory();
-         _idGenerator = new GrammarIdGenerator();
+         _idGenerator = new IdGenerator();
       }
 
       [Test]
@@ -56,7 +53,12 @@ namespace GrammarTests {
       public void ShouldProduceSimpleAlternativeRuleFromEnumerable() {
          var testRule = new Rule("some_rule", _idGenerator);
 
-         testRule.SayOneOf(new List<string> { "hello", "jello" });
+         testRule.SayOneOf(
+            new List<string> {
+               "hello",
+               "jello"
+            }
+         );
 
          var expectedExpression = CompositeExpression.Create(
             ExpressionModifier.Alternatives,
@@ -127,6 +129,5 @@ namespace GrammarTests {
 
          Assert.That(testRule.Expression, Is.EqualTo(expectedExpression));
       }
-
    }
 }

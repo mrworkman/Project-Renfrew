@@ -15,11 +15,13 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-namespace Renfrew.Grammar.Dragon.SpeechRecognition {
-   public enum OperationType {
-      Sequence    = 1,
-      Alternative = 2,
-      Repeat      = 3,
-      Optional    = 4,
+namespace Renfrew.Grammar.Serialization.Dragon.SpeechRecognition {
+   public enum SymbolType {
+      StartOperation = 1,
+      EndOperation   = 2,
+      Word           = 3,
+      Rule           = 4,
+      Wildcard       = 5,
+      List           = 6,
    }
 }

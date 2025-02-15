@@ -50,7 +50,7 @@ namespace GrammarTests.Util {
          string expectedDumpStr = GetMarkedUpDiff(diffs, Operation.Delete);
          string actualDumpStr = GetMarkedUpDiff(diffs, Operation.Insert);
 
-         return $"{expectedDumpStr}{actualDumpStr}";
+         return $"Expected\r\n{expectedDumpStr}\r\nActual\r\n{actualDumpStr}";
       }
 
       static string GetMarkedUpDiff(

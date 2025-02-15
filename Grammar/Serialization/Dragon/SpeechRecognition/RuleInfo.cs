@@ -17,7 +17,7 @@
 
 using System.Collections.Generic;
 
-namespace Renfrew.Grammar.Dragon.SpeechRecognition {
+namespace Renfrew.Grammar.Serialization.Dragon.SpeechRecognition {
    public class RuleInfo {
       public uint Id { get; set; }
       public List<Symbol> Symbols { get; set; }

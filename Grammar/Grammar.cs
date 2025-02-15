@@ -47,7 +47,7 @@ namespace Renfrew.Grammar {
       protected Grammar(IGrammarService grammarService, INatSpeak natSpeak)
          : this(
             new RuleFactory(),
-            new GrammarIdGenerator(),
+            new IdGenerator(),
             grammarService,
             natSpeak
          ) { }

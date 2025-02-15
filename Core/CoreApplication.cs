@@ -23,12 +23,10 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
 using NLog;
 using NLog.Fluent;
-
 using Renfrew.Core.Properties;
-
+using Renfrew.Grammar.Serialization;
 using Application = System.Windows.Forms.Application;
 
 namespace Renfrew.Core {
@@ -52,6 +50,7 @@ namespace Renfrew.Core {
       private bool _isTerminated = false;
 
       #region Application Init
+
       private CoreApplication() {
          InitializeComponent();
       }
@@ -63,7 +62,7 @@ namespace Renfrew.Core {
       private void InitializeComponent() {
          // Add application exit event handler(s)
          Application.ApplicationExit += OnApplicationExit;
-         Application.ThreadExit      += OnApplicationExit;
+         Application.ThreadExit += OnApplicationExit;
 
          // Set up the system tray icon
          _notifyIcon = new NotifyIcon();
@@ -79,27 +78,36 @@ namespace Renfrew.Core {
 
 
          _notifyIcon.DoubleClick += delegate(object sender, EventArgs args) {
-            _logger.Debug($"Dragon is alive: {_natSpeakService.IsDragonAlive()}");
+            _logger.Debug(
+               $"Dragon is alive: {_natSpeakService.IsDragonAlive()}"
+            );
          };
 
          // Add menu items to system tray icon menu
-         _contextMenuStrip.Items.Add("&Show Console", null, delegate(Object sender, EventArgs e) {
-            ShowConsole();
-         });
+         _contextMenuStrip.Items.Add(
+            "&Show Console",
+            null,
+            delegate(Object sender, EventArgs e) { ShowConsole(); }
+         );
          _contextMenuStrip.Items.Add("-");
-         _contextMenuStrip.Items.Add("E&xit Project Renfrew", null, OnApplicationExit);
+         _contextMenuStrip.Items.Add(
+            "E&xit Project Renfrew",
+            null,
+            OnApplicationExit
+         );
 
          _notifyIcon.Visible = true;
       }
 
-      public static CoreApplication Instance => _instance ?? (_instance = new CoreApplication());
+      public static CoreApplication Instance =>
+         _instance ?? (_instance = new CoreApplication());
 
       #endregion
 
       #region Application Termination
+
       private void OnApplicationExit(Object sender = null, EventArgs e = null) {
-         if (_isTerminated == true)
-            return;
+         if (_isTerminated == true) return;
 
          _notifyIcon.Visible = false;
 
@@ -114,16 +122,21 @@ namespace Renfrew.Core {
       public void Stop() {
          OnApplicationExit();
       }
+
       #endregion
 
       private void InitializeGrammarsFromAssembly(Assembly assembly) {
-
          // Get a list of all of the classes marked with the GrammarExportAttribute.
          var types = assembly.GetTypes()
-            .Select(e => new {
-               Type = e,
-               Attr = e.GetCustomAttributes<GrammarExportAttribute>().FirstOrDefault()
-            }).Where(e => e.Attr != null && e.Type.IsClass).ToList();
+            .Select(
+               e => new {
+                  Type = e,
+                  Attr = e.GetCustomAttributes<GrammarExportAttribute>()
+                     .FirstOrDefault()
+               }
+            )
+            .Where(e => e.Attr != null && e.Type.IsClass)
+            .ToList();
 
          _logger.Info($"Found {types.Count} grammars in assembly.");
 
@@ -136,8 +149,8 @@ namespace Renfrew.Core {
                var fileName = Path.GetFileName(assembly.Location);
 
                _logger.Warn(
-                  $"Class '{type.Type.FullName}' in {fileName} marked as exported grammar, " +
-                  $"but it does not extend {typeof(Grammar).FullName}. Ignoring."
+                  $"Class '{type.Type.FullName}' in {fileName} marked as exported grammar, "
+                  + $"but it does not extend {typeof(Grammar).FullName}. Ignoring."
                );
 
                continue;
@@ -147,7 +160,9 @@ namespace Renfrew.Core {
 
             // TODO: Find a way to break a grammar's dependency on NatSpeakInterop
             var grammar = (Grammar) Activator.CreateInstance(
-               type.Type, _grammarService, _natSpeakService
+               type.Type,
+               _grammarService,
+               _natSpeakService
             );
 
             try {
@@ -162,7 +177,9 @@ namespace Renfrew.Core {
 
             _logger.Info($"Grammar, '{a.Name}', initialized.");
 
-            _logger.Debug($"Grammar's words: {String.Join(", ", grammar.WordList)}");
+            _logger.Debug(
+               $"Grammar's words: {String.Join(", ", grammar.WordList)}"
+            );
          }
       }
 
@@ -178,11 +195,13 @@ namespace Renfrew.Core {
          _logger.Info("Looking for external grammars.");
 
          // Do nothing if the Grammars subdirectory doesn't exist.
-         if (Directory.Exists(grammarDirectory) == false)
-            return;
+         if (Directory.Exists(grammarDirectory) == false) return;
 
          // Load each DLL in the directory.
-         foreach (var f in Directory.EnumerateFiles(grammarDirectory, "*.dll")) {
+         foreach (var f in Directory.EnumerateFiles(
+                     grammarDirectory,
+                     "*.dll"
+                  )) {
             _logger.Info($"Found grammar file {f}.");
 
             // Get the full path to the DLL file.
@@ -194,7 +213,6 @@ namespace Renfrew.Core {
                _logger.Error(e, "Could not load assembly!");
             }
          }
-
       }
 
       private void LoadInternalGrammars() {
@@ -212,16 +230,25 @@ namespace Renfrew.Core {
          InfoConsole.Instance.Focus();
       }
 
-      public void ShowNotifyError(String message, String title = "Project Renfrew") {
+      public void ShowNotifyError(
+         String message,
+         String title = "Project Renfrew"
+      ) {
          _notifyIcon.ShowBalloonTip(2000, title, message, ToolTipIcon.Error);
       }
 
-      public void ShowNotifyInfo(String message, String title = "Project Renfrew") {
+      public void ShowNotifyInfo(
+         String message,
+         String title = "Project Renfrew"
+      ) {
          _notifyIcon.ShowBalloonTip(2000, title, message, ToolTipIcon.Info);
       }
 
       public async Task Start(NatSpeakService natSpeakService) {
-         _natSpeakService = natSpeakService ?? throw new ArgumentNullException(nameof(natSpeakService));
+         _natSpeakService = natSpeakService
+                            ?? throw new ArgumentNullException(
+                               nameof(natSpeakService)
+                            );
 
          ShowConsole();
 
@@ -232,7 +259,7 @@ namespace Renfrew.Core {
 
          // Get a reference to the GrammarService instance.
          _grammarService = _natSpeakService.GrammarService;
-         _grammarService.GrammarSerializer = new GrammarSerializer();
+         _grammarService.GrammarSerializer = new Serializer();
 
          _logger.Info("Querying Dragon Naturally Speaking...");
 
@@ -242,13 +269,11 @@ namespace Renfrew.Core {
          String profilePath;
 
          for (var notified = false;; notified = true) {
-
             profileName = _natSpeakService.GetCurrentUserProfileName();
 
             // If a profile name could not be retrieved, then either the user
             // hasn't selected a profile yet, or NatSpeak hasn't been started.
             if (profileName == null) {
-
                if (notified == false) {
                   _logger.Info("Could not load profile. Will try again.");
                   ShowNotifyInfo("Could not load profile. Will try again.");
@@ -272,7 +297,6 @@ namespace Renfrew.Core {
          _logger.Info($"Dragon Profile Path: {profilePath}");
 
          LoadGrammars();
-
       }
    }
 }

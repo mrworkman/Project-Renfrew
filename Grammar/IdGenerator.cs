@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace Renfrew.Grammar {
-   internal class GrammarIdGenerator : IIdGenerator {
+   internal class IdGenerator : IIdGenerator {
       private readonly Dictionary<string, uint> _listNames = new();
       private readonly Dictionary<string, uint> _ruleNames = new();
       private readonly Dictionary<string, uint> _words = new();

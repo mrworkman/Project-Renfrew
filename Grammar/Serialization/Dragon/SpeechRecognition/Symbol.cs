@@ -15,10 +15,23 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-namespace Renfrew.Grammar.Dragon.SpeechRecognition {
+#pragma warning disable CS0659
+namespace Renfrew.Grammar.Serialization.Dragon.SpeechRecognition {
    public class Symbol {
       public SymbolType Type { get; set; }
       public ushort Probability { get; } = 0;
       public uint Value { get; set; }
+
+      public override bool Equals(object obj) {
+         var other = (Symbol) obj;
+
+         if (other == null) {
+            return false;
+         }
+
+         return Type == other.Type
+                && Probability == other.Probability
+                && Value == other.Value;
+      }
    }
 }

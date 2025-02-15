@@ -1,19 +1,15 @@
 ﻿using System;
-
 using GrammarTests.Util;
-
 using Moq;
-
 using NUnit.Framework;
-
 using Renfrew.Grammar;
+using Renfrew.Grammar.Serialization;
 using Renfrew.NatSpeakInterop;
 
 namespace GrammarTests.SerializerTests {
    class SimpleGrammar : Grammar {
-      public SimpleGrammar(IGrammarService grammarService, INatSpeak natSpeak) : base(grammarService, natSpeak) {
-
-      }
+      public SimpleGrammar(IGrammarService grammarService, INatSpeak natSpeak) :
+         base(grammarService, natSpeak) { }
 
       public override void Dispose() {
          throw new NotImplementedException();
@@ -21,7 +17,10 @@ namespace GrammarTests.SerializerTests {
 
       public override void Initialize() {
          ImportRule("dgndictation");
-         AddRule("naming_scheme_x", rule => rule.Say("ape").WithRule("dgndictation"));
+         AddRule(
+            "naming_scheme_x",
+            rule => rule.Say("ape").WithRule("dgndictation")
+         );
 
          //Load();
 
@@ -31,9 +30,9 @@ namespace GrammarTests.SerializerTests {
 
    [TestFixture]
    class DgndictationTests {
-
       [Test]
       public void SimpleGrammarShouldProduceCorrectBytes() {
+         // @formatter:off
          var expectedBytes = new byte[] {
             #region Bytes
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00,
@@ -50,19 +49,86 @@ namespace GrammarTests.SerializerTests {
             0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00
             #endregion
          };
+         // @formatter:on
 
-         var ser = new GrammarSerializer(false);
-         
+         var ser = new Serializer(false);
+
          var gram = new SimpleGrammar(
             new Mock<IGrammarService>().Object,
             new Mock<INatSpeak>().Object
          );
          gram.Initialize();
-         
+
          var actualBytes = ser.Serialize(gram);
 
          CustomAssert.ByteArraysAreEqual(
-            expectedBytes, actualBytes
+            expectedBytes,
+            actualBytes
+         );
+      }
+
+      class SaySayOneOf : Grammar {
+         public SaySayOneOf(
+            IGrammarService grammarService,
+            INatSpeak natSpeak
+         ) :
+            base(grammarService, natSpeak) { }
+
+         public override void Dispose() {
+            throw new NotImplementedException();
+         }
+
+         public override void Initialize() {
+            AddRule(
+               "foo2",
+               rule => rule.Say("hello").SayOneOf("abe", "bob")
+            );
+
+            //Load();
+
+            //ActivateRule("naming_scheme_x");
+         }
+      }
+
+      [Test]
+      public void SerializeSaySayOneOf() {
+         // @formatter:off
+         var expectedBytes = new byte[] {
+	         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+	         0x04, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 
+	         0x10, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 
+	         0x66, 0x6f, 0x6f, 0x32, 0x00, 0x00, 0x00, 0x00, 
+	         0x02, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 
+	         0x0c, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 
+	         0x62, 0x6f, 0x62, 0x00, 0x10, 0x00, 0x00, 0x00, 
+	         0x01, 0x00, 0x00, 0x00, 0x68, 0x65, 0x6c, 0x6c, 
+	         0x6f, 0x00, 0x00, 0x00, 0x0c, 0x00, 0x00, 0x00, 
+	         0x02, 0x00, 0x00, 0x00, 0x61, 0x62, 0x65, 0x00, 
+	         0x03, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 
+	         0x40, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 
+	         0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 
+	         0x03, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 
+	         0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 
+	         0x03, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 
+	         0x03, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 
+	         0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 
+	         0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 
+         };
+         // @formatter:on
+
+         var ser = new Serializer(false);
+
+         var gram = new SaySayOneOf(
+            new Mock<IGrammarService>().Object,
+            new Mock<INatSpeak>().Object
+         );
+         gram.Initialize();
+
+         var actualBytes = ser.Serialize(gram);
+
+         CustomAssert.ByteArraysAreEqual(
+            expectedBytes,
+            actualBytes
          );
       }
    }

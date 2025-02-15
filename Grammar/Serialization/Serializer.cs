@@ -24,8 +24,8 @@ using NLog;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.NatSpeakInterop;
 
-namespace Renfrew.Grammar {
-   public class GrammarSerializer : IGrammarSerializer {
+namespace Renfrew.Grammar.Serialization {
+   public class Serializer : IGrammarSerializer {
       private static Logger _logger = LogManager.GetCurrentClassLogger();
 
       #region Speech Recognition Constants
@@ -55,9 +55,9 @@ namespace Renfrew.Grammar {
 
       private readonly NameEncoding _encoding;
 
-      public GrammarSerializer() : this(useUnicode: true) { }
+      public Serializer() : this(useUnicode: true) { }
 
-      public GrammarSerializer(bool useUnicode) {
+      public Serializer(bool useUnicode) {
          _encoding = useUnicode ? NameEncoding.Unicode : NameEncoding.Ascii;
       }
 
@@ -171,12 +171,12 @@ namespace Renfrew.Grammar {
          var memoryStream = new MemoryStream();
          var stream = new BinaryWriter(memoryStream);
 
-         var ruleData = new GrammarRuleConverter(grammar).Convert();
+         var ruleData = new RuleConverter().Convert(grammar);
 
          foreach (var rule in ruleData) {
             var length = rule.Symbols.Count * SrCfgRuleSize;
 
-            // Write SRCFGRULEx struct.
+            // Write SRCFGRULE struct.
             stream.Write(length + SrCfgRuleSize); // dwSize
             stream.Write(rule.Id); // dwRuleNum
 
