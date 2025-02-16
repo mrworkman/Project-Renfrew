@@ -1,5 +1,5 @@
 ﻿// Project Renfrew
-// Copyright(C) 2024 Stephen Workman (workman.stephen@gmail.com)
+// Copyright(C) 2025 Stephen Workman (workman.stephen@gmail.com)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,11 +15,23 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-namespace Renfrew.Grammar.Serialization.Dragon.SpeechRecognition {
-   public enum OperationType {
-      Sequence    = 1,
-      Alternative = 2,
-      Repeat      = 3,
-      Optional    = 4,
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Renfrew.Grammar.Serialization.LowLevelTypes {
+   internal class SrChunk {
+      public uint ChunkId { get; set; }
+
+      public uint ChunkSize => (uint) Rules.Sum(rule => rule.Size);
+
+      public List<ISerializableRule> Rules { get; set; }
+
+      public void Serialize(BinaryWriter writer) {
+         writer.Write(ChunkId);
+         writer.Write(ChunkSize);
+
+         Rules.ForEach(rule => rule.Serialize(writer));
+      }
    }
 }

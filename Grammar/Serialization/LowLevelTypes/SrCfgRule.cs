@@ -1,5 +1,5 @@
 ﻿// Project Renfrew
-// Copyright(C) 2024 Stephen Workman (workman.stephen@gmail.com)
+// Copyright(C) 2025 Stephen Workman (workman.stephen@gmail.com)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,23 +15,24 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-#pragma warning disable CS0659
-namespace Renfrew.Grammar.Serialization.Dragon.SpeechRecognition {
-   public class Symbol {
-      public SymbolType Type { get; set; }
-      public ushort Probability { get; } = 0;
-      public uint Value { get; set; }
+using System.Collections.Generic;
+using System.IO;
 
-      public override bool Equals(object obj) {
-         var other = (Symbol) obj;
+namespace Renfrew.Grammar.Serialization.LowLevelTypes {
+   internal class SrCfgRule : ISerializableRule {
+      public const uint SrCfgRuleSize = 8;
+      public const uint SrCfgSymbolSize = 8;
 
-         if (other == null) {
-            return false;
-         }
+      public uint Size =>
+         SrCfgRuleSize + (uint) Symbols.Count * SrCfgSymbolSize;
 
-         return Type == other.Type
-                && Probability == other.Probability
-                && Value == other.Value;
+      public uint UniqueId { get; set; }
+      public List<SrCfgSymbol> Symbols { get; set; }
+
+      public void Serialize(BinaryWriter writer) {
+         writer.Write(Size);
+         writer.Write(UniqueId);
+         Symbols.ForEach(symbol => symbol.Serialize(writer));
       }
    }
 }

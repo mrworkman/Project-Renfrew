@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.Interfaces;
-using Renfrew.Grammar.Serialization.Dragon.SpeechRecognition;
+using Renfrew.Grammar.Serialization.HighLevelTypes;
 
 namespace Renfrew.Grammar.Serialization {
    /// <summary>

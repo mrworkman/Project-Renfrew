@@ -7,7 +7,7 @@ using NUnit.Framework;
 using Renfrew.Grammar;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.Serialization;
-using Renfrew.Grammar.Serialization.Dragon.SpeechRecognition;
+using Renfrew.Grammar.Serialization.HighLevelTypes;
 
 namespace GrammarTests.SerializerTests {
    [TestFixture]

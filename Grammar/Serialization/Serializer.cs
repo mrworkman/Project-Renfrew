@@ -1,5 +1,5 @@
 ﻿// Project Renfrew
-// Copyright(C) 2017 Stephen Workman (workman.stephen@gmail.com)
+// Copyright(C) 2025 Stephen Workman (workman.stephen@gmail.com)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.If not, see<http://www.gnu.org/licenses/>.
+// along with this program. If not, see<http://www.gnu.org/licenses/>.
 //
 
 using System;
@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text;
 using NLog;
 using Renfrew.Grammar.FluentApi;
+using Renfrew.Grammar.Serialization.LowLevelTypes;
 using Renfrew.NatSpeakInterop;
 
 namespace Renfrew.Grammar.Serialization {
@@ -30,20 +31,17 @@ namespace Renfrew.Grammar.Serialization {
 
       #region Speech Recognition Constants
 
-      private const int SrCfgXRuleSize = 8;
-      private const int SrCfgRuleSize = 8;
-
-      private enum HeaderTypes : uint {
+      internal enum HeaderTypes : uint {
          Cfg = 0,
          Dictation = 2,
       }
 
-      private enum NameEncoding : uint {
+      internal enum NameEncoding : uint {
          Ascii = 0,
          Unicode = 1,
       }
 
-      private enum ChunkType : uint {
+      internal enum ChunkType : uint {
          Language = 1,
          Words = 2,
          Rules = 3,
@@ -61,45 +59,21 @@ namespace Renfrew.Grammar.Serialization {
          _encoding = useUnicode ? NameEncoding.Unicode : NameEncoding.Ascii;
       }
 
-      private int GetPaddedStringLength(string s) {
-         var numBytes = _encoding == NameEncoding.Unicode ?
-            Encoding.Unicode.GetByteCount(s) + 2 :
-            Encoding.ASCII.GetByteCount(s) + 1;
-
-         // Pad to 4-byte boundary.
-         return (numBytes + 3) & ~3;
+      internal SrChunk SerializeExportRules(Grammar grammar) {
+         return SerializeStrings(ChunkType.ExportRules, grammar.ExportedRules);
       }
 
-      private void SerializeExportRules(
-         Grammar grammar,
-         BinaryWriter stream
-      ) {
-         SerializeStrings(
-            ChunkType.ExportRules,
-            grammar.ExportedRules,
-            stream
-         );
+      internal SrChunk SerializeImportRules(Grammar grammar) {
+         return SerializeStrings(ChunkType.ImportRules, grammar.ImportedRules);
       }
 
-      private void SerializeImportRules(
-         Grammar grammar,
-         BinaryWriter stream
-      ) {
-         SerializeStrings(
-            ChunkType.ImportRules,
-            grammar.ImportedRules,
-            stream
-         );
+      internal SrChunk SerializeWords(Grammar grammar) {
+         return SerializeStrings(ChunkType.Words, grammar.Words);
       }
 
-      private void SerializeWords(Grammar grammar, BinaryWriter stream) {
-         SerializeStrings(ChunkType.Words, grammar.Words, stream);
-      }
-
-      private void SerializeStrings<T>(
+      internal SrChunk SerializeStrings<T>(
          ChunkType chunkType,
-         IReadOnlyList<T> names,
-         BinaryWriter stream
+         IReadOnlyList<T> idStrings
       )
          where T: IIdString {
          if (chunkType == ChunkType.Rules) {
@@ -108,116 +82,86 @@ namespace Renfrew.Grammar.Serialization {
             );
          }
 
-         if (!names.Any()) {
-            return;
+         if (!idStrings.Any()) {
+            return null;
          }
 
-         var bytes = SerializeStrings(names);
-
-         // Write SRCHUNK struct.
-         stream.Write((uint) chunkType); // dwChunkId
-         stream.Write(bytes.Length); // dwChunkSize
-         stream.Write(bytes); // avInfo
+         return new SrChunk {
+            ChunkId = (uint) chunkType,
+            Rules = idStrings.Select(
+                  idString => (ISerializableRule) new SrCfgXRule {
+                     //Size =
+                     //   GetPaddedStringLength(idString.String) + SrCfgXRuleSize, // TODO: Infer value
+                     RuleNumber = idString.Id,
+                     String = idString.String,
+                     EncodeAsUnicode = _encoding == NameEncoding.Unicode,
+                  }
+               )
+               .ToList()
+         };
       }
 
-      private byte[] SerializeStrings<T>(IReadOnlyList<T> idStrings)
-         where T: IIdString {
-         var memoryStream = new MemoryStream();
-         var stream = new BinaryWriter(memoryStream);
-
-         foreach (var idString in idStrings) {
-            var name = idString.String;
-            var id = idString.Id;
-
-            var length = GetPaddedStringLength(name);
-
-            var nameBytes = _encoding == NameEncoding.Unicode ?
-               Encoding.Unicode.GetBytes(name) :
-               Encoding.ASCII.GetBytes(name);
-
-            // Write SRCFGXRULE struct.
-            stream.Write(length + SrCfgXRuleSize); // dwSize
-            stream.Write(id); // dwRuleNum
-            stream.Write(nameBytes); // szString
-
-            // Make sure that the word/rule name is padded to a 4-byte boundary.
-            stream.Write(new byte[length - nameBytes.Length]);
-         }
-
-         stream.Flush();
-
-         try {
-            return memoryStream.ToArray();
-         } finally {
-            stream.Dispose();
-            memoryStream.Dispose();
-         }
-      }
-
-      private void SerializeRules(Grammar grammar, BinaryWriter stream) {
+      internal SrChunk SerializeRules(Grammar grammar) {
          if (!grammar.AllRules.Any()) {
-            return;
+            return null;
          }
-
-         var bytes = SerializeRules(grammar);
-
-         // Write SRCHUNK struct.
-         stream.Write((uint) ChunkType.Rules); // dwChunkId
-         stream.Write(bytes.Length); // dwChunkSize
-         stream.Write(bytes); // avInfo
-      }
-
-      private byte[] SerializeRules(Grammar grammar) {
-         var memoryStream = new MemoryStream();
-         var stream = new BinaryWriter(memoryStream);
 
          var ruleData = new RuleConverter().Convert(grammar);
 
-         foreach (var rule in ruleData) {
-            var length = rule.Symbols.Count * SrCfgRuleSize;
+         return new SrChunk {
+            ChunkId = (uint) ChunkType.Rules,
+            Rules = ruleData.Select(
+                  rule => (ISerializableRule) new SrCfgRule {
+                     //Size = (uint) rule.Symbols.Count * SrCfgRuleSize, TODO: Infer value
+                     UniqueId = rule.Id,
+                     Symbols = rule.Symbols.Select(
+                           symbol => new SrCfgSymbol {
+                              Type = (ushort) symbol.Type,
+                              Probability = symbol.Probability,
+                              Value = symbol.Value
+                           }
+                        )
+                        .ToList(),
+                  }
+               )
+               .ToList()
+         };
+      }
 
-            // Write SRCFGRULE struct.
-            stream.Write(length + SrCfgRuleSize); // dwSize
-            stream.Write(rule.Id); // dwRuleNum
+      internal (SrHeader Header, List<SrChunk> Chunks)
+         CreateDataStructures(Grammar grammar) {
+         var chunks = new List<SrChunk> {
+            SerializeExportRules(grammar),
+            SerializeImportRules(grammar),
+            SerializeWords(grammar),
+            SerializeRules(grammar)
+         };
 
-            // Write SRCFGSYMBOL structs.
-            foreach (var symbol in rule.Symbols) {
-               stream.Write((ushort) symbol.Type); // wType
-               stream.Write(symbol.Probability); // wProbability
-               stream.Write(symbol.Value); // dwValue
-            }
-         }
-
-         try {
-            return memoryStream.ToArray();
-         } finally {
-            stream.Dispose();
-            memoryStream.Dispose();
-         }
+         return (
+            new SrHeader {
+               Type = (uint) HeaderTypes.Cfg,
+               Flags = (uint) _encoding,
+            },
+            chunks.Where(chunk => chunk != null).ToList()
+         );
       }
 
       public byte[] Serialize(IGrammar iGrammar) {
          var grammar = (Grammar) iGrammar; // FIXME: This doesn't feel right.
 
-         var memoryStream = new MemoryStream();
-         var stream = new BinaryWriter(memoryStream);
+         var dataStructures = CreateDataStructures(grammar);
 
-         // Start off with the necessary header and flags
-         stream.Write((uint) HeaderTypes.Cfg);
-         stream.Write((uint) _encoding);
+         var writer = new BinaryWriter(new MemoryStream());
 
-         SerializeExportRules(grammar, stream);
-         SerializeImportRules(grammar, stream);
-         SerializeWords(grammar, stream);
-         SerializeRules(grammar, stream);
+         dataStructures.Header.Serialize(writer);
+         dataStructures.Chunks.ForEach(chunk => chunk.Serialize(writer));
 
-         stream.Flush();
+         writer.Flush();
 
          try {
-            return memoryStream.ToArray();
+            return (writer.BaseStream as MemoryStream)!.ToArray();
          } finally {
-            stream.Dispose();
-            memoryStream.Dispose();
+            writer.Dispose();
          }
       }
    }

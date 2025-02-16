@@ -1,5 +1,5 @@
 ﻿// Project Renfrew
-// Copyright(C) 2024 Stephen Workman (workman.stephen@gmail.com)
+// Copyright(C) 2025 Stephen Workman (workman.stephen@gmail.com)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,13 +15,18 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-namespace Renfrew.Grammar.Serialization.Dragon.SpeechRecognition {
-   public enum SymbolType {
-      StartOperation = 1,
-      EndOperation   = 2,
-      Word           = 3,
-      Rule           = 4,
-      Wildcard       = 5,
-      List           = 6,
+using System.IO;
+
+namespace Renfrew.Grammar.Serialization.LowLevelTypes {
+   internal struct SrCfgSymbol {
+      public uint Type { get; set; }
+      public uint Probability { get; set; }
+      public uint Value { get; set; }
+
+      public void Serialize(BinaryWriter writer) {
+         writer.Write(Type);
+         writer.Write(Probability);
+         writer.Write(Value);
+      }
    }
 }
