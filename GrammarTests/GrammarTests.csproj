@@ -50,6 +50,9 @@
     <Reference Include="Moq, Version=4.7.145.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.7.145\lib\net45\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
@@ -72,8 +75,11 @@
     <Compile Include="RuleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuleInvocationTests.cs" />
-    <Compile Include="SerializerTests\DgndictationTests.cs" />
-    <Compile Include="SerializerTests\RuleConverterTests.cs" />
+    <Compile Include="Serialization\CreateRulesChunkTests.cs" />
+    <Compile Include="Serialization\DgndictationTests.cs" />
+    <Compile Include="Serialization\RuleConverterTests.cs" />
+    <Compile Include="Serialization\SerializerTests.cs" />
+    <Compile Include="Serialization\SrCfgSymbolTests.cs" />
     <Compile Include="Util\CustomAssert.cs" />
   </ItemGroup>
   <ItemGroup>

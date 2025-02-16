@@ -18,6 +18,7 @@
 using System.IO;
 using System.Text;
 
+#pragma warning disable CS0659
 namespace Renfrew.Grammar.Serialization.LowLevelTypes {
    internal class SrCfgXRule : ISerializableRule {
       public const uint SrCfgXRuleSize = 8;
@@ -53,7 +54,22 @@ namespace Renfrew.Grammar.Serialization.LowLevelTypes {
 
          writer.Write(encodedString);
 
-         writer.Write(new byte[stringLength - encodedString.Length]);
+         if (stringLength - encodedString.Length != 0) {
+            writer.Write(new byte[stringLength - encodedString.Length]);
+         }
+      }
+
+      public override bool Equals(object obj) {
+         var other = obj as SrCfgXRule;
+
+         if (other == null) {
+            return false;
+         }
+
+         return Size == other.Size
+                && RuleNumber == other.RuleNumber
+                && String == other.String
+                && EncodeAsUnicode == other.EncodeAsUnicode;
       }
    }
 }

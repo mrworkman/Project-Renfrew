@@ -43,7 +43,7 @@ namespace Renfrew.Grammar.FluentApi {
       public CompositeExpression Expression => _expression;
 
       public IReadOnlyList<Word> Words => _words.Select(entry => entry.Value)
-         .OrderBy(word => word.String.ToLowerInvariant())
+         .OrderBy(word => word.Id)
          .ToList();
 
       internal Rule(string name, IIdGenerator idGenerator) {
@@ -54,6 +54,14 @@ namespace Renfrew.Grammar.FluentApi {
 
          String = name ?? throw new ArgumentNullException(nameof(name));
          Id = _idGenerator.GetRuleId(String);
+      }
+
+      private void AdoptWordsFromRule(Rule r) {
+         foreach (var kvp in r._words) {
+            if (!_words.ContainsKey(kvp.Key)) {
+               _words.Add(kvp.Key, kvp.Value);
+            }
+         }
       }
 
       public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
@@ -73,6 +81,8 @@ namespace Renfrew.Grammar.FluentApi {
             _expression.AddExpression(nestedRule._expression);
          }
 
+         AdoptWordsFromRule(nestedRule);
+
          return (ActionableRule) this;
       }
 
@@ -90,6 +100,8 @@ namespace Renfrew.Grammar.FluentApi {
          } else {
             _expression.AddExpression(nestedRule._expression);
          }
+
+         AdoptWordsFromRule(nestedRule);
 
          return (ActionableRule) this;
       }
@@ -123,6 +135,8 @@ namespace Renfrew.Grammar.FluentApi {
          } else {
             _expression.AddExpression(nestedRule._expression);
          }
+
+         AdoptWordsFromRule(nestedRule);
 
          return (ActionableRule) this;
       }

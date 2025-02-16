@@ -27,8 +27,8 @@ namespace Renfrew.Grammar.Serialization {
    /// Converts from fluent rule structure to a structure NatSpeak understands.
    /// </summary>
    public class RuleConverter {
-      public List<RuleInfo> Convert(Grammar grammar) {
-         return grammar.ExportedRules.Select(ConvertRule).ToList();
+      public List<RuleInfo> Convert(IReadOnlyList<IRule> rules) {
+         return rules.Select(ConvertRule).ToList();
       }
 
       public RuleInfo ConvertRule(IRule rule) {

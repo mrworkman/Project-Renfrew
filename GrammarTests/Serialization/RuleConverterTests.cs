@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
 using Renfrew.Grammar;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.Serialization;
 using Renfrew.Grammar.Serialization.HighLevelTypes;
 
-namespace GrammarTests.SerializerTests {
+namespace GrammarTests.Serialization {
    [TestFixture]
    internal class RuleConverterTests {
       private IdGenerator _generator;
@@ -21,7 +17,7 @@ namespace GrammarTests.SerializerTests {
       }
 
       [Test]
-      public void ConvertSimpleSay() {
+      public void ShouldConvertSimpleSay() {
          var rule = new Rule("-", _generator);
 
          rule.Say("hello");
@@ -86,7 +82,7 @@ namespace GrammarTests.SerializerTests {
 
 
       [Test]
-      public void ConvertSaySayOneOf() {
+      public void ShouldConvertSaySayOneOf() {
          var rule = new Rule("-", _generator);
 
          rule.Say("hello").SayOneOf("abe", "bob");

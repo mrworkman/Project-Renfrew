@@ -19,8 +19,8 @@ using System.IO;
 
 namespace Renfrew.Grammar.Serialization.LowLevelTypes {
    internal struct SrCfgSymbol {
-      public uint Type { get; set; }
-      public uint Probability { get; set; }
+      public ushort Type { get; set; }
+      public ushort Probability { get; set; }
       public uint Value { get; set; }
 
       public void Serialize(BinaryWriter writer) {

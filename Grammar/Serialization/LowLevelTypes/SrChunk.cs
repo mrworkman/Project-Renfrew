@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+#pragma warning disable CS0659
 namespace Renfrew.Grammar.Serialization.LowLevelTypes {
    internal class SrChunk {
       public uint ChunkId { get; set; }
@@ -32,6 +33,18 @@ namespace Renfrew.Grammar.Serialization.LowLevelTypes {
          writer.Write(ChunkSize);
 
          Rules.ForEach(rule => rule.Serialize(writer));
+      }
+
+      public override bool Equals(object obj) {
+         var other = obj as SrChunk;
+
+         if (other == null) {
+            return false;
+         }
+
+         return ChunkId == other.ChunkId
+                && ChunkSize == other.ChunkSize
+                && Rules.SequenceEqual(other.Rules);
       }
    }
 }

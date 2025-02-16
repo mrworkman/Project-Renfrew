@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using NLog;
 using Renfrew.Grammar.FluentApi;
+using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.Grammar.Serialization.LowLevelTypes;
 using Renfrew.NatSpeakInterop;
 
@@ -59,19 +59,23 @@ namespace Renfrew.Grammar.Serialization {
          _encoding = useUnicode ? NameEncoding.Unicode : NameEncoding.Ascii;
       }
 
-      internal SrChunk SerializeExportRules(Grammar grammar) {
-         return SerializeStrings(ChunkType.ExportRules, grammar.ExportedRules);
+      internal SrChunk CreateExportRulesNamesChunk(
+         IReadOnlyList<IRule> exportRules
+      ) {
+         return CreateStringChunk(ChunkType.ExportRules, exportRules);
       }
 
-      internal SrChunk SerializeImportRules(Grammar grammar) {
-         return SerializeStrings(ChunkType.ImportRules, grammar.ImportedRules);
+      internal SrChunk CreateImportRulesNamesChunk(
+         IReadOnlyList<IRule> importRules
+      ) {
+         return CreateStringChunk(ChunkType.ImportRules, importRules);
       }
 
-      internal SrChunk SerializeWords(Grammar grammar) {
-         return SerializeStrings(ChunkType.Words, grammar.Words);
+      internal SrChunk CreateWordsChunk(IReadOnlyList<Word> words) {
+         return CreateStringChunk(ChunkType.Words, words);
       }
 
-      internal SrChunk SerializeStrings<T>(
+      internal SrChunk CreateStringChunk<T>(
          ChunkType chunkType,
          IReadOnlyList<T> idStrings
       )
@@ -90,8 +94,6 @@ namespace Renfrew.Grammar.Serialization {
             ChunkId = (uint) chunkType,
             Rules = idStrings.Select(
                   idString => (ISerializableRule) new SrCfgXRule {
-                     //Size =
-                     //   GetPaddedStringLength(idString.String) + SrCfgXRuleSize, // TODO: Infer value
                      RuleNumber = idString.Id,
                      String = idString.String,
                      EncodeAsUnicode = _encoding == NameEncoding.Unicode,
@@ -101,18 +103,17 @@ namespace Renfrew.Grammar.Serialization {
          };
       }
 
-      internal SrChunk SerializeRules(Grammar grammar) {
-         if (!grammar.AllRules.Any()) {
+      internal SrChunk CreateRulesChunk(IReadOnlyList<IRule> exportedRules) {
+         if (!exportedRules.Any()) {
             return null;
          }
 
-         var ruleData = new RuleConverter().Convert(grammar);
+         var ruleData = new RuleConverter().Convert(exportedRules);
 
          return new SrChunk {
             ChunkId = (uint) ChunkType.Rules,
             Rules = ruleData.Select(
                   rule => (ISerializableRule) new SrCfgRule {
-                     //Size = (uint) rule.Symbols.Count * SrCfgRuleSize, TODO: Infer value
                      UniqueId = rule.Id,
                      Symbols = rule.Symbols.Select(
                            symbol => new SrCfgSymbol {
@@ -131,10 +132,10 @@ namespace Renfrew.Grammar.Serialization {
       internal (SrHeader Header, List<SrChunk> Chunks)
          CreateDataStructures(Grammar grammar) {
          var chunks = new List<SrChunk> {
-            SerializeExportRules(grammar),
-            SerializeImportRules(grammar),
-            SerializeWords(grammar),
-            SerializeRules(grammar)
+            CreateExportRulesNamesChunk(grammar.ExportedRules),
+            CreateImportRulesNamesChunk(grammar.ImportedRules),
+            CreateWordsChunk(grammar.Words),
+            CreateRulesChunk(grammar.ExportedRules)
          };
 
          return (

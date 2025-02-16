@@ -17,7 +17,9 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
+#pragma warning disable CS0659
 namespace Renfrew.Grammar.Serialization.LowLevelTypes {
    internal class SrCfgRule : ISerializableRule {
       public const uint SrCfgRuleSize = 8;
@@ -33,6 +35,18 @@ namespace Renfrew.Grammar.Serialization.LowLevelTypes {
          writer.Write(Size);
          writer.Write(UniqueId);
          Symbols.ForEach(symbol => symbol.Serialize(writer));
+      }
+
+      public override bool Equals(object obj) {
+         var other = obj as SrCfgRule;
+
+         if (other == null) {
+            return false;
+         }
+
+         return Size == other.Size
+                && UniqueId == other.UniqueId
+                && Symbols.SequenceEqual(other.Symbols);
       }
    }
 }
