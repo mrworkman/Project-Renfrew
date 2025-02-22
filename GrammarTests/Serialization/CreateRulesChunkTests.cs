@@ -164,8 +164,16 @@ namespace GrammarTests.Serialization {
                         Value = (uint) OperationType.Optional,
                      },
                      new() {
+                        Type = (ushort) SymbolType.StartOperation,
+                        Value = (uint) OperationType.Sequence,
+                     },
+                     new() {
                         Type = (ushort) SymbolType.Word,
                         Value = 2, // Word ID (abe).
+                     },
+                     new() {
+                        Type = (ushort) SymbolType.EndOperation,
+                        Value = (uint) OperationType.Sequence,
                      },
                      new() {
                         Type = (ushort) SymbolType.EndOperation,
@@ -189,8 +197,8 @@ namespace GrammarTests.Serialization {
          );
 
          Assert.AreEqual(expectedResult, actualResult);
-         Assert.AreEqual(56, actualResult.ChunkSize);
-         Assert.AreEqual(56, actualResult.Rules[0].Size);
+         Assert.AreEqual(72, actualResult.ChunkSize);
+         Assert.AreEqual(72, actualResult.Rules[0].Size);
       }
    }
 }

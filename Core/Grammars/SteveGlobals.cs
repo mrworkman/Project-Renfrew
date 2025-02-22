@@ -24,7 +24,7 @@ using Renfrew.Win32.Interop;
 namespace Renfrew.Core.Grammars {
    using Grammar;
 
-   //[GrammarExport("Steve's Grammar", "Steve's own grammar.")]
+   [GrammarExport("Steve's Grammar", "Steve's own grammar.")]
    public class SteveGlobalsGrammar : Grammar {
       private IEnumerable<KeyChord> _currentCommand = new List<KeyChord>();
 
