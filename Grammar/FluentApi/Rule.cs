@@ -24,7 +24,11 @@ using Renfrew.Grammar.FluentApi.Interfaces;
 namespace Renfrew.Grammar.FluentApi {
    internal class Rule : IRule {
       private readonly IIdGenerator _idGenerator;
-      private CompositeExpression _expression;
+
+      private readonly CompositeExpression _expression =
+         CompositeExpression.Create(
+            ExpressionModifier.Sequence
+         );
 
       private readonly Dictionary<string, Word> _words = new(
          StringComparer.CurrentCultureIgnoreCase
@@ -46,7 +50,10 @@ namespace Renfrew.Grammar.FluentApi {
          .OrderBy(word => word.Id)
          .ToList();
 
-      internal Rule(string name, IIdGenerator idGenerator) {
+      internal Rule(
+         string name,
+         IIdGenerator idGenerator
+      ) {
          _idGenerator = idGenerator
                         ?? throw new ArgumentNullException(
                            nameof(idGenerator)
@@ -70,11 +77,7 @@ namespace Renfrew.Grammar.FluentApi {
          );
 
          foreach (var action in actions) {
-            var nestedRule = new Rule("-", _idGenerator) {
-               _expression = CompositeExpression.Create(
-                  ExpressionModifier.Sequence
-               )
-            };
+            var nestedRule = new Rule("-", _idGenerator);
 
             action.Compile()(nestedRule);
 
@@ -83,11 +86,7 @@ namespace Renfrew.Grammar.FluentApi {
             AdoptWordsFromRule(nestedRule);
          }
 
-         if (_expression == null) {
-            _expression = wrapper;
-         } else {
-            _expression.AddExpression(wrapper);
-         }
+         _expression.AddExpression(wrapper);
 
          return (ActionableRule) this;
       }
@@ -97,11 +96,7 @@ namespace Renfrew.Grammar.FluentApi {
             ExpressionModifier.Optionals
          );
 
-         var nestedRule = new Rule("-", _idGenerator) {
-            _expression = CompositeExpression.Create(
-               ExpressionModifier.Sequence
-            )
-         };
+         var nestedRule = new Rule("-", _idGenerator);
 
          action.Compile()(nestedRule);
 
@@ -109,11 +104,7 @@ namespace Renfrew.Grammar.FluentApi {
 
          AdoptWordsFromRule(nestedRule);
 
-         if (_expression == null) {
-            _expression = wrapper;
-         } else {
-            _expression.AddExpression(wrapper);
-         }
+         _expression.AddExpression(wrapper);
 
          return (ActionableRule) this;
       }
@@ -138,11 +129,7 @@ namespace Renfrew.Grammar.FluentApi {
             ExpressionModifier.Repeated
          );
 
-         var nestedRule = new Rule("-", _idGenerator) {
-            _expression = CompositeExpression.Create(
-               ExpressionModifier.Sequence
-            )
-         };
+         var nestedRule = new Rule("-", _idGenerator);
 
          action.Compile()(nestedRule);
 
@@ -150,11 +137,7 @@ namespace Renfrew.Grammar.FluentApi {
 
          AdoptWordsFromRule(nestedRule);
 
-         if (_expression == null) {
-            _expression = wrapper;
-         } else {
-            _expression.AddExpression(wrapper);
-         }
+         _expression.AddExpression(wrapper);
 
          return (ActionableRule) this;
       }
@@ -167,10 +150,6 @@ namespace Renfrew.Grammar.FluentApi {
       }
 
       public IActionableRule Say(string word) {
-         _expression ??= CompositeExpression.Create(
-            ExpressionModifier.Sequence
-         );
-
          var wordExpr = Word.Create(_idGenerator.GetWordId(word), word);
 
          if (!_words.ContainsKey(word)) {
@@ -201,20 +180,12 @@ namespace Renfrew.Grammar.FluentApi {
             alternatives.AddExpression(wordExpr);
          }
 
-         if (_expression == null) {
-            _expression = alternatives;
-         } else {
-            _expression.AddExpression(alternatives);
-         }
+         _expression.AddExpression(alternatives);
 
          return (ActionableRule) this;
       }
 
       public IActionableRule WithRule(string ruleName) {
-         _expression ??= CompositeExpression.Create(
-            ExpressionModifier.Sequence
-         );
-
          _expression.AddExpression(
             RuleName.Create(_idGenerator.GetRuleId(ruleName), ruleName)
          );

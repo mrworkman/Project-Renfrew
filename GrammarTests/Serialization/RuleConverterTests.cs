@@ -1,11 +1,27 @@
-﻿using System.Collections.Generic;
+﻿// Project Renfrew
+// Copyright(C) 2025 Stephen Workman (workman.stephen@gmail.com)
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see<http://www.gnu.org/licenses/>.
+//
+
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using Renfrew.Grammar;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.Serialization;
 using Renfrew.Grammar.Serialization.HighLevelTypes;
-using Renfrew.Grammar.Serialization.LowLevelTypes;
 
 namespace GrammarTests.Serialization {
    [TestFixture]
@@ -31,7 +47,7 @@ namespace GrammarTests.Serialization {
       }
 
       [Test]
-      public void ShouldConvertSimpleSay() {
+      public void ShouldConvert_Say() {
          var expectedSymbols = new List<Symbol> {
             #region Expected Symbols
 
@@ -60,7 +76,7 @@ namespace GrammarTests.Serialization {
       }
 
       [Test]
-      public void ConvertSimpleSayOptionallySay() {
+      public void ShouldConvert_SimpleSayOptionallySay() {
          var expectedSymbols = new List<Symbol> {
             #region Expected Symbols
 
@@ -111,7 +127,7 @@ namespace GrammarTests.Serialization {
 
 
       [Test]
-      public void ShouldConvertSaySayOneOf() {
+      public void ShouldConvert_Say_SayOneOf() {
          var expectedSymbols = new List<Symbol> {
             #region Expected Symbols
 
@@ -157,7 +173,7 @@ namespace GrammarTests.Serialization {
       }
 
       [Test]
-      public void ShouldConvertOptionallySay_SayOneOf() {
+      public void ShouldConvert_OptionallySay_SayOneOf() {
          var expectedSymbols = new List<Symbol> {
             #region Expected Symbols
 
@@ -204,7 +220,7 @@ namespace GrammarTests.Serialization {
             new() {
                Type = SymbolType.EndOperation,
                Value = (uint) OperationType.Sequence,
-            }
+            },
 
             #endregion
          };

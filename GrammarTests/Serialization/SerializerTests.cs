@@ -124,6 +124,10 @@ namespace GrammarTests.Serialization {
                      Symbols = new() {
                         new() {
                            Type = (ushort) SymbolType.StartOperation,
+                           Value = (uint) OperationType.Sequence,
+                        },
+                        new() {
+                           Type = (ushort) SymbolType.StartOperation,
                            Value = (uint) OperationType.Repeat,
                         },
                         new() {
@@ -175,7 +179,11 @@ namespace GrammarTests.Serialization {
                         new() {
                            Type = (ushort) SymbolType.EndOperation,
                            Value = (uint) OperationType.Repeat,
-                        }
+                        },
+                        new() {
+                           Type = (ushort) SymbolType.EndOperation,
+                           Value = (uint) OperationType.Sequence,
+                        },
                      }
                   }
                },
