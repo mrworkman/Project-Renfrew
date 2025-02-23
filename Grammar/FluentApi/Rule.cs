@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Renfrew.Grammar.FluentApi.Interfaces;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Renfrew.Grammar.FluentApi {
    internal class Rule : IRule {
@@ -71,19 +72,34 @@ namespace Renfrew.Grammar.FluentApi {
          }
       }
 
+      private void InvokeWithNestedRule(
+         Expression<Action<IRule>> action,
+         CompositeExpression wrapper,
+         bool addWrapperToRuleExpression = true
+      ) {
+         var nestedRule = new Rule("-", _idGenerator);
+
+         action.Compile()(nestedRule);
+         wrapper.AddExpression(nestedRule._expression);
+
+         AdoptWordsFromRule(nestedRule);
+
+         if (addWrapperToRuleExpression) {
+            _expression.AddExpression(wrapper);
+         }
+      }
+
       public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
          var wrapper = CompositeExpression.Create(
             ExpressionModifier.Alternatives
          );
 
          foreach (var action in actions) {
-            var nestedRule = new Rule("-", _idGenerator);
-
-            action.Compile()(nestedRule);
-
-            wrapper.AddExpression(nestedRule._expression);
-
-            AdoptWordsFromRule(nestedRule);
+            InvokeWithNestedRule(
+               action,
+               wrapper,
+               addWrapperToRuleExpression: false
+            );
          }
 
          _expression.AddExpression(wrapper);
@@ -92,19 +108,12 @@ namespace Renfrew.Grammar.FluentApi {
       }
 
       public IActionableRule Optionally(Expression<Action<IRule>> action) {
-         var wrapper = CompositeExpression.Create(
-            ExpressionModifier.Optionals
+         InvokeWithNestedRule(
+            action,
+            CompositeExpression.Create(
+               ExpressionModifier.Optionals
+            )
          );
-
-         var nestedRule = new Rule("-", _idGenerator);
-
-         action.Compile()(nestedRule);
-
-         wrapper.AddExpression(nestedRule._expression);
-
-         AdoptWordsFromRule(nestedRule);
-
-         _expression.AddExpression(wrapper);
 
          return (ActionableRule) this;
       }
@@ -125,19 +134,12 @@ namespace Renfrew.Grammar.FluentApi {
 
       // Repeats: A+
       public IActionableRule Repeat(Expression<Action<IRule>> action) {
-         var wrapper = CompositeExpression.Create(
-            ExpressionModifier.Repeated
+         InvokeWithNestedRule(
+            action,
+            CompositeExpression.Create(
+               ExpressionModifier.Repeated
+            )
          );
-
-         var nestedRule = new Rule("-", _idGenerator);
-
-         action.Compile()(nestedRule);
-
-         wrapper.AddExpression(nestedRule._expression);
-
-         AdoptWordsFromRule(nestedRule);
-
-         _expression.AddExpression(wrapper);
 
          return (ActionableRule) this;
       }
