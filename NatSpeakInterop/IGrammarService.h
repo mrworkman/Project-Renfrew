@@ -19,18 +19,18 @@
 
 namespace Renfrew::NatSpeakInterop {
    public interface class IGrammarService {
-      void ActivateRule(IGrammar ^grammar, HWND hWnd, String ^ruleName);
-      void ActivateRule(IGrammar ^grammar, IntPtr hWnd, String ^ruleName);
-      void ActivateRules(IGrammar ^grammar);
-      void DeactivateRule(IGrammar ^grammar, String ^ruleName);
+      void ActivateRule(IGrammar^ grammar, HWND hWnd, String^ ruleName);
+      void ActivateRule(IGrammar^ grammar, IntPtr hWnd, String^ ruleName);
+      void ActivateRules(IGrammar^ grammar);
+      void DeactivateRule(IGrammar^ grammar, String^ ruleName);
 
-      void SetExclusiveGrammar(IGrammar ^grammar, bool exclusive);
+      void SetExclusiveGrammar(IGrammar^ grammar, bool exclusive);
 
-      property IGrammarSerializer ^GrammarSerializer {
-         void set(IGrammarSerializer ^grammarSerializer);
+      property IGrammarSerializer^ GrammarSerializer {
+         void set(IGrammarSerializer^ grammarSerializer);
       };
 
-      void LoadGrammar(IGrammar ^grammar);
-      void UnloadGrammar(IGrammar ^grammar);
+      void LoadGrammar(IGrammar^ grammar);
+      void UnloadGrammar(IGrammar^ grammar);
    };
 }

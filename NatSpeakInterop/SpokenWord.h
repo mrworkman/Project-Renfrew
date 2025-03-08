@@ -1,5 +1,5 @@
-// Project Renfrew
-// Copyright(C) 2017 Stephen Workman (workman.stephen@gmail.com)
+﻿// Project Renfrew
+// Copyright(C) 2025 Stephen Workman (workman.stephen@gmail.com)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,10 +17,22 @@
 
 #pragma once
 
-#include "SpokenWord.h"
+public ref class SpokenWord {
+   public:
+      SpokenWord(String^ word, const DWORD wordNumber, const DWORD ruleNumber) {
+         Word = word;
+         WordNumber = wordNumber;
+         RuleNumber = ruleNumber;
+      }
 
-namespace Renfrew::NatSpeakInterop {
-   public interface class IGrammar {
-      void InvokeRule(List<SpokenWord^>^ spokenWords);
-   };
-}
+      property String^ Word;
+      property DWORD WordNumber;
+      property DWORD RuleNumber;
+
+      virtual String^ ToString() override {
+         return String::Format(
+            "{{ Word = {0}, Word Number: {1}, Rule Number: {2} }}",
+            Word, WordNumber, RuleNumber
+         );
+      }
+};

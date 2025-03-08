@@ -20,12 +20,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
+using NLog;
+using Renfrew.Grammar.Exceptions;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.NatSpeakInterop;
 
 namespace Renfrew.Grammar {
    public abstract class Grammar : IGrammar, IDisposable {
+      private static readonly Logger Logger =
+         LogManager.GetCurrentClassLogger();
+
       private readonly IGrammarService _grammarService;
 
       private readonly Dictionary<string, IRule> _allRules =
@@ -204,16 +209,15 @@ namespace Renfrew.Grammar {
          _allRules.Remove(name);
       }
 
-      // TODO: Refactor this to use the rule number returned from NatSpeak.
-      public void InvokeRule(IEnumerable<string> spokenWords) {
-         //if (spokenWords == null) {
-         //   throw new ArgumentNullException(nameof(spokenWords));
-         //}
+      public void InvokeRule(List<SpokenWord> spokenWords) {
+         Logger.Debug("InvokeRule: {0}", string.Join(", ", spokenWords));
 
-         //// Make sure there is at least one rule activated.
-         //if (!_activeRules.Any()) {
-         //   throw new NoActiveRulesException();
-         //}
+         // Make sure there is at least one rule activated.
+         if (!_activeRules.Any()) {
+            throw new NoActiveRulesException();
+         }
+
+         var startRuleId = spokenWords.First().RuleNumber;
 
          //var result = false;
 

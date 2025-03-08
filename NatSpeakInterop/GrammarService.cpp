@@ -23,6 +23,7 @@
 #include "GrammarException.h"
 #include "GrammarNotLoadedException.h"
 #include "InvalidStateException.h"
+#include "SpokenWord.h"
 #include "SrErrorCodes.h"
 
 using namespace Renfrew::NatSpeakInterop;
@@ -124,18 +125,15 @@ void GrammarService::ActivateRules(IGrammar^ grammar) {
 }
 
 GrammarExecutive^ GrammarService::AddGrammarToList(IGrammar^ grammar) {
-   GrammarExecutive^ ge;
-
-   // Make sure the grammar's not already loaded
    if (_grammars->ContainsKey(grammar) == true) {
       throw gcnew GrammarAlreadyLoadedException("FILL ME IN");
    }
 
-   ge = gcnew GrammarExecutive(grammar);
+   auto grammarExecutive = gcnew GrammarExecutive(grammar);
 
-   _grammars->Add(grammar, ge);
+   _grammars->Add(grammar, grammarExecutive);
 
-   return ge;
+   return grammarExecutive;
 }
 
 void GrammarService::DeactivateRule(IGrammar^ grammar, String^ ruleName) {
@@ -196,7 +194,7 @@ void GrammarService::LoadGrammar(IGrammar^ grammar) {
       throw gcnew InvalidStateException("GrammarSerializer hasn't been set!");
    }
 
-   auto ge = AddGrammarToList(grammar);
+   auto grammarExecutive = AddGrammarToList(grammar);
 
    grammarBytes = _grammarSerializer->Serialize(grammar);
 
@@ -212,7 +210,7 @@ void GrammarService::LoadGrammar(IGrammar^ grammar) {
          this,
          &GrammarService::PhraseFinishedCallback
       ),
-      ge
+      grammarExecutive
    );
 
    IntPtr iSrGramNotifySinkPtr = Marshal::GetIUnknownForObject(
@@ -247,7 +245,7 @@ void GrammarService::LoadGrammar(IGrammar^ grammar) {
    Marshal::Release(iSrGramNotifySinkPtr);
 
    // Store isrGramCommon with our grammar
-   ge->GramCommonInterface = isrGramCommon;
+   grammarExecutive->GramCommonInterface = isrGramCommon;
 }
 
 void GrammarService::PausedProcessor(UInt64 cookie) {
@@ -269,99 +267,57 @@ void GrammarService::PhraseFinishedCallback(
    Debug::Assert(grammarObj != nullptr);
    Debug::Assert(isrResBasic != nullptr);
 
-   auto ge = safe_cast<GrammarExecutive^>(grammarObj);
+   auto grammarExecutive = safe_cast<GrammarExecutive^>(grammarObj);
 
-   if (ge == nullptr) {
+   if (grammarExecutive == nullptr) {
       throw gcnew InvalidStateException("grammarObj is unexpectedly NULL!");
    }
 
-   //
-   // Test Processing The Results
-   //
-
-   /* MOVE BELOW BasePathWord
-   *if ((flags & ISRNOTEFIN_RECOGNIZED) == 0) {
-   Debug::WriteLine("Rejected");
-   return;
+   if ((flags & ISRNOTEFIN_RECOGNIZED) == 0) {
+      Debug::WriteLine("Phrase rejected.");
+      return;
    }
 
    if ((flags & ISRNOTEFIN_THISGRAMMAR) == 0) {
-   Debug::WriteLine("Other");
-   return;
-   }*/
+      Debug::WriteLine("Phrase is not from this grammar.");
+      return;
+   }
 
    auto isrResGraph = safe_cast<ISrResGraph^>(isrResBasic);
 
-   DWORD pathSize = 0;
-   PDWORD path = nullptr;
+   const auto path = new DWORD[MaxPathEntries];
+   DWORD pathSize = sizeof(DWORD) * MaxPathEntries;
 
-   try {
-      // Find out how big the path is
-      isrResGraph->BestPathWord(0, &pathSize, 0, &pathSize);
-   } catch (COMException^ e) {
-      // Allocate space for the path
-      if (e->HResult == EVENT_E_ALL_SUBSCRIBERS_FAILED) {
-         path = new DWORD[pathSize];
-         isrResGraph->BestPathWord(
-            0,
-            path,
-            pathSize * sizeof(DWORD),
-            &pathSize
-         );
-      }
-   }
+   isrResGraph->BestPathWord(0, path, pathSize, &pathSize);
 
-   auto spokenWords = gcnew List<String^>();
+   Debug::Assert(pathSize != 0);
+   Debug::Assert(pathSize <= sizeof(DWORD) * MaxPathEntries);
 
-   DWORD numWords = pathSize / sizeof(DWORD);
+   auto spokenWords = gcnew List<SpokenWord^>();
+
+   const auto numWords = pathSize / sizeof(DWORD);
 
    for (DWORD i = 0; i < numWords; i++) {
       SRRESWORDNODE node;
 
-      DWORD srWordSize = 0;
-      SRWORDW srWord;
+      DWORD bufferSize = sizeof(SRWORDW) + MaxWordSize;
+      const auto buffer = new BYTE[bufferSize];
+      const auto pWord = reinterpret_cast<PSRWORDW>(buffer);
 
-      // Get the word size to allocate space for it
-      isrResGraph->GetWordNode(path[i], &node, &srWord, 0, &srWordSize);
+      isrResGraph->GetWordNode(path[i], &node, pWord, bufferSize, &bufferSize);
 
-      if (srWordSize == 0) {
-         throw gcnew InvalidStateException("Word with no size!");
-      }
+      auto word = gcnew String(pWord->szWord);
+      auto wordNumber = pWord->dwWordNum;
+      auto ruleNumber = node.dwCFGParse;
 
-      // Allocate an appropriately ized struct.
-      auto psrWord = (PSRWORDW) new BYTE[srWordSize];
+      spokenWords->Add(gcnew SpokenWord(word, wordNumber, ruleNumber));
 
-      isrResGraph->GetWordNode(
-         path[i],
-         &node,
-         psrWord,
-         srWordSize,
-         &srWordSize
-      );
-
-      // Ignore the rule number, because it's only really useful if we
-      // want to invoke nested "sub-rules" directly - which we don't.
-      //
-      // if (ruleNumber == 0)
-      //    ruleNumber = node.dwCFGParse;
-
-      Debug::WriteLine(
-         "Word Number: {0}, Word: {1}, Rule: {2}",
-         psrWord->dwWordNum,
-         gcnew String(psrWord->szWord),
-         node.dwCFGParse
-      );
-
-      spokenWords->Add(gcnew String(psrWord->szWord));
-
-      delete[] psrWord;
+      delete[] buffer;
    }
 
    delete[] path;
 
-   // Evaluate the list of spoken words against the
-   // list of available rules in the grammar.
-   ge->Grammar->InvokeRule(spokenWords);
+   grammarExecutive->Grammar->InvokeRule(spokenWords);
 }
 
 GrammarExecutive^ GrammarService::RemoveGrammarFromList(IGrammar^ grammar) {
@@ -375,7 +331,9 @@ GrammarExecutive^ GrammarService::RemoveGrammarFromList(IGrammar^ grammar) {
 void GrammarService::SetExclusiveGrammar(IGrammar^ grammar, bool exclusive) {
    auto ge = GetGrammarExecutive(grammar);
 
-   ((IDgnSrGramCommon^) (ge->GramCommonInterface))->SpecialGrammar(exclusive);
+   safe_cast<IDgnSrGramCommon^>(ge->GramCommonInterface)->SpecialGrammar(
+      exclusive
+   );
 }
 
 void GrammarService::UnloadGrammar(IGrammar^ grammar) {

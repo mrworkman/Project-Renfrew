@@ -121,6 +121,7 @@
     <ClInclude Include="INatSpeak.h" />
     <ClInclude Include="InvalidStateException.h" />
     <ClInclude Include="ISpchServices.h" />
+    <ClInclude Include="SpokenWord.h" />
     <ClInclude Include="ISrCentral.h" />
     <ClInclude Include="ISrGramCommon.h" />
     <ClInclude Include="ISrGramNotifySink.h" />

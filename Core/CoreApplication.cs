@@ -34,7 +34,8 @@ namespace Renfrew.Core {
    using NatSpeakInterop;
 
    public class CoreApplication : ApplicationContext {
-      private static Logger _logger = LogManager.GetCurrentClassLogger();
+      private static readonly Logger Logger =
+         LogManager.GetCurrentClassLogger();
 
       private static CoreApplication _instance;
 
@@ -78,7 +79,7 @@ namespace Renfrew.Core {
 
 
          _notifyIcon.DoubleClick += delegate(object sender, EventArgs args) {
-            _logger.Debug(
+            Logger.Debug(
                $"Dragon is alive: {_natSpeakService.IsDragonAlive()}"
             );
          };
@@ -138,7 +139,7 @@ namespace Renfrew.Core {
             .Where(e => e.Attr != null && e.Type.IsClass)
             .ToList();
 
-         _logger.Info($"Found {types.Count} grammars in assembly.");
+         Logger.Info($"Found {types.Count} grammars in assembly.");
 
          // Enumerate the available types in the assembly.
          foreach (var type in types) {
@@ -148,7 +149,7 @@ namespace Renfrew.Core {
             if (type.Type.IsSubclassOf(typeof(Grammar)) == false) {
                var fileName = Path.GetFileName(assembly.Location);
 
-               _logger.Warn(
+               Logger.Warn(
                   $"Class '{type.Type.FullName}' in {fileName} marked as exported grammar, "
                   + $"but it does not extend {typeof(Grammar).FullName}. Ignoring."
                );
@@ -156,7 +157,7 @@ namespace Renfrew.Core {
                continue;
             }
 
-            _logger.Info($"Initializing '{a.Name}'.");
+            Logger.Info($"Initializing '{a.Name}'.");
 
             // TODO: Find a way to break a grammar's dependency on NatSpeakInterop
             var grammar = (Grammar) Activator.CreateInstance(
@@ -168,16 +169,16 @@ namespace Renfrew.Core {
             try {
                grammar.Initialize();
             } catch (Exception e) {
-               _logger.Error();
-               _logger.Error("---=== EXCEPTION CAUGHT ===---");
-               _logger.Error(e);
-               _logger.Error("---=== END OF EXCEPTION DETAIL ===---");
+               Logger.Error();
+               Logger.Error("---=== EXCEPTION CAUGHT ===---");
+               Logger.Error(e);
+               Logger.Error("---=== END OF EXCEPTION DETAIL ===---");
                continue;
             }
 
-            _logger.Info($"Grammar, '{a.Name}', initialized.");
+            Logger.Info($"Grammar, '{a.Name}', initialized.");
 
-            _logger.Debug(
+            Logger.Debug(
                $"Grammar's words: {String.Join(", ", grammar.WordList)}"
             );
          }
@@ -192,7 +193,7 @@ namespace Renfrew.Core {
          var currentDirectory = Directory.GetCurrentDirectory();
          var grammarDirectory = Path.Combine(currentDirectory, @"Grammars");
 
-         _logger.Info("Looking for external grammars.");
+         Logger.Info("Looking for external grammars.");
 
          // Do nothing if the Grammars subdirectory doesn't exist.
          if (Directory.Exists(grammarDirectory) == false) return;
@@ -202,7 +203,7 @@ namespace Renfrew.Core {
                      grammarDirectory,
                      "*.dll"
                   )) {
-            _logger.Info($"Found grammar file {f}.");
+            Logger.Info($"Found grammar file {f}.");
 
             // Get the full path to the DLL file.
             var path = Path.Combine(grammarDirectory, f);
@@ -210,13 +211,13 @@ namespace Renfrew.Core {
             try {
                InitializeGrammarsFromAssembly(Assembly.LoadFrom(path));
             } catch (FileLoadException e) {
-               _logger.Error(e, "Could not load assembly!");
+               Logger.Error(e, "Could not load assembly!");
             }
          }
       }
 
       private void LoadInternalGrammars() {
-         _logger.Info("Looking for internal (system) grammars.");
+         Logger.Info("Looking for internal (system) grammars.");
 
          InitializeGrammarsFromAssembly(Assembly.GetExecutingAssembly());
       }
@@ -252,8 +253,8 @@ namespace Renfrew.Core {
 
          ShowConsole();
 
-         _logger.Info("Starting...");
-         _logger.Info(
+         Logger.Info("Starting...");
+         Logger.Info(
             $"Product version: {Assembly.GetExecutingAssembly().GetName().Version}"
          );
 
@@ -261,9 +262,9 @@ namespace Renfrew.Core {
          _grammarService = _natSpeakService.GrammarService;
          _grammarService.GrammarSerializer = new Serializer();
 
-         _logger.Info("Querying Dragon Naturally Speaking...");
+         Logger.Info("Querying Dragon Naturally Speaking...");
 
-         _logger.Info($"Dragon Version: {_natSpeakService.GetDragonVersion()}");
+         Logger.Info($"Dragon Version: {_natSpeakService.GetDragonVersion()}");
 
          String profileName;
          String profilePath;
@@ -275,7 +276,7 @@ namespace Renfrew.Core {
             // hasn't selected a profile yet, or NatSpeak hasn't been started.
             if (profileName == null) {
                if (notified == false) {
-                  _logger.Info("Could not load profile. Will try again.");
+                  Logger.Info("Could not load profile. Will try again.");
                   ShowNotifyInfo("Could not load profile. Will try again.");
                }
 
@@ -293,8 +294,8 @@ namespace Renfrew.Core {
             break;
          }
 
-         _logger.Info($"Dragon Profile Loaded: {profileName}");
-         _logger.Info($"Dragon Profile Path: {profilePath}");
+         Logger.Info($"Dragon Profile Loaded: {profileName}");
+         Logger.Info($"Dragon Profile Path: {profilePath}");
 
          LoadGrammars();
       }
