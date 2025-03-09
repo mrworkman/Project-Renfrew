@@ -39,129 +39,117 @@ namespace Renfrew.Grammar.Serialization {
          };
       }
 
-      internal List<Symbol> ConvertSequence(Sequence sequence) {
-         var symbols = new List<Symbol>();
+      private List<Symbol> ConvertAlternatives(Alternatives alternatives) {
+         return WrapOperation(
+            OperationType.Alternative,
+            symbols => {
+               var isOnlyWords = alternatives.Sequences.All(
+                  s => s.Members.Count == 1 && s.Members.First() is Word
+               );
 
-         symbols.Add(
-            new Symbol {
-               Type = SymbolType.StartOperation,
-               OperationType = OperationType.Sequence
+               // Optimise where all sequences are made up of a single word.
+               if (isOnlyWords) {
+                  symbols.AddRange(
+                     alternatives.Sequences.Select(
+                        s => ConvertWord(s.Members.First() as Word)
+                     )
+                  );
+
+                  return symbols;
+               }
+
+               foreach (var alternativeSequence in alternatives.Sequences) {
+                  symbols.AddRange(ConvertSequence(alternativeSequence));
+               }
+
+               return symbols;
             }
          );
+      }
 
-         foreach (var sequenceMember in sequence.Members) {
-            switch (sequenceMember) {
-               case Alternatives alternatives: {
-                  symbols.Add(
-                     new Symbol {
-                        Type = SymbolType.StartOperation,
-                        OperationType = OperationType.Alternative
+      private List<Symbol> ConvertOptional(Optional optional) {
+         return WrapOperation(
+            OperationType.Optional,
+            _ => ConvertSequence(optional.Sequence)
+         );
+      }
+
+      private List<Symbol> ConvertRepeated(Repeated repeated) {
+         return WrapOperation(
+            OperationType.Repeat,
+            _ => ConvertSequence(repeated.Sequence)
+         );
+      }
+
+      private Symbol ConvertRuleName(RuleName ruleName) {
+         return new Symbol {
+            Type = SymbolType.Rule,
+            Id = ruleName.Id
+         };
+      }
+
+      private List<Symbol> ConvertSequence(Sequence sequence) {
+         return WrapOperation(
+            OperationType.Sequence,
+            symbols => {
+               foreach (var sequenceMember in sequence.Members) {
+                  switch (sequenceMember) {
+                     case Alternatives alternatives: {
+                        symbols.AddRange(ConvertAlternatives(alternatives));
+                        break;
                      }
-                  );
-
-                  // Optimise for the case where all of the members are
-                  // sequences made up of a single word.
-                  if (alternatives.Sequences.All(
-                         s => s.Members.Count == 1
-                              && s.Members.All(m => m is Word)
-                      )) {
-                     symbols.AddRange(
-                        alternatives.Sequences.Select(
-                           s => new Symbol {
-                              Type = SymbolType.Word,
-                              Id = (s.Members.First() as Word).Id
-                           }
-                        )
-                     );
-                  } else {
-                     foreach (var alternativeSequence in
-                              alternatives.Sequences) {
-                        symbols.AddRange(ConvertSequence(alternativeSequence));
+                     case Optional optional: {
+                        symbols.AddRange(ConvertOptional(optional));
+                        break;
+                     }
+                     case Repeated repeated: {
+                        symbols.AddRange(ConvertRepeated(repeated));
+                        break;
+                     }
+                     case RuleName ruleName: {
+                        symbols.Add(ConvertRuleName(ruleName));
+                        break;
+                     }
+                     case Word word: {
+                        symbols.Add(ConvertWord(word));
+                        break;
                      }
                   }
+               }
 
-                  symbols.Add(
-                     new Symbol {
-                        Type = SymbolType.EndOperation,
-                        OperationType = OperationType.Alternative
-                     }
-                  );
-                  break;
-               }
-               case Optional optional: {
-                  symbols.Add(
-                     new Symbol {
-                        Type = SymbolType.StartOperation,
-                        OperationType = OperationType.Optional
-                     }
-                  );
-                  symbols.AddRange(ConvertSequence(optional.Sequence));
-                  symbols.Add(
-                     new Symbol {
-                        Type = SymbolType.EndOperation,
-                        OperationType = OperationType.Optional
-                     }
-                  );
-                  break;
-               }
-               case Repeated repeated: {
-                  symbols.Add(
-                     new Symbol {
-                        Type = SymbolType.StartOperation,
-                        OperationType = OperationType.Repeat
-                     }
-                  );
-                  symbols.AddRange(ConvertSequence(repeated.Sequence));
-                  symbols.Add(
-                     new Symbol {
-                        Type = SymbolType.EndOperation,
-                        OperationType = OperationType.Repeat
-                     }
-                  );
-                  break;
-               }
-               case RuleName ruleName: {
-                  symbols.Add(
-                     new Symbol {
-                        Type = SymbolType.Rule,
-                        Id = ruleName.Id
-                     }
-                  );
-                  break;
-               }
-               case Word word: {
-                  symbols.Add(
-                     new Symbol {
-                        Type = SymbolType.Word,
-                        Id = word.Id
-                     }
-                  );
-                  break;
-               }
+               return symbols;
             }
-         }
+         );
+      }
+
+      private Symbol ConvertWord(Word word) {
+         return new Symbol {
+            Type = SymbolType.Word,
+            Id = word.Id
+         };
+      }
+
+      private List<Symbol> WrapOperation(
+         OperationType operationType,
+         Func<List<Symbol>, List<Symbol>> func
+      ) {
+         var symbols = new List<Symbol> {
+            new() {
+               Type = SymbolType.StartOperation,
+               OperationType = operationType
+            }
+         };
+
+         symbols.AddRange(func(new List<Symbol>()));
 
          symbols.Add(
             new Symbol {
                Type = SymbolType.EndOperation,
-               OperationType = OperationType.Sequence
+               OperationType = operationType
             }
          );
 
          return symbols;
-      }
-
-      public OperationType DetermineOperationType(
-         ISequenceMember sequenceMember
-      ) {
-         return sequenceMember switch {
-            Alternatives => OperationType.Alternative,
-            Optional => OperationType.Optional,
-            Repeated => OperationType.Repeat,
-            _ => throw new ArgumentException(
-               $"Unexpected type {sequenceMember.GetType()}"
-            )
-         };
       }
    }
 }
