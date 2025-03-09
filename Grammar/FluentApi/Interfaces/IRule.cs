@@ -18,11 +18,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Renfrew.Grammar.FluentApi.ExpressionParts;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 
 namespace Renfrew.Grammar.FluentApi.Interfaces {
    public interface IRule : IIdString {
-      CompositeExpression Expression { get; }
+      Sequence Sequence { get; }
       IReadOnlyList<Word> Words { get; }
 
       IActionableRule Say(string word);

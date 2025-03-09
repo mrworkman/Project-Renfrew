@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Renfrew.Grammar.FluentApi.ExpressionParts;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
 
@@ -28,7 +29,7 @@ namespace Renfrew.Grammar.FluentApi {
       public uint Id => _rule.Id;
       public string String => _rule.String;
 
-      public CompositeExpression Expression => _rule.Expression;
+      public Sequence Sequence => _rule.Sequence;
       public IReadOnlyList<Word> Words => _rule.Words;
 
       private ActionableRule(Rule baseRule) {

@@ -22,6 +22,7 @@ using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 namespace Renfrew.Grammar.FluentApi.ExpressionParts {
    public class Sequence : IEquatable<Sequence> {
       private readonly List<ISequenceMember> _members = new();
+      internal Sequence() { }
 
       internal IReadOnlyList<ISequenceMember> Members => _members.AsReadOnly();
 
@@ -52,11 +53,15 @@ namespace Renfrew.Grammar.FluentApi.ExpressionParts {
          return true;
       }
 
-      internal static Sequence Create() {
-         return new Sequence();
+      internal static Sequence Create(
+         IEnumerable<ISequenceMember> sequenceMembers
+      ) {
+         var sequence = new Sequence();
+         sequence._members.AddRange(sequenceMembers);
+         return sequence;
       }
 
-      internal void Add(ISequenceMember member) {
+      internal void AddMember(ISequenceMember member) {
          _members.Add(member);
       }
    }

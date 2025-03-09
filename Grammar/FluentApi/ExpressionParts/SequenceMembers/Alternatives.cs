@@ -57,6 +57,11 @@ namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
          return alternatives;
       }
 
+      internal static Alternatives Create(
+         IEnumerable<ISequenceMember> sequenceMembers
+      ) {
+         return Create(Sequence.Create(sequenceMembers));
+      }
 
       internal void Add(Sequence sequence) {
          Sequences.Add(sequence);
