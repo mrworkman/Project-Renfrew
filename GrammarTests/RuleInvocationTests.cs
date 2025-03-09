@@ -17,76 +17,87 @@
 
 using System;
 using System.Diagnostics;
-
 using Moq;
-
 using NUnit.Framework;
-
 using Renfrew.Grammar;
 using Renfrew.Grammar.Exceptions;
 using Renfrew.NatSpeakInterop;
 
 namespace GrammarTests {
-
    [TestFixture]
    public class RuleInvocationTests {
-
       private static int rule1Result = 0;
       private static int rule2Result = 0;
       private static int rule3Result = 0;
 
       #region TestGrammar
+
       private class TestGrammar : Grammar {
-
          public TestGrammar(IGrammarService grammarService)
-            : base(grammarService, new Mock<INatSpeak>().Object) {
-
-         }
+            : base(grammarService, new Mock<INatSpeak>().Object) { }
 
          public override void Dispose() { }
 
          public override void Initialize() { }
 
          public void InitializeRule1() {
-            AddRule("test_rule_01", r =>
-               r.Say("Hello").Say("Jello").Do(words => {
-                  rule1Result = 1;
+            AddRule(
+               "test_rule_01",
+               r =>
+                  r.Say("Hello")
+                     .Say("Jello")
+                     .Do(
+                        words => {
+                           rule1Result = 1;
 
-                  foreach (var word in words)
-                     Debug.WriteLine($"Rule1: RECEIVED WORD: {word}");
-
-               })
+                           foreach (var word in words)
+                              Debug.WriteLine($"Rule1: RECEIVED WORD: {word}");
+                        }
+                     )
             );
          }
 
          public void InitializeRule2() {
-            AddRule("test_rule_02", r =>
-               r.Say("Hello").Say("Jello").OptionallySay("Cheese").Say("Please").Do(words => {
-                  rule2Result = 1;
+            AddRule(
+               "test_rule_02",
+               r =>
+                  r.Say("Hello")
+                     .Say("Jello")
+                     .OptionallySay("Cheese")
+                     .Say("Please")
+                     .Do(
+                        words => {
+                           rule2Result = 1;
 
-                  foreach (var word in words)
-                     Debug.WriteLine($"Rule2: RECEIVED WORD: {word}");
-
-               })
+                           foreach (var word in words)
+                              Debug.WriteLine($"Rule2: RECEIVED WORD: {word}");
+                        }
+                     )
             );
          }
 
          public void InitializeRule3() {
-            AddRule("test_rule_03", r =>
-               r.Say("Hello")
-                  .Optionally(o => o.Say("Skee"))
-                  .RepeatOneOf(
-                     rp => rp.SayOneOf("a", "b", "c"),
-                     rp => rp.Say("Hi"),
-                     rp => rp.Say("Sty")
-                  ).Do(words => {
-                     rule3Result = 1;
-                     foreach (var word in words)
-                        Debug.WriteLine($"Rule3: RECEIVED WORD: {word}");
-                  })
+            AddRule(
+               "test_rule_03",
+               r =>
+                  r.Say("Hello")
+                     .Optionally(o => o.Say("Skee"))
+                     .RepeatOneOf(
+                        rp => rp.SayOneOf("a", "b", "c"),
+                        rp => rp.Say("Hi"),
+                        rp => rp.Say("Sty")
+                     )
+                     .Do(
+                        words => {
+                           rule3Result = 1;
+                           foreach (var word in words)
+                              Debug.WriteLine($"Rule3: RECEIVED WORD: {word}");
+                        }
+                     )
             );
          }
       }
+
       #endregion
 
       private TestGrammar _grammar;
@@ -107,7 +118,8 @@ namespace GrammarTests {
       public void ComplexRuleActionShouldBeInvoked_Variant1() {
          _grammar.InitializeRule3();
          _grammar.ActivateRule("test_rule_03");
-         _grammar.InvokeRule(new[] { "Hello", "Skee", "Sty", "Sty", "Hi", "Hi", "Sty" });
+         //_grammar.InvokeRule(new[] { "Hello", "Skee", "Sty", "Sty", "Hi", "Hi", "Sty" });
+         throw new NotImplementedException();
 
          Assert.That(rule3Result, Is.EqualTo(1));
       }
@@ -116,7 +128,8 @@ namespace GrammarTests {
       public void ComplexRuleActionShouldBeInvoked_Variant2() {
          _grammar.InitializeRule3();
          _grammar.ActivateRule("test_rule_03");
-         _grammar.InvokeRule(new[] { "Hello", "Hi", "Hi" });
+         //_grammar.InvokeRule(new[] { "Hello", "Hi", "Hi" });
+         throw new NotImplementedException();
 
          Assert.That(rule3Result, Is.EqualTo(1));
       }
@@ -125,7 +138,8 @@ namespace GrammarTests {
       public void ComplexRuleActionShouldBeInvoked_Variant3() {
          _grammar.InitializeRule3();
          _grammar.ActivateRule("test_rule_03");
-         _grammar.InvokeRule(new[] { "Hello", "Hi", "a", "a", "Sty", "Hi", "c", "b", "c", "c" });
+         //_grammar.InvokeRule(new[] { "Hello", "Hi", "a", "a", "Sty", "Hi", "c", "b", "c", "c" });
+         throw new NotImplementedException();
 
          Assert.That(rule3Result, Is.EqualTo(1));
       }
@@ -134,43 +148,57 @@ namespace GrammarTests {
       public void SimpleRuleActionShouldBeInvoked() {
          _grammar.InitializeRule1();
          _grammar.ActivateRule("test_rule_01");
-         _grammar.InvokeRule(new[] {"Hello", "Jello"});
+         //_grammar.InvokeRule(new[] {"Hello", "Jello"});
+         throw new NotImplementedException();
 
          Assert.That(rule1Result, Is.EqualTo(1));
       }
 
       [Test]
       public void SimpleRuleActionWithExtraWordShouldThrowException() {
-         Assert.That(() => {
-            _grammar.InitializeRule1();
-            _grammar.ActivateRule("test_rule_01");
-            _grammar.InvokeRule(new[] { "Hello", "Jello", "Smello" });
-         }, Throws.InstanceOf<InvalidSequenceInCallbackException>());
+         Assert.That(
+            () => {
+               _grammar.InitializeRule1();
+               _grammar.ActivateRule("test_rule_01");
+               //_grammar.InvokeRule(new[] { "Hello", "Jello", "Smello" });
+               throw new NotImplementedException();
+            },
+            Throws.InstanceOf<InvalidSequenceInCallbackException>()
+         );
       }
 
       [Test]
       public void SimpleRuleActionWithInvalidWordShouldThrowException() {
-         Assert.That(() => {
-            _grammar.InitializeRule1();
-            _grammar.ActivateRule("test_rule_01");
-            _grammar.InvokeRule(new[] { "Hello", "Mellow" });
-         }, Throws.InstanceOf<InvalidSequenceInCallbackException>());
+         Assert.That(
+            () => {
+               _grammar.InitializeRule1();
+               _grammar.ActivateRule("test_rule_01");
+               //_grammar.InvokeRule(new[] { "Hello", "Mellow" });
+               throw new NotImplementedException();
+            },
+            Throws.InstanceOf<InvalidSequenceInCallbackException>()
+         );
       }
 
       [Test]
       public void SimpleRuleActionWithNotEnoughWordsShouldThrowException() {
-         Assert.That(() => {
-            _grammar.InitializeRule1();
-            _grammar.ActivateRule("test_rule_01");
-            _grammar.InvokeRule(new[] { "Hello" });
-         }, Throws.InstanceOf<InvalidSequenceInCallbackException>());
+         Assert.That(
+            () => {
+               _grammar.InitializeRule1();
+               _grammar.ActivateRule("test_rule_01");
+               //_grammar.InvokeRule(new[] { "Hello" });
+               throw new NotImplementedException();
+            },
+            Throws.InstanceOf<InvalidSequenceInCallbackException>()
+         );
       }
 
       [Test]
       public void SimpleRuleActionWithMissiongOptionalWordShouldBeInvoked() {
          _grammar.InitializeRule2();
          _grammar.ActivateRule("test_rule_02");
-         _grammar.InvokeRule(new[] { "Hello", "Jello", "Please" });
+         //_grammar.InvokeRule(new[] { "Hello", "Jello", "Please" });
+         throw new NotImplementedException();
 
          Assert.That(rule2Result, Is.EqualTo(1));
       }
@@ -179,27 +207,36 @@ namespace GrammarTests {
       public void SimpleRuleActionWithOptionalWordShouldBeInvoked() {
          _grammar.InitializeRule2();
          _grammar.ActivateRule("test_rule_02");
-         _grammar.InvokeRule(new[] { "Hello", "Jello", "Cheese", "Please" });
+         //_grammar.InvokeRule(new[] { "Hello", "Jello", "Cheese", "Please" });
+         throw new NotImplementedException();
 
          Assert.That(rule2Result, Is.EqualTo(1));
       }
 
       [Test]
-      public void SimpleRuleActionWithInvalidWordInPlaceOfOptionalWordShouldThrowException() {
-         Assert.That(() => {
-            _grammar.InitializeRule2();
-            _grammar.ActivateRule("test_rule_02");
-            _grammar.InvokeRule(new[] { "Hello", "Jello", "Sneeze", "Please" });
-         }, Throws.InstanceOf<InvalidSequenceInCallbackException>());
+      public void
+         SimpleRuleActionWithInvalidWordInPlaceOfOptionalWordShouldThrowException() {
+         Assert.That(
+            () => {
+               _grammar.InitializeRule2();
+               _grammar.ActivateRule("test_rule_02");
+               //_grammar.InvokeRule(new[] { "Hello", "Jello", "Sneeze", "Please" });
+               throw new NotImplementedException();
+            },
+            Throws.InstanceOf<InvalidSequenceInCallbackException>()
+         );
       }
 
       [Test]
-      public void TryingToInvokeARuleWhenNoRulesAreActiveShouldThrowAnException() {
-         Assert.That(() => {
-            _grammar.InvokeRule(new[] { "Hello", "Jello", "Sneeze", "Please" });
-         }, Throws.InstanceOf<NoActiveRulesException>());
+      public void
+         TryingToInvokeARuleWhenNoRulesAreActiveShouldThrowAnException() {
+         Assert.That(
+            () => {
+               //_grammar.InvokeRule(new[] { "Hello", "Jello", "Sneeze", "Please" });
+               throw new NotImplementedException();
+            },
+            Throws.InstanceOf<NoActiveRulesException>()
+         );
       }
-
    }
-
 }
