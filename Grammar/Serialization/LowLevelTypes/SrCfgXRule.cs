@@ -23,40 +23,31 @@ namespace Renfrew.Grammar.Serialization.LowLevelTypes {
    internal class SrCfgXRule : ISerializableRule {
       public const uint SrCfgXRuleSize = 8;
 
-      public uint Size => SrCfgXRuleSize
-                          + GetPaddedStringLength(String, EncodeAsUnicode);
-
       public uint RuleNumber { get; set; }
       public string String { get; set; }
-      public bool EncodeAsUnicode { get; set; }
 
-      internal static uint GetPaddedStringLength(
-         string s,
-         bool encodeAsUnicode
-      ) {
-         var numBytes = encodeAsUnicode ?
-            (uint) Encoding.Unicode.GetByteCount(s) + 2u :
-            (uint) Encoding.ASCII.GetByteCount(s) + 1u;
-
-         // Pad to 4-byte boundary.
-         return (numBytes + 3u) & ~3u;
-      }
+      public uint Size => SrCfgXRuleSize + GetPaddedStringLength(String);
 
       public void Serialize(BinaryWriter writer) {
          writer.Write(Size);
          writer.Write(RuleNumber);
 
-         var stringLength = GetPaddedStringLength(String, EncodeAsUnicode);
+         var stringLength = GetPaddedStringLength(String);
 
-         var encodedString = EncodeAsUnicode ?
-            Encoding.Unicode.GetBytes(String) :
-            Encoding.ASCII.GetBytes(String);
+         var encodedString = Encoding.Unicode.GetBytes(String);
 
          writer.Write(encodedString);
 
          if (stringLength - encodedString.Length != 0) {
             writer.Write(new byte[stringLength - encodedString.Length]);
          }
+      }
+
+      internal static uint GetPaddedStringLength(string s) {
+         var numBytes = (uint) Encoding.Unicode.GetByteCount(s) + 2u;
+
+         // Pad to 4-byte boundary.
+         return (numBytes + 3u) & ~3u;
       }
 
       public override bool Equals(object obj) {
@@ -68,8 +59,7 @@ namespace Renfrew.Grammar.Serialization.LowLevelTypes {
 
          return Size == other.Size
                 && RuleNumber == other.RuleNumber
-                && String == other.String
-                && EncodeAsUnicode == other.EncodeAsUnicode;
+                && String == other.String;
       }
    }
 }

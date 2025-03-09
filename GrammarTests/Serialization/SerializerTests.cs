@@ -69,7 +69,7 @@ namespace GrammarTests.Serialization {
 
       [SetUp]
       public void Setup() {
-         _serializer = new Serializer(useUnicode: false);
+         _serializer = new Serializer();
 
          _grammar = new TestGrammar(
             new Mock<IGrammarService>().Object,
@@ -206,7 +206,12 @@ namespace GrammarTests.Serialization {
          var (actualHeader, actualChunks) =
             _serializer.CreateDataStructures(_grammar);
 
-         Assert.AreEqual(new SrHeader(), actualHeader);
+         Assert.AreEqual(
+            new SrHeader {
+               Flags = (uint) Serializer.SrHeaderFlags.Unicode
+            },
+            actualHeader
+         );
          Assert.AreEqual(expectedChunks, actualChunks);
       }
    }

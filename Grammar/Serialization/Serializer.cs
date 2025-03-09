@@ -36,7 +36,7 @@ namespace Renfrew.Grammar.Serialization {
          Dictation = 2,
       }
 
-      internal enum NameEncoding : uint {
+      internal enum SrHeaderFlags : uint {
          Ascii = 0,
          Unicode = 1,
       }
@@ -51,13 +51,7 @@ namespace Renfrew.Grammar.Serialization {
 
       #endregion
 
-      private readonly NameEncoding _encoding;
-
-      public Serializer() : this(useUnicode: true) { }
-
-      public Serializer(bool useUnicode) {
-         _encoding = useUnicode ? NameEncoding.Unicode : NameEncoding.Ascii;
-      }
+      public Serializer() { }
 
       internal SrChunk CreateExportRulesNamesChunk(
          IReadOnlyList<IRule> exportRules
@@ -96,7 +90,6 @@ namespace Renfrew.Grammar.Serialization {
                   idString => (ISerializableRule) new SrCfgXRule {
                      RuleNumber = idString.Id,
                      String = idString.String,
-                     EncodeAsUnicode = _encoding == NameEncoding.Unicode,
                   }
                )
                .ToList()
@@ -141,7 +134,7 @@ namespace Renfrew.Grammar.Serialization {
          return (
             new SrHeader {
                Type = (uint) HeaderTypes.Cfg,
-               Flags = (uint) _encoding,
+               Flags = (uint) SrHeaderFlags.Unicode,
             },
             chunks.Where(chunk => chunk != null).ToList()
          );
