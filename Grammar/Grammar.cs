@@ -36,6 +36,8 @@ namespace Renfrew.Grammar {
       private readonly Dictionary<string, IRule> _allRules =
          new(StringComparer.CurrentCultureIgnoreCase);
 
+      private readonly Dictionary<uint, IRule> _allRulesById = new();
+
       private readonly Dictionary<string, IRule> _exportedRules =
          new(StringComparer.CurrentCultureIgnoreCase);
 
@@ -126,6 +128,7 @@ namespace Renfrew.Grammar {
          }
 
          _allRules.Add(rule.String, rule);
+         _allRulesById.Add(rule.Id, rule);
          _exportedRules.Add(rule.String, rule);
       }
 
@@ -179,6 +182,7 @@ namespace Renfrew.Grammar {
          }
 
          _allRules.Add(rule.String, rule);
+         _allRulesById.Add(rule.Id, rule);
          _importedRules.Add(rule.String, rule);
       }
 
@@ -206,7 +210,10 @@ namespace Renfrew.Grammar {
 
          _exportedRules.Remove(name);
          _importedRules.Remove(name);
+
+         var ruleId = _allRules[name].Id;
          _allRules.Remove(name);
+         _allRulesById.Remove(ruleId);
       }
 
       public void InvokeRule(List<SpokenWord> spokenWords) {
@@ -217,7 +224,10 @@ namespace Renfrew.Grammar {
             throw new NoActiveRulesException();
          }
 
-         var startRuleId = spokenWords.First().RuleNumber;
+         var startRuleId = spokenWords.First().RuleId;
+         var startRule = _allRulesById[startRuleId];
+
+         Debug.Assert(_activeRules.ContainsKey(startRule.String));
 
          //var result = false;
 

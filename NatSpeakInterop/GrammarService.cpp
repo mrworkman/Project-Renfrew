@@ -307,10 +307,10 @@ void GrammarService::PhraseFinishedCallback(
       isrResGraph->GetWordNode(path[i], &node, pWord, bufferSize, &bufferSize);
 
       auto word = gcnew String(pWord->szWord);
-      auto wordNumber = pWord->dwWordNum;
-      auto ruleNumber = node.dwCFGParse;
+      auto wordId = pWord->dwWordNum;
+      auto ruleId = node.dwCFGParse;
 
-      spokenWords->Add(gcnew SpokenWord(word, wordNumber, ruleNumber));
+      spokenWords->Add(gcnew SpokenWord(word, wordId, ruleId));
 
       delete[] buffer;
    }

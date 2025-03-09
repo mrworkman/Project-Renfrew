@@ -19,20 +19,20 @@
 
 public ref class SpokenWord {
    public:
-      SpokenWord(String^ word, const DWORD wordNumber, const DWORD ruleNumber) {
+      SpokenWord(String^ word, const DWORD wordId, const DWORD ruleId) {
          Word = word;
-         WordNumber = wordNumber;
-         RuleNumber = ruleNumber;
+         WordId = wordId;
+         RuleId = ruleId;
       }
 
       property String^ Word;
-      property DWORD WordNumber;
-      property DWORD RuleNumber;
+      property DWORD WordId;
+      property DWORD RuleId;
 
       virtual String^ ToString() override {
          return String::Format(
-            "{{ Word = {0}, Word Number: {1}, Rule Number: {2} }}",
-            Word, WordNumber, RuleNumber
+            "{{ Word = {0}, Word ID: {1}, Rule ID: {2} }}",
+            Word, WordId, RuleId
          );
       }
 };
