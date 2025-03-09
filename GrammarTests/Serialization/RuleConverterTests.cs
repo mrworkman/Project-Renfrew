@@ -53,15 +53,15 @@ namespace GrammarTests.Serialization {
 
             new() {
                Type = SymbolType.StartOperation,
-               Value = (uint) OperationType.Sequence,
+               OperationType = OperationType.Sequence,
             },
             new() {
                Type = SymbolType.Word,
-               Value = 1,
+               Id = 1,
             },
             new() {
                Type = SymbolType.EndOperation,
-               Value = (uint) OperationType.Sequence,
+               OperationType = OperationType.Sequence,
             }
 
             #endregion
@@ -82,35 +82,35 @@ namespace GrammarTests.Serialization {
 
             new() {
                Type = SymbolType.StartOperation,
-               Value = (uint) OperationType.Sequence,
+               OperationType = OperationType.Sequence,
             },
             new() {
                Type = SymbolType.Word,
-               Value = 1,
+               Id = 1,
             },
             new() {
                Type = SymbolType.StartOperation,
-               Value = (uint) OperationType.Optional,
+               OperationType = OperationType.Optional,
             },
             new() {
                Type = SymbolType.StartOperation,
-               Value = (uint) OperationType.Sequence,
+               OperationType = OperationType.Sequence,
             },
             new() {
                Type = SymbolType.Word,
-               Value = 2,
+               Id = 2,
             },
             new() {
                Type = SymbolType.EndOperation,
-               Value = (uint) OperationType.Sequence,
+               OperationType = OperationType.Sequence,
             },
             new() {
                Type = SymbolType.EndOperation,
-               Value = (uint) OperationType.Optional,
+               OperationType = OperationType.Optional,
             },
             new() {
                Type = SymbolType.EndOperation,
-               Value = (uint) OperationType.Sequence,
+               OperationType = OperationType.Sequence,
             }
 
             #endregion
@@ -133,31 +133,31 @@ namespace GrammarTests.Serialization {
 
             new() {
                Type = SymbolType.StartOperation,
-               Value = (uint) OperationType.Sequence,
+               OperationType = OperationType.Sequence,
             },
             new() {
                Type = SymbolType.Word,
-               Value = 1,
+               Id = 1,
             },
             new() {
                Type = SymbolType.StartOperation,
-               Value = (uint) OperationType.Alternative,
+               OperationType = OperationType.Alternative,
             },
             new() {
                Type = SymbolType.Word,
-               Value = 2,
+               Id = 2,
             },
             new() {
                Type = SymbolType.Word,
-               Value = 3,
+               Id = 3,
             },
             new() {
                Type = SymbolType.EndOperation,
-               Value = (uint) OperationType.Alternative,
+               OperationType = OperationType.Alternative,
             },
             new() {
                Type = SymbolType.EndOperation,
-               Value = (uint) OperationType.Sequence,
+               OperationType = OperationType.Sequence,
             }
 
             #endregion
@@ -179,47 +179,47 @@ namespace GrammarTests.Serialization {
 
             new() {
                Type = SymbolType.StartOperation,
-               Value = (uint) OperationType.Sequence,
+               OperationType = OperationType.Sequence,
             },
             new() {
                Type = SymbolType.StartOperation,
-               Value = (uint) OperationType.Optional,
+               OperationType = OperationType.Optional,
             },
             new() {
                Type = SymbolType.StartOperation,
-               Value = (uint) OperationType.Sequence,
+               OperationType = OperationType.Sequence,
             },
             new() {
                Type = SymbolType.Word,
-               Value = 1,
+               Id = 1,
             },
             new() {
                Type = SymbolType.EndOperation,
-               Value = (uint) OperationType.Sequence,
+               OperationType = OperationType.Sequence,
             },
             new() {
                Type = SymbolType.EndOperation,
-               Value = (uint) OperationType.Optional,
+               OperationType = OperationType.Optional,
             },
             new() {
                Type = SymbolType.StartOperation,
-               Value = (uint) OperationType.Alternative,
+               OperationType = OperationType.Alternative,
             },
             new() {
                Type = SymbolType.Word,
-               Value = 2,
+               Id = 2,
             },
             new() {
                Type = SymbolType.Word,
-               Value = 3,
+               Id = 3,
             },
             new() {
                Type = SymbolType.EndOperation,
-               Value = (uint) OperationType.Alternative,
+               OperationType = OperationType.Alternative,
             },
             new() {
                Type = SymbolType.EndOperation,
-               Value = (uint) OperationType.Sequence,
+               OperationType = OperationType.Sequence,
             },
 
             #endregion

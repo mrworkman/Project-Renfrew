@@ -15,43 +15,21 @@
 // along with this program. If not, see<http://www.gnu.org/licenses/>.
 //
 
+using System;
+using System.Collections.Generic;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using Renfrew.Grammar;
 using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.Grammar.Serialization;
-using Renfrew.NatSpeakInterop;
-using System;
-using System.Collections.Generic;
-using Renfrew.Grammar.Serialization.LowLevelTypes;
-using Newtonsoft.Json;
 using Renfrew.Grammar.Serialization.HighLevelTypes;
+using Renfrew.Grammar.Serialization.LowLevelTypes;
+using Renfrew.NatSpeakInterop;
 
 namespace GrammarTests.Serialization {
    [TestFixture]
    internal class SerializerTests {
-      class TestGrammar : Grammar {
-         #region Boilerplate
-
-         public TestGrammar(
-            IGrammarService grammarService,
-            INatSpeak natSpeak
-         ) :
-            base(grammarService, natSpeak) { }
-
-         public override void Dispose() { }
-         public override void Initialize() { }
-
-         public void Initialize(string ruleName, Func<IRule, IRule> ruleFunc) {
-            AddRule(ruleName, ruleFunc);
-         }
-
-         #endregion
-      }
-
-      private Serializer _serializer;
-      private TestGrammar _grammar;
-
       [OneTimeSetUp]
       public void OneTimeSetup() {
          var settings = new JsonSerializerSettings {
@@ -77,6 +55,28 @@ namespace GrammarTests.Serialization {
          );
       }
 
+      private class TestGrammar : Grammar {
+         #region Boilerplate
+
+         public TestGrammar(
+            IGrammarService grammarService,
+            INatSpeak natSpeak
+         ) :
+            base(grammarService, natSpeak) { }
+
+         public override void Dispose() { }
+         public override void Initialize() { }
+
+         public void Initialize(string ruleName, Func<IRule, IRule> ruleFunc) {
+            AddRule(ruleName, ruleFunc);
+         }
+
+         #endregion
+      }
+
+      private Serializer _serializer;
+      private TestGrammar _grammar;
+
       [Test]
       public void Repeat_SayOneOf_SayOneOf() {
          var expectedChunks = new List<SrChunk> {
@@ -84,16 +84,16 @@ namespace GrammarTests.Serialization {
 
             new() {
                ChunkId = (uint) Serializer.ChunkType.ExportRules,
-               Rules = new() {
+               Rules = new List<ISerializableRule> {
                   new SrCfgXRule {
                      RuleNumber = 1,
                      String = "test_rule"
                   }
-               },
+               }
             },
             new() {
                ChunkId = (uint) Serializer.ChunkType.Words,
-               Rules = new() {
+               Rules = new List<ISerializableRule> {
                   new SrCfgXRule {
                      RuleNumber = 1,
                      String = "alpha"
@@ -113,80 +113,80 @@ namespace GrammarTests.Serialization {
                   new SrCfgXRule {
                      RuleNumber = 5,
                      String = "two"
-                  },
-               },
+                  }
+               }
             },
             new() {
                ChunkId = (uint) Serializer.ChunkType.Rules,
-               Rules = new() {
+               Rules = new List<ISerializableRule> {
                   new SrCfgRule {
                      UniqueId = 1,
-                     Symbols = new() {
+                     Symbols = new List<SrCfgSymbol> {
                         new() {
                            Type = (ushort) SymbolType.StartOperation,
-                           Value = (uint) OperationType.Sequence,
+                           Value = (uint) OperationType.Sequence
                         },
                         new() {
                            Type = (ushort) SymbolType.StartOperation,
-                           Value = (uint) OperationType.Repeat,
+                           Value = (uint) OperationType.Repeat
                         },
                         new() {
                            Type = (ushort) SymbolType.StartOperation,
-                           Value = (uint) OperationType.Sequence,
+                           Value = (uint) OperationType.Sequence
                         },
                         // First SayOneOf().
                         new() {
                            Type = (ushort) SymbolType.StartOperation,
-                           Value = (uint) OperationType.Alternative,
+                           Value = (uint) OperationType.Alternative
                         },
                         new() {
                            Type = (ushort) SymbolType.Word,
-                           Value = 1,
+                           Value = 1
                         },
                         new() {
                            Type = (ushort) SymbolType.Word,
-                           Value = 2,
+                           Value = 2
                         },
                         new() {
                            Type = (ushort) SymbolType.Word,
-                           Value = 3,
+                           Value = 3
                         },
                         new() {
                            Type = (ushort) SymbolType.EndOperation,
-                           Value = (uint) OperationType.Alternative,
+                           Value = (uint) OperationType.Alternative
                         },
                         // Second SayOneOf().
                         new() {
                            Type = (ushort) SymbolType.StartOperation,
-                           Value = (uint) OperationType.Alternative,
+                           Value = (uint) OperationType.Alternative
                         },
                         new() {
                            Type = (ushort) SymbolType.Word,
-                           Value = 4,
+                           Value = 4
                         },
                         new() {
                            Type = (ushort) SymbolType.Word,
-                           Value = 5,
+                           Value = 5
                         },
                         new() {
                            Type = (ushort) SymbolType.EndOperation,
-                           Value = (uint) OperationType.Alternative,
+                           Value = (uint) OperationType.Alternative
                         },
                         new() {
                            Type = (ushort) SymbolType.EndOperation,
-                           Value = (uint) OperationType.Sequence,
+                           Value = (uint) OperationType.Sequence
                         },
                         new() {
                            Type = (ushort) SymbolType.EndOperation,
-                           Value = (uint) OperationType.Repeat,
+                           Value = (uint) OperationType.Repeat
                         },
                         new() {
                            Type = (ushort) SymbolType.EndOperation,
-                           Value = (uint) OperationType.Sequence,
-                        },
+                           Value = (uint) OperationType.Sequence
+                        }
                      }
                   }
-               },
+               }
             }
 
             #endregion

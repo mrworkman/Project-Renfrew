@@ -18,14 +18,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Renfrew.Grammar.FluentApi;
+using Renfrew.Grammar.FluentApi.ExpressionParts;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.Grammar.Serialization.HighLevelTypes;
 
 namespace Renfrew.Grammar.Serialization {
    /// <summary>
-   /// Converts from fluent rule structure to a structure NatSpeak understands.
+   ///    Converts from fluent rule structure to a structure NatSpeak understands.
    /// </summary>
    public class RuleConverter {
       public List<RuleInfo> Convert(IReadOnlyList<IRule> rules) {
@@ -35,37 +35,96 @@ namespace Renfrew.Grammar.Serialization {
       public RuleInfo ConvertRule(IRule rule) {
          return new RuleInfo {
             Id = rule.Id,
-            Symbols = ConvertCompositeExpression(rule.Expression),
+            Symbols = ConvertSequence(rule.Sequence)
          };
       }
 
-      internal List<Symbol> ConvertCompositeExpression(
-         CompositeExpression compositeExpression
-      ) {
+      internal List<Symbol> ConvertSequence(Sequence sequence) {
          var symbols = new List<Symbol>();
-
-         var operationType = ConvertModifierToOperationType(
-            compositeExpression.Modifier
-         );
 
          symbols.Add(
             new Symbol {
                Type = SymbolType.StartOperation,
-               Value = (uint) operationType,
+               OperationType = OperationType.Sequence
             }
          );
 
-         foreach (var subExpression in compositeExpression.SubExpressions) {
-            switch (subExpression) {
-               case CompositeExpression composite: {
-                  symbols.AddRange(ConvertCompositeExpression(composite));
+         foreach (var sequenceMember in sequence.Members) {
+            switch (sequenceMember) {
+               case Alternatives alternatives: {
+                  symbols.Add(
+                     new Symbol {
+                        Type = SymbolType.StartOperation,
+                        OperationType = OperationType.Alternative
+                     }
+                  );
+
+                  // Optimise for the case where all of the members are
+                  // sequences made up of a single word.
+                  if (alternatives.Sequences.All(
+                         s => s.Members.Count == 1
+                              && s.Members.All(m => m is Word)
+                      )) {
+                     symbols.AddRange(
+                        alternatives.Sequences.Select(
+                           s => new Symbol {
+                              Type = SymbolType.Word,
+                              Id = (s.Members.First() as Word).Id
+                           }
+                        )
+                     );
+                  } else {
+                     foreach (var alternativeSequence in
+                              alternatives.Sequences) {
+                        symbols.AddRange(ConvertSequence(alternativeSequence));
+                     }
+                  }
+
+                  symbols.Add(
+                     new Symbol {
+                        Type = SymbolType.EndOperation,
+                        OperationType = OperationType.Alternative
+                     }
+                  );
                   break;
                }
-               case RuleName rule: {
+               case Optional optional: {
+                  symbols.Add(
+                     new Symbol {
+                        Type = SymbolType.StartOperation,
+                        OperationType = OperationType.Optional
+                     }
+                  );
+                  symbols.AddRange(ConvertSequence(optional.Sequence));
+                  symbols.Add(
+                     new Symbol {
+                        Type = SymbolType.EndOperation,
+                        OperationType = OperationType.Optional
+                     }
+                  );
+                  break;
+               }
+               case Repeated repeated: {
+                  symbols.Add(
+                     new Symbol {
+                        Type = SymbolType.StartOperation,
+                        OperationType = OperationType.Repeat
+                     }
+                  );
+                  symbols.AddRange(ConvertSequence(repeated.Sequence));
+                  symbols.Add(
+                     new Symbol {
+                        Type = SymbolType.EndOperation,
+                        OperationType = OperationType.Repeat
+                     }
+                  );
+                  break;
+               }
+               case RuleName ruleName: {
                   symbols.Add(
                      new Symbol {
                         Type = SymbolType.Rule,
-                        Value = rule.Id,
+                        Id = ruleName.Id
                      }
                   );
                   break;
@@ -74,7 +133,7 @@ namespace Renfrew.Grammar.Serialization {
                   symbols.Add(
                      new Symbol {
                         Type = SymbolType.Word,
-                        Value = word.Id,
+                        Id = word.Id
                      }
                   );
                   break;
@@ -85,22 +144,23 @@ namespace Renfrew.Grammar.Serialization {
          symbols.Add(
             new Symbol {
                Type = SymbolType.EndOperation,
-               Value = (uint) operationType,
+               OperationType = OperationType.Sequence
             }
          );
 
          return symbols;
       }
 
-      public OperationType ConvertModifierToOperationType(
-         ExpressionModifier modifier
+      public OperationType DetermineOperationType(
+         ISequenceMember sequenceMember
       ) {
-         return modifier switch {
-            ExpressionModifier.Alternatives => OperationType.Alternative,
-            ExpressionModifier.Sequence => OperationType.Sequence,
-            ExpressionModifier.Optionals => OperationType.Optional,
-            ExpressionModifier.Repeated => OperationType.Repeat,
-            _ => throw new ArgumentException($"Unexpected type {modifier}")
+         return sequenceMember switch {
+            Alternatives => OperationType.Alternative,
+            Optional => OperationType.Optional,
+            Repeated => OperationType.Repeat,
+            _ => throw new ArgumentException(
+               $"Unexpected type {sequenceMember.GetType()}"
+            )
          };
       }
    }
