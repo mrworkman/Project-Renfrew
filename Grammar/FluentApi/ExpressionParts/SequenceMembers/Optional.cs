@@ -16,5 +16,15 @@
 //
 
 namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
-   public class Optional { }
+   public class Optional : ISequenceMember {
+      private Optional() { }
+
+      internal Sequence Sequence { get; private set; }
+
+      internal static Optional Create(Sequence sequence) {
+         return new Optional {
+            Sequence = sequence
+         };
+      }
+   }
 }

@@ -16,5 +16,14 @@
 //
 
 namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
-   public class Repeated { }
+   public class Repeated : ISequenceMember {
+      private Repeated() { }
+      internal Sequence Sequence { get; private set; }
+
+      internal static Repeated Create(Sequence sequence) {
+         return new Repeated {
+            Sequence = sequence
+         };
+      }
+   }
 }
