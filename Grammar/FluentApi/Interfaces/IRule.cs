@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 
 namespace Renfrew.Grammar.FluentApi.Interfaces {
    public interface IRule : IIdString {

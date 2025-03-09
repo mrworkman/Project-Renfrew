@@ -23,6 +23,7 @@ using System.Text.RegularExpressions;
 using NLog;
 using Renfrew.Grammar.Exceptions;
 using Renfrew.Grammar.FluentApi;
+using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.NatSpeakInterop;
 

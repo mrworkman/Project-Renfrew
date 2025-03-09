@@ -21,6 +21,7 @@ using System.IO;
 using System.Linq;
 using NLog;
 using Renfrew.Grammar.FluentApi;
+using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.Grammar.Serialization.LowLevelTypes;
 using Renfrew.NatSpeakInterop;

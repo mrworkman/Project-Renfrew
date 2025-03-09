@@ -51,9 +51,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FluentApi\Expression.cs" />
-    <Compile Include="FluentApi\ExpressionModifier.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Alternatives.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\IIdString.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Optional.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Repeated.cs" />
     <Compile Include="FluentApi\Interfaces\IIdGenerator.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\ISequenceMember.cs" />
+    <Compile Include="FluentApi\ExpressionParts\Sequence.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\ListName.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\RuleName.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Word.cs" />
     <Compile Include="GrammarAction.cs" />
     <Compile Include="Exceptions\InvalidSequenceInCallbackException.cs" />
     <Compile Include="Exceptions\NoActiveRulesException.cs" />

@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
-using static System.Collections.Specialized.BitVector32;
 
 namespace Renfrew.Grammar.FluentApi {
    internal class Rule : IRule {

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Renfrew.Grammar;
 using Renfrew.Grammar.FluentApi;
+using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace GrammarTests {
