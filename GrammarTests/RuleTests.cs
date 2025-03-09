@@ -17,17 +17,28 @@
 
 
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using Renfrew.Grammar;
 using Renfrew.Grammar.FluentApi;
+using Renfrew.Grammar.FluentApi.ExpressionParts;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace GrammarTests {
    [TestFixture]
    public class RuleTests {
-      private RuleFactory _factory;
-      private IIdGenerator _idGenerator;
+      [OneTimeSetUp]
+      public void OneTimeSetup() {
+         var settings = new JsonSerializerSettings {
+            TypeNameHandling = TypeNameHandling.Objects,
+            Formatting = Formatting.Indented
+         };
+
+         TestContext.AddFormatter<Sequence>(
+            o => JsonConvert.SerializeObject(o, settings)
+         );
+      }
 
       [SetUp]
       public void Initialize() {
@@ -35,19 +46,23 @@ namespace GrammarTests {
          _idGenerator = new IdGenerator();
       }
 
+      private RuleFactory _factory;
+      private IIdGenerator _idGenerator;
+
       [Test]
       public void ShouldProduceSimpleAlternativeRule() {
          var testRule = new Rule("some_rule", _idGenerator);
 
          testRule.SayOneOf("hello", "jello");
 
-         var expectedExpression = CompositeExpression.Create(
-            ExpressionModifier.Alternatives,
-            Word.Create(0, "hello"),
-            Word.Create(1, "jello")
+         var expectedSequence = Sequence.Create(
+            Alternatives.Create(
+               Word.Create(1, "hello"),
+               Word.Create(2, "jello")
+            )
          );
 
-         Assert.That(testRule.Expression, Is.EqualTo(expectedExpression));
+         Assert.That(testRule.Sequence, Is.EqualTo(expectedSequence));
       }
 
       [Test]
@@ -61,13 +76,14 @@ namespace GrammarTests {
             }
          );
 
-         var expectedExpression = CompositeExpression.Create(
-            ExpressionModifier.Alternatives,
-            Word.Create(0, "hello"),
-            Word.Create(1, "jello")
+         var expectedSequence = Sequence.Create(
+            Alternatives.Create(
+               Word.Create(1, "hello"),
+               Word.Create(2, "jello")
+            )
          );
 
-         Assert.That(testRule.Expression, Is.EqualTo(expectedExpression));
+         Assert.That(testRule.Sequence, Is.EqualTo(expectedSequence));
       }
 
       [Test]
@@ -76,12 +92,13 @@ namespace GrammarTests {
 
          testRule.Optionally(r => r.Say("hello"));
 
-         var expectedExpression = CompositeExpression.Create(
-            ExpressionModifier.Optionals,
-            Word.Create(0, "hello")
+         var expectedSequence = Sequence.Create(
+            Optional.Create(
+               Word.Create(1, "hello")
+            )
          );
 
-         Assert.That(testRule.Expression, Is.EqualTo(expectedExpression));
+         Assert.That(testRule.Sequence, Is.EqualTo(expectedSequence));
       }
 
       [Test]
@@ -90,12 +107,13 @@ namespace GrammarTests {
 
          testRule.Repeat(r => r.Say("hello"));
 
-         var expectedExpression = CompositeExpression.Create(
-            ExpressionModifier.Repeated,
-            Word.Create(0, "hello")
+         var expectedSequence = Sequence.Create(
+            Repeated.Create(
+               Word.Create(1, "hello")
+            )
          );
 
-         Assert.That(testRule.Expression, Is.EqualTo(expectedExpression));
+         Assert.That(testRule.Sequence, Is.EqualTo(expectedSequence));
       }
 
       [Test]
@@ -104,12 +122,9 @@ namespace GrammarTests {
 
          testRule.Say("hello");
 
-         var expectedExpression = CompositeExpression.Create(
-            ExpressionModifier.Sequence,
-            Word.Create(0, "hello")
-         );
+         var expectedSequence = Sequence.Create(Word.Create(1, "hello"));
 
-         Assert.That(testRule.Expression, Is.EqualTo(expectedExpression));
+         Assert.That(testRule.Sequence, Is.EqualTo(expectedSequence));
       }
 
       [Test]
@@ -119,16 +134,21 @@ namespace GrammarTests {
          testRule.Optionally(e => e.SayOneOf("cheese", "cheese"));
          testRule.Say("Hello").OneOf(r => r.Say("Hi"), r => r.Say("Boo"));
 
-         var expectedExpression = CompositeExpression.Create(
-            ExpressionModifier.Sequence,
-            Word.Create(0, "Hello"),
-            CompositeExpression.Create(
-               ExpressionModifier.Alternatives,
-               Word.Create(1, "Hi")
+         var expectedSequence = Sequence.Create(
+            Optional.Create(
+               Alternatives.Create(
+                  Word.Create(1, "cheese"),
+                  Word.Create(1, "cheese")
+               )
+            ),
+            Word.Create(2, "Hello"),
+            Alternatives.Create(
+               Word.Create(3, "Hi"),
+               Word.Create(4, "Boo")
             )
          );
 
-         Assert.That(testRule.Expression, Is.EqualTo(expectedExpression));
+         Assert.That(testRule.Sequence, Is.EqualTo(expectedSequence));
       }
    }
 }

@@ -15,15 +15,31 @@
 // along with this program. If not, see<http://www.gnu.org/licenses/>.
 //
 
+using System;
+
 namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
-   public class Optional : ISequenceMember {
+   public class Optional : ISequenceMember, IEquatable<Optional> {
       private Optional() { }
 
-      internal Sequence Sequence { get; private set; }
+      public Sequence Sequence { get; private set; }
+
+      public bool Equals(Optional other) {
+         if (other is null) {
+            return false;
+         }
+
+         return Sequence.Equals(other.Sequence);
+      }
 
       internal static Optional Create(Sequence sequence) {
          return new Optional {
             Sequence = sequence
+         };
+      }
+
+      internal static Optional Create(ISequenceMember sequenceMember) {
+         return new Optional {
+            Sequence = Sequence.Create(sequenceMember)
          };
       }
    }

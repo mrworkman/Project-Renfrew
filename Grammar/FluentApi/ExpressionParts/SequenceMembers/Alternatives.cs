@@ -17,12 +17,25 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
-   public class Alternatives : ISequenceMember {
+   public class Alternatives : ISequenceMember, IEquatable<Alternatives> {
       private Alternatives() { }
 
-      internal List<Sequence> Sequences { get; private set; }
+      public List<Sequence> Sequences { get; private set; }
+
+      public bool Equals(Alternatives other) {
+         if (other is null) {
+            return false;
+         }
+
+         if (Sequences.Count != other.Sequences.Count) {
+            return false;
+         }
+
+         return !Sequences.Where((t, i) => !t.Equals(other.Sequences[i])).Any();
+      }
 
       internal static Alternatives Create(Sequence sequence) {
          return new Alternatives {
@@ -60,7 +73,17 @@ namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
       internal static Alternatives Create(
          IEnumerable<ISequenceMember> sequenceMembers
       ) {
-         return Create(Sequence.Create(sequenceMembers));
+         return Create(sequenceMembers.Select(Sequence.Create));
+      }
+
+      internal static Alternatives Create(
+         ISequenceMember sequenceMember,
+         params ISequenceMember[] additionalSequenceMembers
+      ) {
+         return Create(
+            Sequence.Create(sequenceMember),
+            additionalSequenceMembers.Select(Sequence.Create).ToArray()
+         );
       }
 
       internal void Add(Sequence sequence) {

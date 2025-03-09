@@ -31,22 +31,6 @@ namespace Renfrew.Grammar.FluentApi {
          StringComparer.CurrentCultureIgnoreCase
       );
 
-      /// <summary>
-      /// Numeric rule identifier.
-      /// </summary>
-      public uint Id { get; }
-
-      /// <summary>
-      /// The rule's name.
-      /// </summary>
-      public string String { get; }
-
-      public Sequence Sequence { get; private set; } = new();
-
-      public IReadOnlyList<Word> Words => _words.Select(entry => entry.Value)
-         .OrderBy(word => word.Id)
-         .ToList();
-
       internal Rule(
          string name,
          IIdGenerator idGenerator
@@ -60,24 +44,21 @@ namespace Renfrew.Grammar.FluentApi {
          Id = _idGenerator.GetRuleId(String);
       }
 
-      private void AdoptWordsFromRule(Rule r) {
-         foreach (var kvp in r._words) {
-            if (!_words.ContainsKey(kvp.Key)) {
-               _words.Add(kvp.Key, kvp.Value);
-            }
-         }
-      }
+      /// <summary>
+      ///    Numeric rule identifier.
+      /// </summary>
+      public uint Id { get; }
 
-      private Sequence InvokeActionInNestedRule(
-         Expression<Action<IRule>> action
-      ) {
-         var nestedRule = new Rule("-", _idGenerator);
+      /// <summary>
+      ///    The rule's name.
+      /// </summary>
+      public string String { get; }
 
-         action.Compile()(nestedRule);
-         AdoptWordsFromRule(nestedRule);
+      public Sequence Sequence { get; } = new();
 
-         return nestedRule.Sequence;
-      }
+      public IReadOnlyList<Word> Words => _words.Select(entry => entry.Value)
+         .OrderBy(word => word.Id)
+         .ToList();
 
       public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
          Sequence.AddMember(
@@ -177,6 +158,25 @@ namespace Renfrew.Grammar.FluentApi {
 
       public bool Equals(IIdString other) {
          return Id == other?.Id && String == other.String;
+      }
+
+      private void AdoptWordsFromRule(Rule r) {
+         foreach (var kvp in r._words) {
+            if (!_words.ContainsKey(kvp.Key)) {
+               _words.Add(kvp.Key, kvp.Value);
+            }
+         }
+      }
+
+      private Sequence InvokeActionInNestedRule(
+         Expression<Action<IRule>> action
+      ) {
+         var nestedRule = new Rule("-", _idGenerator);
+
+         action.Compile()(nestedRule);
+         AdoptWordsFromRule(nestedRule);
+
+         return nestedRule.Sequence;
       }
    }
 }

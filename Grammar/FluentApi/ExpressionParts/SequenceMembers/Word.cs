@@ -15,6 +15,8 @@
 // along with this program. If not, see<http://www.gnu.org/licenses/>.
 //
 
+using System;
+
 namespace Renfrew.Grammar.FluentApi.ExpressionParts.
    SequenceMembers {
    public class Word : IIdString {
@@ -27,7 +29,11 @@ namespace Renfrew.Grammar.FluentApi.ExpressionParts.
       public string String { get; }
 
       public bool Equals(IIdString other) {
-         return Id == other?.Id && String == other.String;
+         return Id == other?.Id
+                && String.Equals(
+                   other.String,
+                   StringComparison.CurrentCultureIgnoreCase
+                );
       }
 
       internal static Word Create(uint id, string value) {

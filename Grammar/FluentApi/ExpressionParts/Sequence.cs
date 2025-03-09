@@ -24,7 +24,7 @@ namespace Renfrew.Grammar.FluentApi.ExpressionParts {
       private readonly List<ISequenceMember> _members = new();
       internal Sequence() { }
 
-      internal IReadOnlyList<ISequenceMember> Members => _members.AsReadOnly();
+      public IReadOnlyList<ISequenceMember> Members => _members.AsReadOnly();
 
       public bool Equals(Sequence other) {
          if (other is null) {
@@ -35,22 +35,70 @@ namespace Renfrew.Grammar.FluentApi.ExpressionParts {
             return false;
          }
 
-         // TODO: Is this loop actually necessary?
          for (var i = 0; i < _members.Count; i++) {
             var left = _members[i];
             var right = other._members[i];
 
-            // TODO: Consider.
             if (left.GetType() != right.GetType()) {
                return false;
             }
 
-            if (!left.Equals(right)) {
-               return false;
+            switch (left) {
+               case IIdString term: {
+                  if (!term.Equals(right as IIdString)) {
+                     return false;
+                  }
+
+                  break;
+               }
+               case Alternatives alternatives: {
+                  if (!alternatives.Equals(right as Alternatives)) {
+                     return false;
+                  }
+
+                  break;
+               }
+               case Optional optional: {
+                  if (!optional.Equals(right as Optional)) {
+                     return false;
+                  }
+
+                  break;
+               }
+               case Repeated repeated: {
+                  if (!repeated.Equals(right as Repeated)) {
+                     return false;
+                  }
+
+                  break;
+               }
+               default: {
+                  if (!left.Equals(right)) {
+                     return false;
+                  }
+
+                  break;
+               }
             }
          }
 
          return true;
+      }
+
+      internal static Sequence Create(ISequenceMember sequenceMember) {
+         var sequence = new Sequence();
+         sequence._members.Add(sequenceMember);
+         return sequence;
+      }
+
+      internal static Sequence Create(
+         ISequenceMember sequenceMember,
+         params ISequenceMember[] additionalSequenceMembers
+      ) {
+         var sequence = new Sequence();
+         sequence._members.Add(sequenceMember);
+         sequence._members.AddRange(additionalSequenceMembers);
+         return sequence;
       }
 
       internal static Sequence Create(
