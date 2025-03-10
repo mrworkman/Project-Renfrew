@@ -35,7 +35,7 @@ namespace Renfrew.Grammar.Serialization {
       public RuleInfo ConvertRule(IRule rule) {
          return new RuleInfo {
             Id = rule.Id,
-            Symbols = ConvertSequence(rule.Sequence)
+            Symbols = ConvertSequence(rule.Sequence, optimize: false)
          };
       }
 
@@ -43,21 +43,6 @@ namespace Renfrew.Grammar.Serialization {
          return WrapOperation(
             OperationType.Alternative,
             symbols => {
-               var isOnlyWords = alternatives.Sequences.All(
-                  s => s.Members.Count == 1 && s.Members.First() is Word
-               );
-
-               // Optimise where all sequences are made up of a single word.
-               if (isOnlyWords) {
-                  symbols.AddRange(
-                     alternatives.Sequences.Select(
-                        s => ConvertWord(s.Members.First() as Word)
-                     )
-                  );
-
-                  return symbols;
-               }
-
                foreach (var alternativeSequence in alternatives.Sequences) {
                   symbols.AddRange(ConvertSequence(alternativeSequence));
                }
@@ -88,38 +73,55 @@ namespace Renfrew.Grammar.Serialization {
          };
       }
 
-      private List<Symbol> ConvertSequence(Sequence sequence) {
+      private List<Symbol> ConvertSequence(
+         Sequence sequence,
+         bool optimize = true
+      ) {
+         // Optimizing will avoid wrapping symbols in a start/end sequence
+         // operation if there is only one member in the Sequence. Dragon
+         // supports either way though. TODO: Ignore ACTION members.
+         if (optimize && sequence.Members.Count == 1) {
+            return ConvertSequence(sequence, symbols: null);
+         }
+
          return WrapOperation(
             OperationType.Sequence,
-            symbols => {
-               foreach (var sequenceMember in sequence.Members) {
-                  switch (sequenceMember) {
-                     case Alternatives alternatives: {
-                        symbols.AddRange(ConvertAlternatives(alternatives));
-                        break;
-                     }
-                     case Optional optional: {
-                        symbols.AddRange(ConvertOptional(optional));
-                        break;
-                     }
-                     case Repeated repeated: {
-                        symbols.AddRange(ConvertRepeated(repeated));
-                        break;
-                     }
-                     case RuleName ruleName: {
-                        symbols.Add(ConvertRuleName(ruleName));
-                        break;
-                     }
-                     case Word word: {
-                        symbols.Add(ConvertWord(word));
-                        break;
-                     }
-                  }
-               }
-
-               return symbols;
-            }
+            symbols => ConvertSequence(sequence, symbols)
          );
+      }
+
+      private List<Symbol> ConvertSequence(
+         Sequence sequence,
+         List<Symbol> symbols
+      ) {
+         symbols ??= new List<Symbol>();
+
+         foreach (var sequenceMember in sequence.Members) {
+            switch (sequenceMember) {
+               case Alternatives alternatives: {
+                  symbols.AddRange(ConvertAlternatives(alternatives));
+                  break;
+               }
+               case Optional optional: {
+                  symbols.AddRange(ConvertOptional(optional));
+                  break;
+               }
+               case Repeated repeated: {
+                  symbols.AddRange(ConvertRepeated(repeated));
+                  break;
+               }
+               case RuleName ruleName: {
+                  symbols.Add(ConvertRuleName(ruleName));
+                  break;
+               }
+               case Word word: {
+                  symbols.Add(ConvertWord(word));
+                  break;
+               }
+            }
+         }
+
+         return symbols;
       }
 
       private Symbol ConvertWord(Word word) {

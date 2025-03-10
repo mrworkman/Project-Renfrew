@@ -93,16 +93,8 @@ namespace GrammarTests.Serialization {
                OperationType = OperationType.Optional,
             },
             new() {
-               Type = SymbolType.StartOperation,
-               OperationType = OperationType.Sequence,
-            },
-            new() {
                Type = SymbolType.Word,
                Id = 2,
-            },
-            new() {
-               Type = SymbolType.EndOperation,
-               OperationType = OperationType.Sequence,
             },
             new() {
                Type = SymbolType.EndOperation,
@@ -186,16 +178,8 @@ namespace GrammarTests.Serialization {
                OperationType = OperationType.Optional,
             },
             new() {
-               Type = SymbolType.StartOperation,
-               OperationType = OperationType.Sequence,
-            },
-            new() {
                Type = SymbolType.Word,
                Id = 1,
-            },
-            new() {
-               Type = SymbolType.EndOperation,
-               OperationType = OperationType.Sequence,
             },
             new() {
                Type = SymbolType.EndOperation,
