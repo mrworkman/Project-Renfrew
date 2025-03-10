@@ -17,8 +17,7 @@
 
 using System;
 
-namespace Renfrew.Grammar.FluentApi.ExpressionParts.
-   SequenceMembers {
+namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
    public class Word : IIdString {
       private Word(uint id, string str) {
          Id = id;
