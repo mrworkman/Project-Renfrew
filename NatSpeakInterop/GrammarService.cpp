@@ -293,18 +293,18 @@ void GrammarService::PhraseFinishedCallback(
    Debug::Assert(pathSize != 0);
    Debug::Assert(pathSize <= sizeof(DWORD) * MaxPathEntries);
 
-   auto spokenWords = gcnew List<SpokenWord^>();
+   const auto bufferSize = sizeof(SRWORDW) + MaxWordSize;
+   const auto buffer = new BYTE[bufferSize];
+   const auto pWord = reinterpret_cast<PSRWORDW>(buffer);
 
+   const auto spokenWords = gcnew List<SpokenWord^>();
    const auto numWords = pathSize / sizeof(DWORD);
 
    for (DWORD i = 0; i < numWords; i++) {
       SRRESWORDNODE node;
+      DWORD ignore;
 
-      DWORD bufferSize = sizeof(SRWORDW) + MaxWordSize;
-      const auto buffer = new BYTE[bufferSize];
-      const auto pWord = reinterpret_cast<PSRWORDW>(buffer);
-
-      isrResGraph->GetWordNode(path[i], &node, pWord, bufferSize, &bufferSize);
+      isrResGraph->GetWordNode(path[i], &node, pWord, bufferSize, &ignore);
 
       auto word = gcnew String(pWord->szWord);
       auto wordId = pWord->dwWordNum;
@@ -312,9 +312,9 @@ void GrammarService::PhraseFinishedCallback(
 
       spokenWords->Add(gcnew SpokenWord(word, wordId, ruleId));
 
-      delete[] buffer;
    }
 
+   delete[] buffer;
    delete[] path;
 
    grammarExecutive->Grammar->InvokeRule(spokenWords);

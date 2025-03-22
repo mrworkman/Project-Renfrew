@@ -15,6 +15,8 @@
 // along with this program. If not, see<http://www.gnu.org/licenses/>.
 //
 
+using Renfrew.Grammar.Types;
+
 namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
    public class RuleName : IIdString {
       private RuleName(uint id, string str) {

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Renfrew.Grammar.FluentApi.ExpressionParts;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
+using Renfrew.Grammar.Types;
 
 namespace Renfrew.Grammar.FluentApi.Interfaces {
    public interface IRule : IIdString {

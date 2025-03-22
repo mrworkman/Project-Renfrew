@@ -21,6 +21,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NLog;
+using Renfrew.Grammar.Collections;
 using Renfrew.Grammar.Exceptions;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
@@ -34,23 +35,16 @@ namespace Renfrew.Grammar {
 
       private readonly IGrammarService _grammarService;
 
-      private readonly Dictionary<string, IRule> _allRules =
-         new(StringComparer.CurrentCultureIgnoreCase);
+      private readonly Lookup<IRule> _allRules = new();
+      private readonly Lookup<IRule> _exportedRules = new();
+      private readonly Lookup<IRule> _importedRules = new();
+      private readonly Lookup<IRule> _activeRules = new();
 
-      private readonly Dictionary<uint, IRule> _allRulesById = new();
-
-      private readonly Dictionary<string, IRule> _exportedRules =
-         new(StringComparer.CurrentCultureIgnoreCase);
-
-      private readonly Dictionary<string, IRule> _importedRules =
-         new(StringComparer.CurrentCultureIgnoreCase);
-
-      private readonly Dictionary<string, Word> _allWords = new();
+      private readonly Lookup<Word> _allWords = new();
 
       private readonly RuleFactory _ruleFactory;
       private readonly IIdGenerator _idGenerator;
 
-      private readonly Dictionary<string, IRule> _activeRules = new();
 
       protected Grammar(IGrammarService grammarService, INatSpeak natSpeak)
          : this(
@@ -97,7 +91,7 @@ namespace Renfrew.Grammar {
          _grammarService.ActivateRule(this, IntPtr.Zero, name);
 
          if (!_activeRules.ContainsKey(name)) {
-            _activeRules.Add(name, _exportedRules[name]);
+            _activeRules.Add(_exportedRules.Get(name));
          }
       }
 
@@ -124,13 +118,12 @@ namespace Renfrew.Grammar {
 
          foreach (var word in rule.Words) {
             if (!_allWords.ContainsKey(word.String)) {
-               _allWords.Add(word.String, word);
+               _allWords.Add(word);
             }
          }
 
-         _allRules.Add(rule.String, rule);
-         _allRulesById.Add(rule.Id, rule);
-         _exportedRules.Add(rule.String, rule);
+         _allRules.Add(rule);
+         _exportedRules.Add(rule);
       }
 
       public void AddRule(string name, Func<IRule, IRule> ruleFunc) {
@@ -182,9 +175,8 @@ namespace Renfrew.Grammar {
             );
          }
 
-         _allRules.Add(rule.String, rule);
-         _allRulesById.Add(rule.Id, rule);
-         _importedRules.Add(rule.String, rule);
+         _allRules.Add(rule);
+         _importedRules.Add(rule);
       }
 
       public abstract void Initialize();
@@ -212,9 +204,7 @@ namespace Renfrew.Grammar {
          _exportedRules.Remove(name);
          _importedRules.Remove(name);
 
-         var ruleId = _allRules[name].Id;
          _allRules.Remove(name);
-         _allRulesById.Remove(ruleId);
       }
 
       public void InvokeRule(List<SpokenWord> spokenWords) {
@@ -226,7 +216,7 @@ namespace Renfrew.Grammar {
          }
 
          var startRuleId = spokenWords.First().RuleId;
-         var startRule = _allRulesById[startRuleId];
+         var startRule = _allRules.Get(startRuleId);
 
          Debug.Assert(_activeRules.ContainsKey(startRule.String));
 

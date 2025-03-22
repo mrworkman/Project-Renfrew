@@ -16,6 +16,7 @@
 //
 
 using System;
+using Renfrew.Grammar.Types;
 
 namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
    public class Word : IIdString {

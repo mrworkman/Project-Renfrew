@@ -24,6 +24,7 @@ using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.Grammar.Serialization.LowLevelTypes;
+using Renfrew.Grammar.Types;
 using Renfrew.NatSpeakInterop;
 
 namespace Renfrew.Grammar.Serialization {

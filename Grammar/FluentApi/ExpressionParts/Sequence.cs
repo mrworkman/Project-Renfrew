@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
+using Renfrew.Grammar.Types;
 
 namespace Renfrew.Grammar.FluentApi.ExpressionParts {
    public class Sequence : IEquatable<Sequence> {

@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Alternatives.cs" />
-    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\IIdString.cs" />
+    <Compile Include="Types\IIdString.cs" />
     <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Optional.cs" />
     <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Repeated.cs" />
     <Compile Include="FluentApi\Interfaces\IIdGenerator.cs" />
@@ -85,6 +85,7 @@
     <Compile Include="Serialization\HighLevelTypes\RuleInfo.cs" />
     <Compile Include="Serialization\HighLevelTypes\Symbol.cs" />
     <Compile Include="Serialization\HighLevelTypes\SymbolType.cs" />
+    <Compile Include="Collections\Lookup.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NatSpeakInterop\NatspeakInterop.vcxproj">

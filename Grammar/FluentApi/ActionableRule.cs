@@ -21,6 +21,7 @@ using System.Linq.Expressions;
 using Renfrew.Grammar.FluentApi.ExpressionParts;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
+using Renfrew.Grammar.Types;
 
 namespace Renfrew.Grammar.FluentApi {
    internal class ActionableRule : IActionableRule {
