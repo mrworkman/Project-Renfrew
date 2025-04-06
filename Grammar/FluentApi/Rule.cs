@@ -32,14 +32,9 @@ namespace Renfrew.Grammar.FluentApi {
          StringComparer.CurrentCultureIgnoreCase
       );
 
-      internal Rule(
-         string name,
-         IIdGenerator idGenerator
-      ) {
+      internal Rule(string name, IIdGenerator idGenerator) {
          _idGenerator = idGenerator
-                        ?? throw new ArgumentNullException(
-                           nameof(idGenerator)
-                        );
+                        ?? throw new ArgumentNullException(nameof(idGenerator));
 
          String = name ?? throw new ArgumentNullException(nameof(name));
          Id = _idGenerator.GetRuleId(String);
@@ -64,9 +59,7 @@ namespace Renfrew.Grammar.FluentApi {
       public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
          Sequence.AddMember(
             Alternatives.Create(
-               actions
-                  .Select(InvokeActionInNestedRule)
-                  .ToList()
+               actions.Select(InvokeActionInNestedRule).ToList()
             )
          );
 
@@ -74,11 +67,7 @@ namespace Renfrew.Grammar.FluentApi {
       }
 
       public IActionableRule Optionally(Expression<Action<IRule>> action) {
-         Sequence.AddMember(
-            Optional.Create(
-               InvokeActionInNestedRule(action)
-            )
-         );
+         Sequence.AddMember(Optional.Create(InvokeActionInNestedRule(action)));
 
          return (ActionableRule) this;
       }
@@ -99,11 +88,7 @@ namespace Renfrew.Grammar.FluentApi {
 
       // Repeats: A+
       public IActionableRule Repeat(Expression<Action<IRule>> action) {
-         Sequence.AddMember(
-            Repeated.Create(
-               InvokeActionInNestedRule(action)
-            )
-         );
+         Sequence.AddMember(Repeated.Create(InvokeActionInNestedRule(action)));
 
          return (ActionableRule) this;
       }
