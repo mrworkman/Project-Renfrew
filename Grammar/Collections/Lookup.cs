@@ -59,6 +59,10 @@ namespace Renfrew.Grammar.Collections {
          _dictByString.Add(idString.String, idString);
       }
 
+      public bool Contains(TValue idString) {
+         return _dictById.ContainsKey(idString.Id);
+      }
+
       public bool ContainsKey(string key) {
          return _dictByString.ContainsKey(key);
       }

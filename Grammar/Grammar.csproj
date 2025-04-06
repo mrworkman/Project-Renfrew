@@ -52,6 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Alternatives.cs" />
+    <Compile Include="Collections\ListWalker.cs" />
+    <Compile Include="Solving\Solver.cs" />
+    <Compile Include="Solving\SolveResult.cs" />
     <Compile Include="Types\IIdString.cs" />
     <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Optional.cs" />
     <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Repeated.cs" />

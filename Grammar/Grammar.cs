@@ -46,8 +46,8 @@ namespace Renfrew.Grammar {
       private readonly IIdGenerator _idGenerator;
 
 
-      protected Grammar(IGrammarService grammarService, INatSpeak natSpeak)
-         : this(
+      protected Grammar(IGrammarService grammarService, INatSpeak natSpeak) :
+         this(
             new RuleFactory(),
             new IdGenerator(),
             grammarService,
@@ -210,7 +210,6 @@ namespace Renfrew.Grammar {
       public void InvokeRule(List<SpokenWord> spokenWords) {
          Logger.Debug("InvokeRule: {0}", string.Join(", ", spokenWords));
 
-         // Make sure there is at least one rule activated.
          if (!_activeRules.Any()) {
             throw new NoActiveRulesException();
          }
@@ -218,168 +217,10 @@ namespace Renfrew.Grammar {
          var startRuleId = spokenWords.First().RuleId;
          var startRule = _allRules.Get(startRuleId);
 
-         Debug.Assert(_activeRules.ContainsKey(startRule.String));
+         Debug.Assert(_activeRules.Contains(startRule));
 
-         //var result = false;
-
-         //// Iterate over each rule in the grammar, trying to invoke each one.
-         //// The one that "works" will be assumed to be the correct rule.
-         //foreach (var rule in _activeRules.Values.OrderBy(e => e)) {
-
-         //   var spokenWordsStack = new Stack<string>(spokenWords.Reverse());
-         //   var callbacks = new List<KeyValuePair<IGrammarAction, IEnumerable<string>>>();
-
-         //   // Check the word sequence to see if it's a match.
-         //   result = ProcessSpokenWords(
-         //      rule.Elements,
-         //      spokenWordsStack,
-         //      callbacks
-         //   );
-
-         //   // Make sure there are no words left in the stack
-         //   if (spokenWordsStack.Any()) {
-         //      Debug.WriteLine(
-         //         $"There are extra words in the callback: {string.Join(", ", spokenWords)}"
-         //      );
-
-         //      // The result of ProcessSpokenWords above could be "true", but
-         //      // that doesn't mean that this rule is the correct one. If there
-         //      // are spoken words that aren't accounted for, then it's the wrong
-         //      // rule.
-         //      result = false;
-         //   }
-
-         //   // Invoke callback(s)
-         //   if (!result) {
-         //      continue;
-         //   }
-
-         //   foreach (var callback in callbacks) {
-         //      callback.Key.InvokeAction(callback.Value);
-         //   }
-
-         //   break;
-         //}
-
-         //// Did the spoken words match the rule's structure?
-         //if (!result) {
-         //   throw new InvalidSequenceInCallbackException();
-         //}
-         //throw new NotImplementedException();
+         //ResolveSequence(startRule.Sequence, spokenWords, 0);
       }
-
-      //private bool ProcessSpokenWords(
-      //   IElementContainer elementContainer, Stack<string> spokenWordsStack,
-      //   List<KeyValuePair<IGrammarAction, IEnumerable<string>>> callbacks,
-      //   List<string> aw = null
-      //) {
-
-      //   if (callbacks == null) {
-      //      throw new ArgumentNullException(nameof(callbacks));
-      //   }
-
-      //   var actionWords = new List<string>();
-
-      //   foreach (var element in elementContainer.Elements) {
-
-      //      if (element is IWordElement wordElement) {
-      //         var spokenWord = spokenWordsStack.FirstOrDefault();
-
-      //         // If the words don't match, then this sub-rule doesn't match.
-      //         if (spokenWord == null || 
-      //            !string.Equals(
-      //               spokenWord, wordElement.ToString(),
-      //               StringComparison.CurrentCultureIgnoreCase
-      //            )
-      //         ) {
-      //            return false;
-      //         }
-
-      //         // Add word to callback stack
-      //         spokenWordsStack.Pop();
-      //         actionWords.Add(spokenWord);
-
-      //         continue;
-      //      }
-
-      //      // This rule refers to another rule, so we need to
-      //      // look it up and traverse it as well...
-      //      if (element is IRuleElement ruleElement) {
-      //         var nestedRule = _allRules[ruleElement.ToString()].Subject;
-
-      //         var nestedResult = ProcessSpokenWords(
-      //            nestedRule.Elements,
-      //            spokenWordsStack,
-      //            callbacks,
-      //            actionWords
-      //         );
-
-      //         if (!nestedResult) {
-      //            return false;
-      //         }
-
-      //         continue;
-      //      }
-
-      //      // Check if we need to descend into a sub-rule (Optional, Repeats, Alternatives...)
-      //      if (element is IElementContainer subRule) {
-      //         var subRuleResult = false;
-
-      //         if (subRule is IOptionals) {
-      //            ProcessSpokenWords(subRule, spokenWordsStack, callbacks, actionWords);
-      //            subRuleResult = true;
-      //         } else if (subRule is IAlternatives rule) {
-      //            var alternatives = rule?.Elements;
-
-      //            foreach (var alternative in alternatives) {
-
-      //               // Encapsulate in a sequence
-      //               var sequence = new Sequence();
-      //               sequence.AddElement(alternative);
-
-      //               subRuleResult = ProcessSpokenWords(
-      //                  sequence,
-      //                  spokenWordsStack,
-      //                  callbacks,
-      //                  actionWords
-      //               );
-
-      //               if (subRuleResult) {
-      //                  break;
-      //               }
-      //            }
-
-      //         } else if (subRule is IRepeats repeats) {
-      //            while (ProcessSpokenWords(repeats, spokenWordsStack, callbacks, actionWords)) {
-      //               subRuleResult = true;
-      //            }
-      //         } else { // Must be an ISequence
-      //            subRuleResult = ProcessSpokenWords(subRule, spokenWordsStack, callbacks, actionWords);
-      //         }
-
-      //         if (!subRuleResult) {
-      //            return false;
-      //         }
-
-      //         continue;
-      //      }
-
-      //      if (element is IGrammarAction action) {
-      //         callbacks.Add(
-      //            new KeyValuePair<IGrammarAction, IEnumerable<string>>(
-      //               action, actionWords
-      //            )
-      //         );
-
-      //         actionWords = new List<string>();
-      //      }
-      //   }
-
-      //   aw?.AddRange(actionWords);
-
-      //   // If we get here, the rule matches the spoken words
-      //   return true;
-      //}
 
       /// <summary>
       /// Due to a problem with Dragon 15, rules we want to remain active
