@@ -15,26 +15,21 @@
 // along with this program. If not, see<http://www.gnu.org/licenses/>.
 //
 
-namespace Renfrew.Grammar.Solving {
-   internal class SolveResult {
-      private SolveResult() { }
+using System;
 
-      public static SolveResult Succeeded(int numberOfMatches) {
-         return new Success(numberOfMatches);
-      }
+namespace Renfrew.Grammar.Exceptions {
+   public class SolveException : Exception {
+      public SolveException(string message) : base(message) { }
 
-      public static SolveResult Failed() {
-         return new Failure();
-      }
+      public SolveException(string message, Exception innerException) : base(
+         message,
+         innerException
+      ) { }
+   }
 
-      public class Failure : SolveResult { }
-
-      public class Success : SolveResult {
-         internal Success(int numberOfMatches) {
-            NumberOfMatches = numberOfMatches;
-         }
-
-         public int NumberOfMatches { get; }
-      }
+   public class UnrecognizedMemberType : SolveException {
+      public UnrecognizedMemberType(Type memberType) : base(
+         $"Unrecognized member type: {memberType.Name}"
+      ) { }
    }
 }

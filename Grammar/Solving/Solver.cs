@@ -1,5 +1,5 @@
 ﻿// Project Renfrew
-// Copyright(C) 2017 Stephen Workman (workman.stephen@gmail.com)
+// Copyright(C) 2025 Stephen Workman (workman.stephen@gmail.com)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,11 +12,12 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.If not, see<http://www.gnu.org/licenses/>.
+// along with this program. If not, see<http://www.gnu.org/licenses/>.
 //
 
 using System.Collections.Generic;
 using Renfrew.Grammar.Collections;
+using Renfrew.Grammar.Exceptions;
 using Renfrew.Grammar.FluentApi.ExpressionParts;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 
@@ -60,6 +61,9 @@ namespace Renfrew.Grammar.Solving {
             case Optional optional: {
                return VisitOptional(optional, memberIndex + 1);
             }
+            case Repeated repeated: {
+               return VisitRepeated(repeated, memberIndex + 1);
+            }
             case Word word: {
                if (word.Id == _phrase.Current.WordId
                    && word.String == _phrase.Current.Word) {
@@ -69,6 +73,11 @@ namespace Renfrew.Grammar.Solving {
                }
 
                break;
+            }
+            default: {
+               throw new UnrecognizedMemberType(
+                  _members[memberIndex].GetType()
+               );
             }
          }
 
@@ -111,8 +120,30 @@ namespace Renfrew.Grammar.Solving {
             return SolveResult.Failed();
          }
 
-         // Success.
          return rightResult;
+      }
+
+      public SolveResult VisitRepeated(Repeated repeated, int memberIndex) {
+         while (true) {
+            // Visit the repeated sequence.
+            var leftResult = VisitSequence(
+               repeated.Sequence,
+               false,
+               _phrase,
+               _grammar
+            );
+
+            if (leftResult is SolveResult.Failure) {
+               return SolveResult.Failed();
+            }
+
+            // Visit the next member of the current sequence.
+            var rightResult = VisitMember(memberIndex);
+
+            if (rightResult is SolveResult.Success) {
+               return rightResult;
+            }
+         }
       }
 
       public static SolveResult VisitSequence(
