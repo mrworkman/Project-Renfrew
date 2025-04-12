@@ -137,6 +137,20 @@ namespace GrammarTests {
             rule => rule.Say("one").SayOneOf("two", "three").Say("four")
          );
 
+      private static readonly Sequence TestAlternativesSequence3 =
+         CreateSequenceFromRule(
+            rule => rule.Say("one")
+               .OneOf(
+                  // @formatter:off
+                  alternative => alternative.Say("two", "three"),
+                  alternative => alternative.Say("two", "three", "four"),
+                  alternative => alternative.Say("two", "three", "four", "five"),
+                  alternative => alternative.Say("two", "three", "four", "five", "six")
+                  // @formatter:on
+               )
+               .Say("two", "three", "four", "five", "six")
+         );
+
       #endregion
 
       #region Simple Seqences Test Cases
@@ -226,6 +240,10 @@ namespace GrammarTests {
          Params(TestAlternativesSequence1, "jello:2@1"),
          Params(TestAlternativesSequence2, "one:1@1,two:2@1,four:4@1"),
          Params(TestAlternativesSequence2, "one:1@1,three:3@1,four:4@1"),
+         Params(TestAlternativesSequence3, "one:1@1,two:2@1,three:3@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1"),
+         Params(TestAlternativesSequence3, "one:1@1,two:2@1,three:3@1,four:4@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1"),
+         Params(TestAlternativesSequence3, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1"),
+         Params(TestAlternativesSequence3, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1"),
       };
       // @formatter:on
 
@@ -235,6 +253,12 @@ namespace GrammarTests {
          Params(TestAlternativesSequence2, "one:1@1,two:2@1,three:3@1,four:4@1"),
          Params(TestAlternativesSequence2, "one:1@1,four:4@1"),
          Params(TestAlternativesSequence2, "three:3@1,four:4@1"),
+         Params(TestAlternativesSequence3, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1"),
+         Params(TestAlternativesSequence3, "one:1@1,two:2@1,three:3@1"),
+         Params(TestAlternativesSequence3, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1"),
+         Params(TestAlternativesSequence3, "two:2@1,three:3@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1"),
+         Params(TestAlternativesSequence3, "one:1@1,six:6@1"),
+
       };
       // @formatter:on
 
