@@ -22,14 +22,13 @@ namespace Renfrew.Grammar.Collections {
    internal class ListWalker<T> {
       private readonly List<T> _list;
 
-      private bool _atEnd = false;
-      private int _currentIndex = 0;
-
       public ListWalker(List<T> list) {
          _list = list;
       }
 
-      public T Current => _list[_currentIndex];
+      public T Current => _list[CurrentIndex];
+      public int CurrentIndex { get; private set; }
+      public bool IsAtEnd { get; private set; }
 
       public void MoveBack(int steps = 1) {
          if (steps <= 0) {
@@ -39,12 +38,12 @@ namespace Renfrew.Grammar.Collections {
             );
          }
 
-         if (_currentIndex - steps < 0) {
+         if (CurrentIndex - steps < 0) {
             throw new IndexOutOfRangeException();
          }
 
-         _currentIndex -= steps;
-         _atEnd = false;
+         CurrentIndex -= steps;
+         IsAtEnd = false;
       }
 
       public void MoveForward(int steps = 1) {
@@ -55,11 +54,11 @@ namespace Renfrew.Grammar.Collections {
             );
          }
 
-         if (_currentIndex + steps >= _list.Count) {
-            _currentIndex = _list.Count;
-            _atEnd = true;
+         if (CurrentIndex + steps >= _list.Count) {
+            CurrentIndex = _list.Count;
+            IsAtEnd = true;
          } else {
-            _currentIndex += steps;
+            CurrentIndex += steps;
          }
       }
    }

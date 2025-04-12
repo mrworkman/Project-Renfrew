@@ -27,25 +27,34 @@ namespace Renfrew.Grammar.Solving {
       private readonly ListWalker<SpokenWord> _phrase;
       private readonly Grammar _grammar;
 
+      private readonly bool _isTrunkSequence;
       private int _numberOfMatches = 0;
 
       private Solver(
          Sequence sequence,
+         bool isTrunkSequence,
          ListWalker<SpokenWord> phrase,
          Grammar grammar
       ) {
          _members = new List<ISequenceMember>(sequence.Members);
          _phrase = phrase;
          _grammar = grammar;
+         _isTrunkSequence = isTrunkSequence;
       }
 
       public SolveResult VisitMember(int memberIndex) {
-         if (memberIndex == _members.Count) {
-            return SolveResult.Succeeded(_numberOfMatches);
+         if (memberIndex >= _members.Count) {
+            if (_phrase.IsAtEnd) {
+               return SolveResult.Succeeded(_numberOfMatches);
+            }
+
+            return _isTrunkSequence ?
+               SolveResult.Failed() :
+               SolveResult.Succeeded(_numberOfMatches);
          }
 
-         if (memberIndex > _members.Count) {
-            throw new IndexOutOfRangeException();
+         if (_phrase.IsAtEnd && _members[memberIndex] is not Optional) {
+            return SolveResult.Failed();
          }
 
          switch (_members[memberIndex]) {
@@ -53,21 +62,28 @@ namespace Renfrew.Grammar.Solving {
                return VisitOptional(optional, memberIndex + 1);
             }
             case Word word: {
-               if (word.Id == _phrase.Current.WordId) {
+               if (word.Id == _phrase.Current.WordId
+                   && word.String == _phrase.Current.Word) {
                   _numberOfMatches++;
-                  _phrase.MoveForward();
-                  return VisitMember(memberIndex + 1);
+               } else {
+                  return SolveResult.Failed();
                }
 
                break;
             }
          }
 
-         return SolveResult.Failed();
+         _phrase.MoveForward();
+         return VisitMember(memberIndex + 1);
       }
 
       public SolveResult VisitOptional(Optional optional, int memberIndex) {
-         var leftResult = VisitSequence(optional.Sequence, _phrase, _grammar);
+         var leftResult = VisitSequence(
+            optional.Sequence,
+            false,
+            _phrase,
+            _grammar
+         );
          var rightResult = VisitMember(memberIndex);
 
          if (rightResult is SolveResult.Success) {
@@ -92,10 +108,12 @@ namespace Renfrew.Grammar.Solving {
 
       public static SolveResult VisitSequence(
          Sequence sequence,
+         bool isTrunkSequence,
          ListWalker<SpokenWord> phrase,
          Grammar grammar
       ) {
-         return new Solver(sequence, phrase, grammar).VisitMember(0);
+         return new Solver(sequence, isTrunkSequence, phrase, grammar)
+            .VisitMember(0);
       }
    }
 }

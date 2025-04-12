@@ -112,6 +112,17 @@ namespace Renfrew.Grammar.FluentApi {
          return (ActionableRule) this;
       }
 
+      public IActionableRule Say(string word, params string[] additionalWords) {
+         var previousWord = Say(word);
+
+         foreach (var additionalWord in additionalWords) {
+            previousWord = previousWord.Say(additionalWord);
+         }
+
+         return (ActionableRule) this;
+      }
+
+
       public IActionableRule SayOneOf(params string[] words) {
          return SayOneOf(words as IEnumerable<string>);
       }

@@ -28,6 +28,7 @@ namespace Renfrew.Grammar.FluentApi.Interfaces {
       IReadOnlyList<Word> Words { get; }
 
       IActionableRule Say(string word);
+      IActionableRule Say(string firstWord, params string[] additionalWords);
       IActionableRule SayOneOf(IEnumerable<string> words);
       IActionableRule SayOneOf(params string[] words);
 
