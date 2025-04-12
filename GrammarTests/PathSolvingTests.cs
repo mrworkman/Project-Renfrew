@@ -67,37 +67,40 @@ namespace GrammarTests {
 
       #region Simple Sequences Test Sequences
 
-      private static readonly Sequence TestSequence0 = CreateSequenceFromRule(
-         rule => rule.Say("this", "is", "a", "test")
-      );
+      private static readonly Sequence TestSimpleSequencesSequence1 =
+         CreateSequenceFromRule(rule => rule.Say("this", "is", "a", "test"));
 
       #endregion
 
       #region Optionals Test Sequences
 
-      private static readonly Sequence TestSequence1 = CreateSequenceFromRule(
-         rule => rule.Say("hello").OptionallySay("cosmo").Say("kramer")
-      );
+      private static readonly Sequence TestOptionalsSequence1 =
+         CreateSequenceFromRule(
+            rule => rule.Say("hello").OptionallySay("cosmo").Say("kramer")
+         );
 
-      private static readonly Sequence TestSequence2 = CreateSequenceFromRule(
-         rule => rule.Say("i'm", "cosmo", "kramer")
-            .Optionally(optional => optional.Say("the", "ass", "man"))
-      );
+      private static readonly Sequence TestOptionalsSequence2 =
+         CreateSequenceFromRule(
+            rule => rule.Say("i'm", "cosmo", "kramer")
+               .Optionally(optional => optional.Say("the", "ass", "man"))
+         );
 
-      private static readonly Sequence TestSequence3 = CreateSequenceFromRule(
-         rule => rule.Say("one", "two", "three")
-            .Optionally(optional => optional.Say("four", "five"))
-            .Say("four", "five")
-      );
+      private static readonly Sequence TestOptionalsSequence3 =
+         CreateSequenceFromRule(
+            rule => rule.Say("one", "two", "three")
+               .Optionally(optional => optional.Say("four", "five"))
+               .Say("four", "five")
+         );
 
       // Nested optionals.
-      private static readonly Sequence TestSequence4 = CreateSequenceFromRule(
-         rule => rule.Optionally(
-               optional =>
-                  optional.Say("one", "two", "three").OptionallySay("four")
-            )
-            .Say("five")
-      );
+      private static readonly Sequence TestOptionalsSequence4 =
+         CreateSequenceFromRule(
+            rule => rule.Optionally(
+                  optional => optional.Say("one", "two", "three")
+                     .OptionallySay("four")
+               )
+               .Say("five")
+         );
 
       #endregion
 
@@ -124,17 +127,32 @@ namespace GrammarTests {
 
       #endregion
 
+      #region Alternatives Test Sequences
+
+      private static readonly Sequence TestAlternativesSequence1 =
+         CreateSequenceFromRule(rule => rule.SayOneOf("hello", "jello"));
+
+      private static readonly Sequence TestAlternativesSequence2 =
+         CreateSequenceFromRule(
+            rule => rule.Say("one").SayOneOf("two", "three").Say("four")
+         );
+
+      #endregion
+
       #region Simple Seqences Test Cases
 
       private static readonly object[] GoodSimpleSequenceCases = {
-         Params(TestSequence0, "this:1@1,is:2@1,a:3@1,test:4@1"),
+         Params(TestSimpleSequencesSequence1, "this:1@1,is:2@1,a:3@1,test:4@1"),
       };
 
       private static readonly object[] BadSimpleSequenceCases = {
-         Params(TestSequence0, "this:1@1,is:1@1"),
-         Params(TestSequence0, "this:1@1,is:2@1,a:3@1,test:4@1,too:5@1"),
-         Params(TestSequence0, "a:3@1,is:2@1,test:4@1,this:1@1"),
-         Params(TestSequence0, "a:3@1,a:3@1,a:3@1,a:3@1"),
+         Params(TestSimpleSequencesSequence1, "this:1@1,is:1@1"),
+         Params(
+            TestSimpleSequencesSequence1,
+            "this:1@1,is:2@1,a:3@1,test:4@1,too:5@1"
+         ),
+         Params(TestSimpleSequencesSequence1, "a:3@1,is:2@1,test:4@1,this:1@1"),
+         Params(TestSimpleSequencesSequence1, "a:3@1,a:3@1,a:3@1,a:3@1"),
       };
 
       #endregion
@@ -143,30 +161,30 @@ namespace GrammarTests {
 
       // @formatter:off
       private static readonly object[] GoodOptionalsCases = {
-         Params(TestSequence1, "hello:1@1,cosmo:2@1,kramer:3@1"),
-         Params(TestSequence1, "hello:1@1,kramer:3@1"),
-         Params(TestSequence2, "i'm:1@1,cosmo:2@1,kramer:3@1"),
-         Params(TestSequence2, "i'm:1@1,cosmo:2@1,kramer:3@1,the:4@1,ass:5@1,man:6@1" ),
-         Params(TestSequence3, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1"),
-         Params(TestSequence3, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,four:4@1,five:5@1"),
-         Params(TestSequence4, "five:5@1"),
-         Params(TestSequence4, "one:1@1,two:2@1,three:3@1,five:5@1"),
-         Params(TestSequence4, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1"),
+         Params(TestOptionalsSequence1, "hello:1@1,cosmo:2@1,kramer:3@1"),
+         Params(TestOptionalsSequence1, "hello:1@1,kramer:3@1"),
+         Params(TestOptionalsSequence2, "i'm:1@1,cosmo:2@1,kramer:3@1"),
+         Params(TestOptionalsSequence2, "i'm:1@1,cosmo:2@1,kramer:3@1,the:4@1,ass:5@1,man:6@1" ),
+         Params(TestOptionalsSequence3, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1"),
+         Params(TestOptionalsSequence3, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,four:4@1,five:5@1"),
+         Params(TestOptionalsSequence4, "five:5@1"),
+         Params(TestOptionalsSequence4, "one:1@1,two:2@1,three:3@1,five:5@1"),
+         Params(TestOptionalsSequence4, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1"),
       };
       // @formatter:on
 
       // @formatter:off
       private static readonly object[] BadOptionalsCases = {
-         Params(TestSequence3, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,four:4@1,five:5@1,four:4@1,five:5@1"),
-         Params(TestSequence3, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,four:6@1,five:7@1"),
-         Params(TestSequence3, "one:1@1,two:2@1,three:3@1,four:9@1,five:108@1,four:4@1,five:5@1"),
-         Params(TestSequence4, "one:1@1,four:4@1"),
-         Params(TestSequence4, "one:1@1,four:4@1,five:5@1"),
-         Params(TestSequence4, "one:1@1,two:2@1,three:3@1"),
-         Params(TestSequence4, "one:1@1,two:2@1,three:3@1,four:4@1"),
-         Params(TestSequence4, "one:1@1,two:2@1,five:5@1"),
-         Params(TestSequence4, "one:1@1,two:2@1,four:4@1,four:4@1"),
-         Params(TestSequence4, "four:4@1,five:5@1"),
+         Params(TestOptionalsSequence3, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,four:4@1,five:5@1,four:4@1,five:5@1"),
+         Params(TestOptionalsSequence3, "one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,four:6@1,five:7@1"),
+         Params(TestOptionalsSequence3, "one:1@1,two:2@1,three:3@1,four:9@1,five:108@1,four:4@1,five:5@1"),
+         Params(TestOptionalsSequence4, "one:1@1,four:4@1"),
+         Params(TestOptionalsSequence4, "one:1@1,four:4@1,five:5@1"),
+         Params(TestOptionalsSequence4, "one:1@1,two:2@1,three:3@1"),
+         Params(TestOptionalsSequence4, "one:1@1,two:2@1,three:3@1,four:4@1"),
+         Params(TestOptionalsSequence4, "one:1@1,two:2@1,five:5@1"),
+         Params(TestOptionalsSequence4, "one:1@1,two:2@1,four:4@1,four:4@1"),
+         Params(TestOptionalsSequence4, "four:4@1,five:5@1"),
       };
       // @formatter:on 
 
@@ -195,6 +213,28 @@ namespace GrammarTests {
          Params(TestRepeatedSequence3, "one:1@1,two:2@1,three:3@1,four:4@1"),
          Params(TestRepeatedSequence3, "one:1@1,two:2@1,three:3@1"),
          Params(TestRepeatedSequence3, "two:2@1,three:3@1,four:4@1"),
+      };
+      // @formatter:on
+
+      #endregion
+
+      #region Alternatives Test Cases
+
+      // @formatter:off
+      private static readonly object[] GoodAlternativesCases = {
+         Params(TestAlternativesSequence1, "hello:1@1"),
+         Params(TestAlternativesSequence1, "jello:2@1"),
+         Params(TestAlternativesSequence2, "one:1@1,two:2@1,four:4@1"),
+         Params(TestAlternativesSequence2, "one:1@1,three:3@1,four:4@1"),
+      };
+      // @formatter:on
+
+      // @formatter:off
+      private static readonly object[] BadAlternativesCases = {
+         Params(TestAlternativesSequence1, "hello:1@1,jello:2@1"),
+         Params(TestAlternativesSequence2, "one:1@1,two:2@1,three:3@1,four:4@1"),
+         Params(TestAlternativesSequence2, "one:1@1,four:4@1"),
+         Params(TestAlternativesSequence2, "three:3@1,four:4@1"),
       };
       // @formatter:on
 
@@ -275,6 +315,26 @@ namespace GrammarTests {
       [Test]
       [TestCaseSource(nameof(BadRepeatedCases))]
       public void ShouldErrorOnBadRepeatedCases(
+         Sequence testSequene,
+         List<SpokenWord> spokenWords
+      ) {
+         var result = BasePhraseHandler(testSequene, spokenWords);
+         Assert.IsInstanceOf<SolveResult.Failure>(result);
+      }
+
+      [Test]
+      [TestCaseSource(nameof(GoodAlternativesCases))]
+      public void ShouldHandleGoodAlternativesCases(
+         Sequence testSequene,
+         List<SpokenWord> spokenWords
+      ) {
+         var result = BasePhraseHandler(testSequene, spokenWords);
+         Assert.IsInstanceOf<SolveResult.Success>(result);
+      }
+
+      [Test]
+      [TestCaseSource(nameof(BadAlternativesCases))]
+      public void ShouldErrorOnBadAlternativesCases(
          Sequence testSequene,
          List<SpokenWord> spokenWords
       ) {

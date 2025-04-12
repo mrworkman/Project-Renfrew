@@ -42,6 +42,8 @@ namespace Renfrew.Grammar.Solving {
          _isTrunkSequence = isTrunkSequence;
       }
 
+      // TODO: Make sure the rule ID is checked to make sure we're looking at
+      //  the right one.
       public SolveResult VisitMember(int memberIndex) {
          if (memberIndex >= _members.Count) {
             if (_phrase.IsAtEnd) {
@@ -58,6 +60,9 @@ namespace Renfrew.Grammar.Solving {
          }
 
          switch (_members[memberIndex]) {
+            case Alternatives alternatives: {
+               return VisitAlternatives(alternatives, memberIndex + 1);
+            }
             case Optional optional: {
                return VisitOptional(optional, memberIndex + 1);
             }
@@ -90,6 +95,35 @@ namespace Renfrew.Grammar.Solving {
          }
 
          return result;
+      }
+
+      public SolveResult VisitAlternatives(
+         Alternatives alternatives,
+         int memberIndex
+      ) {
+         foreach (var alternativeSequence in alternatives.Sequences) {
+            // Visit the alternative sequence.
+            var leftResult = VisitSequence(
+               alternativeSequence,
+               false,
+               _phrase,
+               _grammar
+            );
+
+            // Visit the next member of the current sequence.
+            var rightResult = VisitMember(memberIndex);
+
+            if (leftResult is SolveResult.Success
+                && rightResult is SolveResult.Success) {
+               return rightResult;
+            }
+
+            if (leftResult is SolveResult.Success leftSuccess) {
+               _phrase.MoveBack(leftSuccess.NumberOfMatches);
+            }
+         }
+
+         return SolveResult.Failed();
       }
 
       public SolveResult VisitOptional(Optional optional, int memberIndex) {
