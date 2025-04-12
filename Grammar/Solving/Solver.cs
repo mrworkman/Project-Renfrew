@@ -15,7 +15,6 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-using System;
 using System.Collections.Generic;
 using Renfrew.Grammar.Collections;
 using Renfrew.Grammar.FluentApi.ExpressionParts;
@@ -23,12 +22,12 @@ using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 
 namespace Renfrew.Grammar.Solving {
    internal class Solver {
-      private readonly List<ISequenceMember> _members;
-      private readonly ListWalker<SpokenWord> _phrase;
       private readonly Grammar _grammar;
 
       private readonly bool _isTrunkSequence;
-      private int _numberOfMatches = 0;
+      private readonly List<ISequenceMember> _members;
+      private readonly ListWalker<SpokenWord> _phrase;
+      private int _numberOfMatches;
 
       private Solver(
          Sequence sequence,
@@ -74,24 +73,34 @@ namespace Renfrew.Grammar.Solving {
          }
 
          _phrase.MoveForward();
-         return VisitMember(memberIndex + 1);
+
+         var result = VisitMember(memberIndex + 1);
+
+         if (result is SolveResult.Failure) {
+            _phrase.MoveBack();
+         }
+
+         return result;
       }
 
       public SolveResult VisitOptional(Optional optional, int memberIndex) {
+         // Visit the optional sequence.
          var leftResult = VisitSequence(
             optional.Sequence,
             false,
             _phrase,
             _grammar
          );
+
+         // Visit the next member of the current sequence.
          var rightResult = VisitMember(memberIndex);
 
          if (rightResult is SolveResult.Success) {
             return rightResult;
          }
 
-         if (leftResult is SolveResult.Success success) {
-            _phrase.MoveBack(success.NumberOfMatches);
+         if (leftResult is SolveResult.Success leftSuccess) {
+            _phrase.MoveBack(leftSuccess.NumberOfMatches);
 
             rightResult = VisitMember(memberIndex);
 
