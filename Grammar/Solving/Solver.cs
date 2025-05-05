@@ -113,12 +113,12 @@ namespace Renfrew.Grammar.Solving {
             // Visit the next member of the current sequence.
             var rightResult = VisitMember(memberIndex);
 
-            if (leftResult is SolveResult.Success
-                && rightResult is SolveResult.Success) {
-               return rightResult;
-            }
 
             if (leftResult is SolveResult.Success leftSuccess) {
+               if (rightResult is SolveResult.Success) {
+                  return rightResult;
+               }
+
                _phrase.MoveBack(leftSuccess.NumberOfMatches);
             }
          }
