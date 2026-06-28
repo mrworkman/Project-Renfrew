@@ -31,6 +31,8 @@ namespace Renfrew.Grammar.Solving {
       private int _numberOfMatches;
 
       private Solver(
+         // Why does this take a Sequence? It already accepts the grammar, and
+         //  it should be looking in the grammar for matching rule(s).
          Sequence sequence,
          bool isTrunkSequence,
          ListWalker<SpokenWord> phrase,
@@ -142,6 +144,16 @@ namespace Renfrew.Grammar.Solving {
             return rightResult;
          }
 
+         //    ┌──── The optional sequence matched, but the remainder of the
+         //    │      parent sequence did not. Try again, assuming the optional
+         //    │      child sequence was the one that did not match.
+         //    │
+         //    ╽
+         // 0--O--1--2
+         //    |
+         //    └─ 1--2
+
+
          if (leftResult is SolveResult.Success leftSuccess) {
             _phrase.MoveBack(leftSuccess.NumberOfMatches);
 
@@ -154,6 +166,7 @@ namespace Renfrew.Grammar.Solving {
             return SolveResult.Failed();
          }
 
+         // Neither branch succeeded.
          return rightResult;
       }
 
