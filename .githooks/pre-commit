@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# Pre-commit hook: format staged C# files with `dotnet format` before commit.
+# Enable in a clone with:  git config core.hooksPath .githooks
+#
+set -eu
+
+# Staged C# files only (Added/Copied/Modified/Renamed -- not Deleted).
+files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.cs')
+[ -z "$files" ] && exit 0
+
+if ! command -v dotnet >/dev/null 2>&1; then
+   echo "pre-commit: 'dotnet' not on PATH; skipping formatting." >&2
+   exit 0
+fi
+
+echo "pre-commit: running dotnet format on staged C# files..."
+
+# --include limits the fixes to the staged files; the solution is still loaded
+# so semantic (style/analyzer) rules like IDE0011/IDE0049 can be applied.
+# Unquoted $files is intentional so each path becomes a separate argument.
+# shellcheck disable=SC2086
+dotnet format "Project Renfrew.sln" --include $files --severity warn
+
+# Re-stage whatever the formatter rewrote, so the tidy version is committed.
+echo "$files" | while IFS= read -r f; do
+   [ -f "$f" ] && git add -- "$f"
+done
+
+echo "pre-commit: formatting complete."
