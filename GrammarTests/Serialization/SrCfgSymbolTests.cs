@@ -21,37 +21,37 @@ using NUnit.Framework;
 using Renfrew.Grammar.Serialization.LowLevelTypes;
 
 namespace GrammarTests.Serialization {
-   [TestFixture]
-   internal class SrCfgSymbolTests {
-      [Test]
-      public void ShouldWriteCorrectBytes() {
-         var symbol = new SrCfgSymbol {
-            Type = 1,
-            Probability = 2,
-            Value = 3
-         };
+    [TestFixture]
+    internal class SrCfgSymbolTests {
+        [Test]
+        public void ShouldWriteCorrectBytes() {
+            var symbol = new SrCfgSymbol {
+                Type = 1,
+                Probability = 2,
+                Value = 3
+            };
 
-         var mockWriter = new Mock<BinaryWriter>();
+            var mockWriter = new Mock<BinaryWriter>();
 
-         symbol.Serialize(mockWriter.Object);
+            symbol.Serialize(mockWriter.Object);
 
-         mockWriter.Verify(
-            writer => writer.Write((ushort) 1),
-            Times.Once,
-            "Expected an unsigned short == 1"
-         );
+            mockWriter.Verify(
+               writer => writer.Write((ushort) 1),
+               Times.Once,
+               "Expected an unsigned short == 1"
+            );
 
-         mockWriter.Verify(
-            writer => writer.Write((ushort) 2),
-            Times.Once,
-            "Expected an unsigned short == 2"
-         );
+            mockWriter.Verify(
+               writer => writer.Write((ushort) 2),
+               Times.Once,
+               "Expected an unsigned short == 2"
+            );
 
-         mockWriter.Verify(
-            writer => writer.Write((uint) 3),
-            Times.Once,
-            "Expected an unsigned int == 1"
-         );
-      }
-   }
+            mockWriter.Verify(
+               writer => writer.Write((uint) 3),
+               Times.Once,
+               "Expected an unsigned int == 1"
+            );
+        }
+    }
 }

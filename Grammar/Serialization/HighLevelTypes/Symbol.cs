@@ -19,37 +19,37 @@ using System;
 
 #pragma warning disable CS0659
 namespace Renfrew.Grammar.Serialization.HighLevelTypes {
-   public class Symbol {
-      public SymbolType Type { get; set; }
-      public ushort Probability { get; } = 0;
-      public OperationType? OperationType { get; set; }
-      public uint? Id { get; set; }
+    public class Symbol {
+        public SymbolType Type { get; set; }
+        public ushort Probability { get; } = 0;
+        public OperationType? OperationType { get; set; }
+        public uint? Id { get; set; }
 
-      public uint Value {
-         get {
-            if (OperationType != null) {
-               return (uint) OperationType;
+        public uint Value {
+            get {
+                if (OperationType != null) {
+                    return (uint) OperationType;
+                }
+
+                if (Id != null) {
+                    return (uint) Id;
+                }
+
+                throw new ArgumentNullException();
+            }
+        }
+
+        public override bool Equals(object obj) {
+            var other = (Symbol) obj;
+
+            if (other == null) {
+                return false;
             }
 
-            if (Id != null) {
-               return (uint) Id;
-            }
-
-            throw new ArgumentNullException();
-         }
-      }
-
-      public override bool Equals(object obj) {
-         var other = (Symbol) obj;
-
-         if (other == null) {
-            return false;
-         }
-
-         return Type == other.Type
-                && Probability == other.Probability
-                && OperationType == other.OperationType
-                && Id == other.Id;
-      }
-   }
+            return Type == other.Type
+                   && Probability == other.Probability
+                   && OperationType == other.OperationType
+                   && Id == other.Id;
+        }
+    }
 }

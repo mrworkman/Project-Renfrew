@@ -25,51 +25,51 @@ using Brushes = System.Windows.Media.Brushes;
 using FontFamily = System.Windows.Media.FontFamily;
 
 namespace Renfrew.Core.Grammars.MousePlot {
-   /// <summary>
-   /// Interaction logic for PlotWindow.xaml
-   /// </summary>
-   public partial class PlotWindow : BaseWindow, IWindow {
-      public PlotWindow() {
-         InitializeComponent();
-      }
+    /// <summary>
+    /// Interaction logic for PlotWindow.xaml
+    /// </summary>
+    public partial class PlotWindow : BaseWindow, IWindow {
+        public PlotWindow() {
+            InitializeComponent();
+        }
 
-      private void Canvas_Loaded(object sender, RoutedEventArgs e) {
+        private void Canvas_Loaded(object sender, RoutedEventArgs e) {
 
-         for (var i = 0; i < 36; i++) {
-            for (var j = 0; j < 36; j++) {
-               if (i == 0 && j == 0) {
-                  continue;
-               }
+            for (var i = 0; i < 36; i++) {
+                for (var j = 0; j < 36; j++) {
+                    if (i == 0 && j == 0) {
+                        continue;
+                    }
 
-               var label = new Label {
-                  Style = Resources["DigitLabel"] as Style,
-                  Content = $"{GetDigitValue(j)}{GetDigitValue(i)}",
-                  Margin = new Thickness(2 + i * 100, 2 + j * 100, 0, 0),
-               };
+                    var label = new Label {
+                        Style = Resources["DigitLabel"] as Style,
+                        Content = $"{GetDigitValue(j)}{GetDigitValue(i)}",
+                        Margin = new Thickness(2 + i * 100, 2 + j * 100, 0, 0),
+                    };
 
-               //label.MouseEnter += Label_MouseEnter;
-               //label.MouseLeave += Label_MouseLeave;
+                    //label.MouseEnter += Label_MouseEnter;
+                    //label.MouseLeave += Label_MouseLeave;
 
-               mainCanvas.Children.Add(label);
+                    mainCanvas.Children.Add(label);
+                }
             }
-         }
-      }
+        }
 
-      private string GetDigitValue(int i) {
-         if (i < 10) {
-            return ((char) ('0' + i)).ToString();
-         }
+        private string GetDigitValue(int i) {
+            if (i < 10) {
+                return ((char) ('0' + i)).ToString();
+            }
 
-         return ((char) ('A' + i - 10)).ToString();
-      }
+            return ((char) ('A' + i - 10)).ToString();
+        }
 
-      public override void Move(double x, double y) {
-         Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
-            WindowState = WindowState.Normal;
-            Left = x;
-            Top = y;
-            WindowState = WindowState.Maximized;
-         })).Wait();
-      }
-   }
+        public override void Move(double x, double y) {
+            Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+                WindowState = WindowState.Normal;
+                Left = x;
+                Top = y;
+                WindowState = WindowState.Maximized;
+            })).Wait();
+        }
+    }
 }

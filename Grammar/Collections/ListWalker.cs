@@ -19,47 +19,47 @@ using System;
 using System.Collections.Generic;
 
 namespace Renfrew.Grammar.Collections {
-   internal class ListWalker<T> {
-      private readonly List<T> _list;
+    internal class ListWalker<T> {
+        private readonly List<T> _list;
 
-      public ListWalker(List<T> list) {
-         _list = list;
-      }
+        public ListWalker(List<T> list) {
+            _list = list;
+        }
 
-      public T Current => _list[CurrentIndex];
-      public int CurrentIndex { get; private set; }
-      public bool IsAtEnd { get; private set; }
+        public T Current => _list[CurrentIndex];
+        public int CurrentIndex { get; private set; }
+        public bool IsAtEnd { get; private set; }
 
-      public void MoveBack(int steps = 1) {
-         if (steps <= 0) {
-            throw new ArgumentOutOfRangeException(
-               nameof(steps),
-               "Negative numbers not allowed."
-            );
-         }
+        public void MoveBack(int steps = 1) {
+            if (steps <= 0) {
+                throw new ArgumentOutOfRangeException(
+                   nameof(steps),
+                   "Negative numbers not allowed."
+                );
+            }
 
-         if (CurrentIndex - steps < 0) {
-            throw new IndexOutOfRangeException();
-         }
+            if (CurrentIndex - steps < 0) {
+                throw new IndexOutOfRangeException();
+            }
 
-         CurrentIndex -= steps;
-         IsAtEnd = false;
-      }
+            CurrentIndex -= steps;
+            IsAtEnd = false;
+        }
 
-      public void MoveForward(int steps = 1) {
-         if (steps <= 0) {
-            throw new ArgumentOutOfRangeException(
-               nameof(steps),
-               "Negative numbers not allowed."
-            );
-         }
+        public void MoveForward(int steps = 1) {
+            if (steps <= 0) {
+                throw new ArgumentOutOfRangeException(
+                   nameof(steps),
+                   "Negative numbers not allowed."
+                );
+            }
 
-         if (CurrentIndex + steps >= _list.Count) {
-            CurrentIndex = _list.Count;
-            IsAtEnd = true;
-         } else {
-            CurrentIndex += steps;
-         }
-      }
-   }
+            if (CurrentIndex + steps >= _list.Count) {
+                CurrentIndex = _list.Count;
+                IsAtEnd = true;
+            } else {
+                CurrentIndex += steps;
+            }
+        }
+    }
 }

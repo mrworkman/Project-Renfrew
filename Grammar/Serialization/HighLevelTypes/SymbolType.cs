@@ -16,12 +16,12 @@
 //
 
 namespace Renfrew.Grammar.Serialization.HighLevelTypes {
-   public enum SymbolType {
-      StartOperation = 1,
-      EndOperation = 2,
-      Word = 3,
-      Rule = 4,
-      Wildcard = 5,
-      List = 6,
-   }
+    public enum SymbolType {
+        StartOperation = 1,
+        EndOperation = 2,
+        Word = 3,
+        Rule = 4,
+        Wildcard = 5,
+        List = 6,
+    }
 }

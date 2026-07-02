@@ -26,127 +26,127 @@ using System.Windows.Threading;
 using Renfrew.Utility;
 
 namespace Renfrew.Core.Grammars.MousePlot {
-   /// <summary>
-   /// Interaction logic for ZoomWindow.xaml
-   /// </summary>
-   public partial class ZoomWindow : BaseWindow, IZoomWindow {
+    /// <summary>
+    /// Interaction logic for ZoomWindow.xaml
+    /// </summary>
+    public partial class ZoomWindow : BaseWindow, IZoomWindow {
 
-      private Magnifier _magnifier;
-      private Timer _timer;
-      private Rectangle _sourceRectangle;
-      private double _scaleMultiplier = 1;
+        private Magnifier _magnifier;
+        private Timer _timer;
+        private Rectangle _sourceRectangle;
+        private double _scaleMultiplier = 1;
 
-      private Rectangle _screenBounds = Rectangle.Empty;
+        private Rectangle _screenBounds = Rectangle.Empty;
 
-      [DllImport("user32.dll", SetLastError = true)]
-      private static extern int SetWindowPos(IntPtr hWnd, IntPtr hwndInsertAfter, int x, int y, int cx, int cy, int wFlags);
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int SetWindowPos(IntPtr hWnd, IntPtr hwndInsertAfter, int x, int y, int cx, int cy, int wFlags);
 
-      public ZoomWindow() {
-         _magnifier = new Magnifier();
+        public ZoomWindow() {
+            _magnifier = new Magnifier();
 
-         InitializeComponent();
-      }
+            InitializeComponent();
+        }
 
-      private void Window_Loaded(object sender, RoutedEventArgs e) {
-         for (var i = 0; i < 9; i++) {
-            for (var j = 0; j < 9; j++) {
+        private void Window_Loaded(object sender, RoutedEventArgs e) {
+            for (var i = 0; i < 9; i++) {
+                for (var j = 0; j < 9; j++) {
 
-               var label = new Label {
-                  Style = Resources["ZoomDigitLabel"] as Style,
-                  Content = $"{GetDigitValue(j)}{GetDigitValue(i)}",
+                    var label = new Label {
+                        Style = Resources["ZoomDigitLabel"] as Style,
+                        Content = $"{GetDigitValue(j)}{GetDigitValue(i)}",
 
-                  Margin = new Thickness(5 + i * 33.3333, 5 + j * 33.3333, 0, 0),
-               };
+                        Margin = new Thickness(5 + i * 33.3333, 5 + j * 33.3333, 0, 0),
+                    };
 
-               var rearLabel = new Label {
-                  Style = Resources["ZoomRearDigitLabel"] as Style,
-                  Content = $"{GetDigitValue(j)}{GetDigitValue(i)}",
+                    var rearLabel = new Label {
+                        Style = Resources["ZoomRearDigitLabel"] as Style,
+                        Content = $"{GetDigitValue(j)}{GetDigitValue(i)}",
 
-                  Margin = new Thickness(5 + i * 33.3333, 5 + j * 33.3333, 0, 0),
-               };
+                        Margin = new Thickness(5 + i * 33.3333, 5 + j * 33.3333, 0, 0),
+                    };
 
-               _mainCanvas.Children.Add(label);
-               _rearCanvas.Children.Add(rearLabel);
-            }
-         }
-
-
-         _magnifierSurface.Child = _magnifier;
-         _magnifier.Initialize(_scaleMultiplier);
-
-         _popup.Focus();
-
-         _timer = new Timer(state => {
-
-            if (_screenBounds.IsEmpty == false) {
-               var r = Rectangle.Intersect(_screenBounds, _sourceRectangle);
-
-               Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
-                  _magnifierSurface.Height = r.Height * 3 / _scaleMultiplier;
-                  _magnifierSurface.Width = r.Width * 3 / _scaleMultiplier;
-               }));
+                    _mainCanvas.Children.Add(label);
+                    _rearCanvas.Children.Add(rearLabel);
+                }
             }
 
-            _magnifier.Update(
-               _sourceRectangle.X, _sourceRectangle.Y,
-               _sourceRectangle.Width, _sourceRectangle.Height - 30
-            );
 
-            _timer.Change(1, Timeout.Infinite);
-         }, null, 1, Timeout.Infinite);
-      }
+            _magnifierSurface.Child = _magnifier;
+            _magnifier.Initialize(_scaleMultiplier);
 
-      private string GetDigitValue(int i) {
-         if (i < 10) {
-            return ((char) ('0' + i)).ToString();
-         }
+            _popup.Focus();
 
-         return ((char) ('A' + i - 10)).ToString();
-      }
+            _timer = new Timer(state => {
 
-      public override void Close() {
-         base.Close();
+                if (_screenBounds.IsEmpty == false) {
+                    var r = Rectangle.Intersect(_screenBounds, _sourceRectangle);
 
-         // Hide the overlaid grid (popup)
-         Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
-            _popup.IsOpen = false;
-         })).Wait();
-      }
+                    Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+                        _magnifierSurface.Height = r.Height * 3 / _scaleMultiplier;
+                        _magnifierSurface.Width = r.Width * 3 / _scaleMultiplier;
+                    }));
+                }
 
-      public void SetScaleMultiplier(double multiplier) {
-         _scaleMultiplier = multiplier;
-      }
+                _magnifier.Update(
+                   _sourceRectangle.X, _sourceRectangle.Y,
+                   _sourceRectangle.Width, _sourceRectangle.Height - 30
+                );
 
-      public void SetSource(int x, int y, int width, int height) {
-         SetSource(new Rectangle(x, y, width, height));
-      }
+                _timer.Change(1, Timeout.Infinite);
+            }, null, 1, Timeout.Infinite);
+        }
 
-      public void SetSource(Rectangle sourceRectangle) {
-         _sourceRectangle = sourceRectangle;
-      }
+        private string GetDigitValue(int i) {
+            if (i < 10) {
+                return ((char) ('0' + i)).ToString();
+            }
 
-      public override void SetScreenBounds(Rectangle rectangle) {
-         _screenBounds = rectangle;
-      }
+            return ((char) ('A' + i - 10)).ToString();
+        }
 
-      public override void Show() {
-         base.Show();
+        public override void Close() {
+            base.Close();
 
-         // Show the overlaid grid (popup)
-         Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+            // Hide the overlaid grid (popup)
+            Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+                _popup.IsOpen = false;
+            })).Wait();
+        }
 
-            // Use absolute coordinates. Relative ones seem to behave oddly on some systems.
-            _popup.Placement = PlacementMode.Absolute;
+        public void SetScaleMultiplier(double multiplier) {
+            _scaleMultiplier = multiplier;
+        }
 
-            // Re-position relative to the parent window.
-            _popup.HorizontalOffset = Left - 20;
-            _popup.VerticalOffset = Top - 20;
+        public void SetSource(int x, int y, int width, int height) {
+            SetSource(new Rectangle(x, y, width, height));
+        }
 
-            // Show the popup (the grid).
-            _popup.IsOpen = true;
+        public void SetSource(Rectangle sourceRectangle) {
+            _sourceRectangle = sourceRectangle;
+        }
 
-         })).Wait();
+        public override void SetScreenBounds(Rectangle rectangle) {
+            _screenBounds = rectangle;
+        }
 
-      }
-   }
+        public override void Show() {
+            base.Show();
+
+            // Show the overlaid grid (popup)
+            Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+
+                // Use absolute coordinates. Relative ones seem to behave oddly on some systems.
+                _popup.Placement = PlacementMode.Absolute;
+
+                // Re-position relative to the parent window.
+                _popup.HorizontalOffset = Left - 20;
+                _popup.VerticalOffset = Top - 20;
+
+                // Show the popup (the grid).
+                _popup.IsOpen = true;
+
+            })).Wait();
+
+        }
+    }
 }

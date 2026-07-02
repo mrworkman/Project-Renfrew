@@ -18,29 +18,29 @@
 using System;
 
 namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
-   public class Optional : ISequenceMember, IEquatable<Optional> {
-      private Optional() { }
+    public class Optional : ISequenceMember, IEquatable<Optional> {
+        private Optional() { }
 
-      public Sequence Sequence { get; private set; }
+        public Sequence Sequence { get; private set; }
 
-      public bool Equals(Optional other) {
-         if (other is null) {
-            return false;
-         }
+        public bool Equals(Optional other) {
+            if (other is null) {
+                return false;
+            }
 
-         return Sequence.Equals(other.Sequence);
-      }
+            return Sequence.Equals(other.Sequence);
+        }
 
-      internal static Optional Create(Sequence sequence) {
-         return new Optional {
-            Sequence = sequence
-         };
-      }
+        internal static Optional Create(Sequence sequence) {
+            return new Optional {
+                Sequence = sequence
+            };
+        }
 
-      internal static Optional Create(ISequenceMember sequenceMember) {
-         return new Optional {
-            Sequence = Sequence.Create(sequenceMember)
-         };
-      }
-   }
+        internal static Optional Create(ISequenceMember sequenceMember) {
+            return new Optional {
+                Sequence = Sequence.Create(sequenceMember)
+            };
+        }
+    }
 }

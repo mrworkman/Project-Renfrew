@@ -24,334 +24,334 @@ using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace GrammarTests.Util {
-   /// <summary>
-   ///    Parses a Dragon/SRGS-style grammar rule string into the fluent
-   ///    <see cref="IRule" /> structure consumed by the solver.
-   /// </summary>
-   /// <remarks>
-   ///    Notation:
-   ///    <list type="bullet">
-   ///       <item><c>word</c> — a spoken word (a bare token).</item>
-   ///       <item><c>a b c</c> — a sequence of terms.</item>
-   ///       <item><c>( a | b )</c> — alternatives (one-of); also groups.</item>
-   ///       <item><c>[ a ]</c> — an optional section.</item>
-   ///       <item><c>x+</c> — repeat; binds to the preceding atom.</item>
-   ///       <item><c>&lt;ruleName&gt;</c> — a reference to another rule.</item>
-   ///    </list>
-   ///    Rules are built through the public fluent API so that word/rule id
-   ///    assignment and word deduplication match handwritten rules exactly.
-   /// </remarks>
-   public class RuleStringParser {
-      private static readonly RuleFactory RuleFactory = new();
+    /// <summary>
+    ///    Parses a Dragon/SRGS-style grammar rule string into the fluent
+    ///    <see cref="IRule" /> structure consumed by the solver.
+    /// </summary>
+    /// <remarks>
+    ///    Notation:
+    ///    <list type="bullet">
+    ///       <item><c>word</c> — a spoken word (a bare token).</item>
+    ///       <item><c>a b c</c> — a sequence of terms.</item>
+    ///       <item><c>( a | b )</c> — alternatives (one-of); also groups.</item>
+    ///       <item><c>[ a ]</c> — an optional section.</item>
+    ///       <item><c>x+</c> — repeat; binds to the preceding atom.</item>
+    ///       <item><c>&lt;ruleName&gt;</c> — a reference to another rule.</item>
+    ///    </list>
+    ///    Rules are built through the public fluent API so that word/rule id
+    ///    assignment and word deduplication match handwritten rules exactly.
+    /// </remarks>
+    public class RuleStringParser {
+        private static readonly RuleFactory RuleFactory = new();
 
-      public Expression<Action<IRule>> ParseExpression(
-         string ruleString
-      ) {
-         if (ruleString == null) {
-            throw new ArgumentNullException(nameof(ruleString));
-         }
-
-         var tokens = Tokenize(ruleString);
-         var cursor = new TokenCursor(tokens);
-         var root = ParseAlternation(cursor);
-
-         cursor.Expect(TokenKind.End);
-
-         return BuildExpression(root);
-      }
-
-      #region Tokenizer
-
-      private enum TokenKind {
-         Word,
-         RuleRef,
-         LParen,
-         RParen,
-         LBracket,
-         RBracket,
-         Pipe,
-         Plus,
-         End
-      }
-
-      private readonly struct Token {
-         public Token(TokenKind kind, string text) {
-            Kind = kind;
-            Text = text;
-         }
-
-         public TokenKind Kind { get; }
-         public string Text { get; }
-      }
-
-      private static List<Token> Tokenize(string input) {
-         var tokens = new List<Token>();
-         var i = 0;
-
-         while (i < input.Length) {
-            var c = input[i];
-
-            if (char.IsWhiteSpace(c)) {
-               i++;
-               continue;
+        public Expression<Action<IRule>> ParseExpression(
+           string ruleString
+        ) {
+            if (ruleString == null) {
+                throw new ArgumentNullException(nameof(ruleString));
             }
 
-            switch (c) {
-               case '(':
-                  tokens.Add(new Token(TokenKind.LParen, "("));
-                  i++;
-                  continue;
-               case ')':
-                  tokens.Add(new Token(TokenKind.RParen, ")"));
-                  i++;
-                  continue;
-               case '[':
-                  tokens.Add(new Token(TokenKind.LBracket, "["));
-                  i++;
-                  continue;
-               case ']':
-                  tokens.Add(new Token(TokenKind.RBracket, "]"));
-                  i++;
-                  continue;
-               case '|':
-                  tokens.Add(new Token(TokenKind.Pipe, "|"));
-                  i++;
-                  continue;
-               case '+':
-                  tokens.Add(new Token(TokenKind.Plus, "+"));
-                  i++;
-                  continue;
-               case '<': {
-                  var end = input.IndexOf('>', i + 1);
+            var tokens = Tokenize(ruleString);
+            var cursor = new TokenCursor(tokens);
+            var root = ParseAlternation(cursor);
 
-                  if (end < 0) {
-                     throw new FormatException(
-                        $"Unterminated rule reference at position {i}."
-                     );
-                  }
+            cursor.Expect(TokenKind.End);
 
-                  var name = input.Substring(i + 1, end - i - 1).Trim();
+            return BuildExpression(root);
+        }
 
-                  if (name.Length == 0) {
-                     throw new FormatException(
-                        $"Empty rule reference at position {i}."
-                     );
-                  }
+        #region Tokenizer
 
-                  tokens.Add(new Token(TokenKind.RuleRef, name));
-                  i = end + 1;
-                  continue;
-               }
+        private enum TokenKind {
+            Word,
+            RuleRef,
+            LParen,
+            RParen,
+            LBracket,
+            RBracket,
+            Pipe,
+            Plus,
+            End
+        }
+
+        private readonly struct Token {
+            public Token(TokenKind kind, string text) {
+                Kind = kind;
+                Text = text;
             }
 
-            // A bare word: everything up to the next special char or space.
-            var start = i;
+            public TokenKind Kind { get; }
+            public string Text { get; }
+        }
 
-            while (i < input.Length && !IsSpecial(input[i])) {
-               i++;
+        private static List<Token> Tokenize(string input) {
+            var tokens = new List<Token>();
+            var i = 0;
+
+            while (i < input.Length) {
+                var c = input[i];
+
+                if (char.IsWhiteSpace(c)) {
+                    i++;
+                    continue;
+                }
+
+                switch (c) {
+                    case '(':
+                        tokens.Add(new Token(TokenKind.LParen, "("));
+                        i++;
+                        continue;
+                    case ')':
+                        tokens.Add(new Token(TokenKind.RParen, ")"));
+                        i++;
+                        continue;
+                    case '[':
+                        tokens.Add(new Token(TokenKind.LBracket, "["));
+                        i++;
+                        continue;
+                    case ']':
+                        tokens.Add(new Token(TokenKind.RBracket, "]"));
+                        i++;
+                        continue;
+                    case '|':
+                        tokens.Add(new Token(TokenKind.Pipe, "|"));
+                        i++;
+                        continue;
+                    case '+':
+                        tokens.Add(new Token(TokenKind.Plus, "+"));
+                        i++;
+                        continue;
+                    case '<': {
+                        var end = input.IndexOf('>', i + 1);
+
+                        if (end < 0) {
+                            throw new FormatException(
+                               $"Unterminated rule reference at position {i}."
+                            );
+                        }
+
+                        var name = input.Substring(i + 1, end - i - 1).Trim();
+
+                        if (name.Length == 0) {
+                            throw new FormatException(
+                               $"Empty rule reference at position {i}."
+                            );
+                        }
+
+                        tokens.Add(new Token(TokenKind.RuleRef, name));
+                        i = end + 1;
+                        continue;
+                    }
+                }
+
+                // A bare word: everything up to the next special char or space.
+                var start = i;
+
+                while (i < input.Length && !IsSpecial(input[i])) {
+                    i++;
+                }
+
+                tokens.Add(new Token(TokenKind.Word, input.Substring(start, i - start)));
             }
 
-            tokens.Add(new Token(TokenKind.Word, input.Substring(start, i - start)));
-         }
+            tokens.Add(new Token(TokenKind.End, string.Empty));
 
-         tokens.Add(new Token(TokenKind.End, string.Empty));
+            return tokens;
+        }
 
-         return tokens;
-      }
+        private static bool IsSpecial(char c) {
+            return char.IsWhiteSpace(c)
+                   || c == '(' || c == ')'
+                   || c == '[' || c == ']'
+                   || c == '<' || c == '>'
+                   || c == '|' || c == '+';
+        }
 
-      private static bool IsSpecial(char c) {
-         return char.IsWhiteSpace(c)
-                || c == '(' || c == ')'
-                || c == '[' || c == ']'
-                || c == '<' || c == '>'
-                || c == '|' || c == '+';
-      }
+        private sealed class TokenCursor {
+            private readonly IReadOnlyList<Token> _tokens;
+            private int _pos;
 
-      private sealed class TokenCursor {
-         private readonly IReadOnlyList<Token> _tokens;
-         private int _pos;
-
-         public TokenCursor(IReadOnlyList<Token> tokens) {
-            _tokens = tokens;
-         }
-
-         public Token Peek => _tokens[_pos];
-
-         public Token Next() {
-            return _tokens[_pos++];
-         }
-
-         public void Expect(TokenKind kind) {
-            if (Peek.Kind != kind) {
-               throw new FormatException(
-                  $"Expected {kind} but found '{Peek.Text}' ({Peek.Kind})."
-               );
+            public TokenCursor(IReadOnlyList<Token> tokens) {
+                _tokens = tokens;
             }
 
-            _pos++;
-         }
-      }
+            public Token Peek => _tokens[_pos];
 
-      #endregion
-
-      #region Abstract Syntax Tree
-
-      private abstract class Node { }
-
-      private sealed class WordNode : Node {
-         public WordNode(string word) => Word = word;
-         public string Word { get; }
-      }
-
-      private sealed class RuleRefNode : Node {
-         public RuleRefNode(string name) => Name = name;
-         public string Name { get; }
-      }
-
-      private sealed class SequenceNode : Node {
-         public SequenceNode(IReadOnlyList<Node> terms) => Terms = terms;
-         public IReadOnlyList<Node> Terms { get; }
-      }
-
-      private sealed class AlternationNode : Node {
-         public AlternationNode(IReadOnlyList<Node> branches) =>
-            Branches = branches;
-
-         public IReadOnlyList<Node> Branches { get; }
-      }
-
-      private sealed class OptionalNode : Node {
-         public OptionalNode(Node child) => Child = child;
-         public Node Child { get; }
-      }
-
-      private sealed class RepeatNode : Node {
-         public RepeatNode(Node child) => Child = child;
-         public Node Child { get; }
-      }
-
-      #endregion
-
-      #region Recursive Descent Parser
-
-      // alternation := sequence ( '|' sequence )*
-      private static Node ParseAlternation(TokenCursor cursor) {
-         var branches = new List<Node> { ParseSequence(cursor) };
-
-         while (cursor.Peek.Kind == TokenKind.Pipe) {
-            cursor.Next();
-            branches.Add(ParseSequence(cursor));
-         }
-
-         return branches.Count == 1
-            ? branches[0]
-            : new AlternationNode(branches);
-      }
-
-      // sequence := term*
-      private static Node ParseSequence(TokenCursor cursor) {
-         var terms = new List<Node>();
-
-         while (StartsTerm(cursor.Peek.Kind)) {
-            terms.Add(ParseTerm(cursor));
-         }
-
-         return new SequenceNode(terms);
-      }
-
-      // term := atom '+'*
-      private static Node ParseTerm(TokenCursor cursor) {
-         var atom = ParseAtom(cursor);
-
-         while (cursor.Peek.Kind == TokenKind.Plus) {
-            cursor.Next();
-            atom = new RepeatNode(atom);
-         }
-
-         return atom;
-      }
-
-      // atom := word | ruleRef | '(' alternation ')' | '[' alternation ']'
-      private static Node ParseAtom(TokenCursor cursor) {
-         var token = cursor.Peek;
-
-         switch (token.Kind) {
-            case TokenKind.Word:
-               cursor.Next();
-               return new WordNode(token.Text);
-            case TokenKind.RuleRef:
-               cursor.Next();
-               return new RuleRefNode(token.Text);
-            case TokenKind.LParen: {
-               cursor.Next();
-               var node = ParseAlternation(cursor);
-               cursor.Expect(TokenKind.RParen);
-               return node;
+            public Token Next() {
+                return _tokens[_pos++];
             }
-            case TokenKind.LBracket: {
-               cursor.Next();
-               var node = ParseAlternation(cursor);
-               cursor.Expect(TokenKind.RBracket);
-               return new OptionalNode(node);
+
+            public void Expect(TokenKind kind) {
+                if (Peek.Kind != kind) {
+                    throw new FormatException(
+                       $"Expected {kind} but found '{Peek.Text}' ({Peek.Kind})."
+                    );
+                }
+
+                _pos++;
             }
-            default:
-               throw new FormatException(
-                  $"Unexpected token '{token.Text}' ({token.Kind})."
-               );
-         }
-      }
+        }
 
-      private static bool StartsTerm(TokenKind kind) {
-         return kind == TokenKind.Word
-                || kind == TokenKind.RuleRef
-                || kind == TokenKind.LParen
-                || kind == TokenKind.LBracket;
-      }
+        #endregion
 
-      #endregion
+        #region Abstract Syntax Tree
 
-      #region Fluent API Builder
+        private abstract class Node { }
 
-      private Expression<Action<IRule>> BuildExpression(Node node) {
-         // Drive the fluent API imperatively. The nested-rule fluent methods
-         // require an Expression, so wrap the (captured) build delegate in one
-         // it can compile and invoke against the nested rule.
-         Action<IRule> apply = rule => Apply(rule, node);
-         return rule => apply(rule);
-      }
+        private sealed class WordNode : Node {
+            public WordNode(string word) => Word = word;
+            public string Word { get; }
+        }
 
-      private void Apply(IRule rule, Node node) {
-         switch (node) {
-            case WordNode word:
-               rule.Say(word.Word);
-               break;
-            case RuleRefNode ruleRef:
-               rule.WithRule(ruleRef.Name);
-               break;
-            case SequenceNode sequence:
-               foreach (var term in sequence.Terms) {
-                  Apply(rule, term);
-               }
+        private sealed class RuleRefNode : Node {
+            public RuleRefNode(string name) => Name = name;
+            public string Name { get; }
+        }
 
-               break;
-            case AlternationNode alternation:
-               rule.OneOf(
-                  alternation.Branches.Select(BuildExpression).ToArray()
-               );
-               break;
-            case OptionalNode optional:
-               rule.Optionally(BuildExpression(optional.Child));
-               break;
-            case RepeatNode repeat:
-               rule.Repeat(BuildExpression(repeat.Child));
-               break;
-            default:
-               throw new InvalidOperationException(
-                  $"Unhandled node type '{node.GetType().Name}'."
-               );
-         }
-      }
+        private sealed class SequenceNode : Node {
+            public SequenceNode(IReadOnlyList<Node> terms) => Terms = terms;
+            public IReadOnlyList<Node> Terms { get; }
+        }
 
-      #endregion
-   }
+        private sealed class AlternationNode : Node {
+            public AlternationNode(IReadOnlyList<Node> branches) =>
+               Branches = branches;
+
+            public IReadOnlyList<Node> Branches { get; }
+        }
+
+        private sealed class OptionalNode : Node {
+            public OptionalNode(Node child) => Child = child;
+            public Node Child { get; }
+        }
+
+        private sealed class RepeatNode : Node {
+            public RepeatNode(Node child) => Child = child;
+            public Node Child { get; }
+        }
+
+        #endregion
+
+        #region Recursive Descent Parser
+
+        // alternation := sequence ( '|' sequence )*
+        private static Node ParseAlternation(TokenCursor cursor) {
+            var branches = new List<Node> { ParseSequence(cursor) };
+
+            while (cursor.Peek.Kind == TokenKind.Pipe) {
+                cursor.Next();
+                branches.Add(ParseSequence(cursor));
+            }
+
+            return branches.Count == 1
+               ? branches[0]
+               : new AlternationNode(branches);
+        }
+
+        // sequence := term*
+        private static Node ParseSequence(TokenCursor cursor) {
+            var terms = new List<Node>();
+
+            while (StartsTerm(cursor.Peek.Kind)) {
+                terms.Add(ParseTerm(cursor));
+            }
+
+            return new SequenceNode(terms);
+        }
+
+        // term := atom '+'*
+        private static Node ParseTerm(TokenCursor cursor) {
+            var atom = ParseAtom(cursor);
+
+            while (cursor.Peek.Kind == TokenKind.Plus) {
+                cursor.Next();
+                atom = new RepeatNode(atom);
+            }
+
+            return atom;
+        }
+
+        // atom := word | ruleRef | '(' alternation ')' | '[' alternation ']'
+        private static Node ParseAtom(TokenCursor cursor) {
+            var token = cursor.Peek;
+
+            switch (token.Kind) {
+                case TokenKind.Word:
+                    cursor.Next();
+                    return new WordNode(token.Text);
+                case TokenKind.RuleRef:
+                    cursor.Next();
+                    return new RuleRefNode(token.Text);
+                case TokenKind.LParen: {
+                    cursor.Next();
+                    var node = ParseAlternation(cursor);
+                    cursor.Expect(TokenKind.RParen);
+                    return node;
+                }
+                case TokenKind.LBracket: {
+                    cursor.Next();
+                    var node = ParseAlternation(cursor);
+                    cursor.Expect(TokenKind.RBracket);
+                    return new OptionalNode(node);
+                }
+                default:
+                    throw new FormatException(
+                       $"Unexpected token '{token.Text}' ({token.Kind})."
+                    );
+            }
+        }
+
+        private static bool StartsTerm(TokenKind kind) {
+            return kind == TokenKind.Word
+                   || kind == TokenKind.RuleRef
+                   || kind == TokenKind.LParen
+                   || kind == TokenKind.LBracket;
+        }
+
+        #endregion
+
+        #region Fluent API Builder
+
+        private Expression<Action<IRule>> BuildExpression(Node node) {
+            // Drive the fluent API imperatively. The nested-rule fluent methods
+            // require an Expression, so wrap the (captured) build delegate in one
+            // it can compile and invoke against the nested rule.
+            Action<IRule> apply = rule => Apply(rule, node);
+            return rule => apply(rule);
+        }
+
+        private void Apply(IRule rule, Node node) {
+            switch (node) {
+                case WordNode word:
+                    rule.Say(word.Word);
+                    break;
+                case RuleRefNode ruleRef:
+                    rule.WithRule(ruleRef.Name);
+                    break;
+                case SequenceNode sequence:
+                    foreach (var term in sequence.Terms) {
+                        Apply(rule, term);
+                    }
+
+                    break;
+                case AlternationNode alternation:
+                    rule.OneOf(
+                       alternation.Branches.Select(BuildExpression).ToArray()
+                    );
+                    break;
+                case OptionalNode optional:
+                    rule.Optionally(BuildExpression(optional.Child));
+                    break;
+                case RepeatNode repeat:
+                    rule.Repeat(BuildExpression(repeat.Child));
+                    break;
+                default:
+                    throw new InvalidOperationException(
+                       $"Unhandled node type '{node.GetType().Name}'."
+                    );
+            }
+        }
+
+        #endregion
+    }
 }

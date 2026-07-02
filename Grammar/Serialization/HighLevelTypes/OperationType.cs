@@ -16,10 +16,10 @@
 //
 
 namespace Renfrew.Grammar.Serialization.HighLevelTypes {
-   public enum OperationType {
-      Sequence = 1,
-      Alternative = 2,
-      Repeat = 3,
-      Optional = 4,
-   }
+    public enum OperationType {
+        Sequence = 1,
+        Alternative = 2,
+        Repeat = 3,
+        Optional = 4,
+    }
 }

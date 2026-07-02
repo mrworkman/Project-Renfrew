@@ -24,31 +24,31 @@ using Renfrew.Grammar.Serialization;
 using Renfrew.Grammar.Serialization.HighLevelTypes;
 
 namespace GrammarTests.Serialization {
-   [TestFixture]
-   internal class RuleConverterTests {
-      private IdGenerator _generator;
-      private RuleConverter _converter = new();
+    [TestFixture]
+    internal class RuleConverterTests {
+        private IdGenerator _generator;
+        private RuleConverter _converter = new();
 
-      [OneTimeSetUp]
-      public void OneTimeSetup() {
-         var settings = new JsonSerializerSettings {
-            TypeNameHandling = TypeNameHandling.Objects,
-            Formatting = Formatting.Indented
-         };
+        [OneTimeSetUp]
+        public void OneTimeSetup() {
+            var settings = new JsonSerializerSettings {
+                TypeNameHandling = TypeNameHandling.Objects,
+                Formatting = Formatting.Indented
+            };
 
-         TestContext.AddFormatter<Symbol>(
-            o => JsonConvert.SerializeObject(o, settings)
-         );
-      }
+            TestContext.AddFormatter<Symbol>(
+               o => JsonConvert.SerializeObject(o, settings)
+            );
+        }
 
-      [SetUp]
-      public void Setup() {
-         _generator = new();
-      }
+        [SetUp]
+        public void Setup() {
+            _generator = new();
+        }
 
-      [Test]
-      public void ShouldConvert_Say() {
-         var expectedSymbols = new List<Symbol> {
+        [Test]
+        public void ShouldConvert_Say() {
+            var expectedSymbols = new List<Symbol> {
             #region Expected Symbols
 
             new() {
@@ -67,17 +67,17 @@ namespace GrammarTests.Serialization {
             #endregion
          };
 
-         var convertedRule = _converter.ConvertRule(
-            new Rule("-", _generator)
-               .Say("hello")
-         );
+            var convertedRule = _converter.ConvertRule(
+               new Rule("-", _generator)
+                  .Say("hello")
+            );
 
-         Assert.AreEqual(expectedSymbols, convertedRule.Symbols);
-      }
+            Assert.AreEqual(expectedSymbols, convertedRule.Symbols);
+        }
 
-      [Test]
-      public void ShouldConvert_SimpleSayOptionallySay() {
-         var expectedSymbols = new List<Symbol> {
+        [Test]
+        public void ShouldConvert_SimpleSayOptionallySay() {
+            var expectedSymbols = new List<Symbol> {
             #region Expected Symbols
 
             new() {
@@ -108,19 +108,19 @@ namespace GrammarTests.Serialization {
             #endregion
          };
 
-         var convertedRule = _converter.ConvertRule(
-            new Rule("-", _generator)
-               .Say("hello")
-               .OptionallySay("jello")
-         );
+            var convertedRule = _converter.ConvertRule(
+               new Rule("-", _generator)
+                  .Say("hello")
+                  .OptionallySay("jello")
+            );
 
-         Assert.AreEqual(expectedSymbols, convertedRule.Symbols);
-      }
+            Assert.AreEqual(expectedSymbols, convertedRule.Symbols);
+        }
 
 
-      [Test]
-      public void ShouldConvert_Say_SayOneOf() {
-         var expectedSymbols = new List<Symbol> {
+        [Test]
+        public void ShouldConvert_Say_SayOneOf() {
+            var expectedSymbols = new List<Symbol> {
             #region Expected Symbols
 
             new() {
@@ -130,60 +130,6 @@ namespace GrammarTests.Serialization {
             new() {
                Type = SymbolType.Word,
                Id = 1,
-            },
-            new() {
-               Type = SymbolType.StartOperation,
-               OperationType = OperationType.Alternative,
-            },
-            new() {
-               Type = SymbolType.Word,
-               Id = 2,
-            },
-            new() {
-               Type = SymbolType.Word,
-               Id = 3,
-            },
-            new() {
-               Type = SymbolType.EndOperation,
-               OperationType = OperationType.Alternative,
-            },
-            new() {
-               Type = SymbolType.EndOperation,
-               OperationType = OperationType.Sequence,
-            }
-
-            #endregion
-         };
-
-         var convertedRule = _converter.ConvertRule(
-            new Rule("-", _generator)
-               .Say("hello")
-               .SayOneOf("abe", "bob")
-         );
-
-         Assert.AreEqual(expectedSymbols, convertedRule.Symbols);
-      }
-
-      [Test]
-      public void ShouldConvert_OptionallySay_SayOneOf() {
-         var expectedSymbols = new List<Symbol> {
-            #region Expected Symbols
-
-            new() {
-               Type = SymbolType.StartOperation,
-               OperationType = OperationType.Sequence,
-            },
-            new() {
-               Type = SymbolType.StartOperation,
-               OperationType = OperationType.Optional,
-            },
-            new() {
-               Type = SymbolType.Word,
-               Id = 1,
-            },
-            new() {
-               Type = SymbolType.EndOperation,
-               OperationType = OperationType.Optional,
             },
             new() {
                Type = SymbolType.StartOperation,
@@ -204,18 +150,72 @@ namespace GrammarTests.Serialization {
             new() {
                Type = SymbolType.EndOperation,
                OperationType = OperationType.Sequence,
+            }
+
+            #endregion
+         };
+
+            var convertedRule = _converter.ConvertRule(
+               new Rule("-", _generator)
+                  .Say("hello")
+                  .SayOneOf("abe", "bob")
+            );
+
+            Assert.AreEqual(expectedSymbols, convertedRule.Symbols);
+        }
+
+        [Test]
+        public void ShouldConvert_OptionallySay_SayOneOf() {
+            var expectedSymbols = new List<Symbol> {
+            #region Expected Symbols
+
+            new() {
+               Type = SymbolType.StartOperation,
+               OperationType = OperationType.Sequence,
+            },
+            new() {
+               Type = SymbolType.StartOperation,
+               OperationType = OperationType.Optional,
+            },
+            new() {
+               Type = SymbolType.Word,
+               Id = 1,
+            },
+            new() {
+               Type = SymbolType.EndOperation,
+               OperationType = OperationType.Optional,
+            },
+            new() {
+               Type = SymbolType.StartOperation,
+               OperationType = OperationType.Alternative,
+            },
+            new() {
+               Type = SymbolType.Word,
+               Id = 2,
+            },
+            new() {
+               Type = SymbolType.Word,
+               Id = 3,
+            },
+            new() {
+               Type = SymbolType.EndOperation,
+               OperationType = OperationType.Alternative,
+            },
+            new() {
+               Type = SymbolType.EndOperation,
+               OperationType = OperationType.Sequence,
             },
 
             #endregion
          };
 
-         var convertedRule = _converter.ConvertRule(
-            new Rule("-", _generator)
-               .OptionallySay("hello")
-               .SayOneOf("abe", "bob")
-         );
+            var convertedRule = _converter.ConvertRule(
+               new Rule("-", _generator)
+                  .OptionallySay("hello")
+                  .SayOneOf("abe", "bob")
+            );
 
-         Assert.AreEqual(expectedSymbols, convertedRule.Symbols);
-      }
-   }
+            Assert.AreEqual(expectedSymbols, convertedRule.Symbols);
+        }
+    }
 }

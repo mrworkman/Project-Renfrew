@@ -21,97 +21,97 @@ using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.Types;
 
 namespace Renfrew.Grammar.FluentApi.ExpressionParts {
-   public class Sequence : IEquatable<Sequence> {
-      private readonly List<ISequenceMember> _members = new();
-      internal Sequence() { }
+    public class Sequence : IEquatable<Sequence> {
+        private readonly List<ISequenceMember> _members = new();
+        internal Sequence() { }
 
-      public IReadOnlyList<ISequenceMember> Members => _members.AsReadOnly();
+        public IReadOnlyList<ISequenceMember> Members => _members.AsReadOnly();
 
-      public bool Equals(Sequence other) {
-         if (other is null) {
-            return false;
-         }
-
-         if (_members.Count != other._members.Count) {
-            return false;
-         }
-
-         for (var i = 0; i < _members.Count; i++) {
-            var left = _members[i];
-            var right = other._members[i];
-
-            if (left.GetType() != right.GetType()) {
-               return false;
+        public bool Equals(Sequence other) {
+            if (other is null) {
+                return false;
             }
 
-            switch (left) {
-               case IIdString term: {
-                  if (!term.Equals(right as IIdString)) {
-                     return false;
-                  }
-
-                  break;
-               }
-               case Alternatives alternatives: {
-                  if (!alternatives.Equals(right as Alternatives)) {
-                     return false;
-                  }
-
-                  break;
-               }
-               case Optional optional: {
-                  if (!optional.Equals(right as Optional)) {
-                     return false;
-                  }
-
-                  break;
-               }
-               case Repeated repeated: {
-                  if (!repeated.Equals(right as Repeated)) {
-                     return false;
-                  }
-
-                  break;
-               }
-               default: {
-                  if (!left.Equals(right)) {
-                     return false;
-                  }
-
-                  break;
-               }
+            if (_members.Count != other._members.Count) {
+                return false;
             }
-         }
 
-         return true;
-      }
+            for (var i = 0; i < _members.Count; i++) {
+                var left = _members[i];
+                var right = other._members[i];
 
-      internal static Sequence Create(ISequenceMember sequenceMember) {
-         var sequence = new Sequence();
-         sequence._members.Add(sequenceMember);
-         return sequence;
-      }
+                if (left.GetType() != right.GetType()) {
+                    return false;
+                }
 
-      internal static Sequence Create(
-         ISequenceMember sequenceMember,
-         params ISequenceMember[] additionalSequenceMembers
-      ) {
-         var sequence = new Sequence();
-         sequence._members.Add(sequenceMember);
-         sequence._members.AddRange(additionalSequenceMembers);
-         return sequence;
-      }
+                switch (left) {
+                    case IIdString term: {
+                        if (!term.Equals(right as IIdString)) {
+                            return false;
+                        }
 
-      internal static Sequence Create(
-         IEnumerable<ISequenceMember> sequenceMembers
-      ) {
-         var sequence = new Sequence();
-         sequence._members.AddRange(sequenceMembers);
-         return sequence;
-      }
+                        break;
+                    }
+                    case Alternatives alternatives: {
+                        if (!alternatives.Equals(right as Alternatives)) {
+                            return false;
+                        }
 
-      internal void AddMember(ISequenceMember member) {
-         _members.Add(member);
-      }
-   }
+                        break;
+                    }
+                    case Optional optional: {
+                        if (!optional.Equals(right as Optional)) {
+                            return false;
+                        }
+
+                        break;
+                    }
+                    case Repeated repeated: {
+                        if (!repeated.Equals(right as Repeated)) {
+                            return false;
+                        }
+
+                        break;
+                    }
+                    default: {
+                        if (!left.Equals(right)) {
+                            return false;
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        internal static Sequence Create(ISequenceMember sequenceMember) {
+            var sequence = new Sequence();
+            sequence._members.Add(sequenceMember);
+            return sequence;
+        }
+
+        internal static Sequence Create(
+           ISequenceMember sequenceMember,
+           params ISequenceMember[] additionalSequenceMembers
+        ) {
+            var sequence = new Sequence();
+            sequence._members.Add(sequenceMember);
+            sequence._members.AddRange(additionalSequenceMembers);
+            return sequence;
+        }
+
+        internal static Sequence Create(
+           IEnumerable<ISequenceMember> sequenceMembers
+        ) {
+            var sequence = new Sequence();
+            sequence._members.AddRange(sequenceMembers);
+            return sequence;
+        }
+
+        internal void AddMember(ISequenceMember member) {
+            _members.Add(member);
+        }
+    }
 }

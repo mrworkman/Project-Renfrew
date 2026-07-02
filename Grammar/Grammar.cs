@@ -30,214 +30,214 @@ using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.NatSpeakInterop;
 
 namespace Renfrew.Grammar {
-   public abstract class Grammar : IGrammar, IDisposable {
-      private static readonly Logger Logger =
-         LogManager.GetCurrentClassLogger();
+    public abstract class Grammar : IGrammar, IDisposable {
+        private static readonly Logger Logger =
+           LogManager.GetCurrentClassLogger();
 
-      private readonly IGrammarService _grammarService;
+        private readonly IGrammarService _grammarService;
 
-      private readonly Lookup<IRule> _allRules = new();
-      private readonly Lookup<IRule> _exportedRules = new();
-      private readonly Lookup<IRule> _importedRules = new();
-      private readonly Lookup<IRule> _activeRules = new();
+        private readonly Lookup<IRule> _allRules = new();
+        private readonly Lookup<IRule> _exportedRules = new();
+        private readonly Lookup<IRule> _importedRules = new();
+        private readonly Lookup<IRule> _activeRules = new();
 
-      private readonly Lookup<Word> _allWords = new();
+        private readonly Lookup<Word> _allWords = new();
 
-      private readonly RuleFactory _ruleFactory;
-      private readonly IIdGenerator _idGenerator;
+        private readonly RuleFactory _ruleFactory;
+        private readonly IIdGenerator _idGenerator;
 
 
-      protected Grammar(IGrammarService grammarService, INatSpeak natSpeak) :
-         this(
-            new RuleFactory(),
-            new IdGenerator(),
-            grammarService,
-            natSpeak
-         ) { }
+        protected Grammar(IGrammarService grammarService, INatSpeak natSpeak) :
+           this(
+              new RuleFactory(),
+              new IdGenerator(),
+              grammarService,
+              natSpeak
+           ) { }
 
-      protected Grammar(
-         RuleFactory ruleFactory,
-         IIdGenerator idGenerator,
-         IGrammarService grammarService,
-         INatSpeak natSpeak
-      ) {
-         Debug.Assert(ruleFactory != null);
-         Debug.Assert(grammarService != null);
-         Debug.Assert(natSpeak != null);
+        protected Grammar(
+           RuleFactory ruleFactory,
+           IIdGenerator idGenerator,
+           IGrammarService grammarService,
+           INatSpeak natSpeak
+        ) {
+            Debug.Assert(ruleFactory != null);
+            Debug.Assert(grammarService != null);
+            Debug.Assert(natSpeak != null);
 
-         _ruleFactory = ruleFactory;
-         _idGenerator = idGenerator;
+            _ruleFactory = ruleFactory;
+            _idGenerator = idGenerator;
 
-         _grammarService = grammarService;
-         NatSpeak = natSpeak;
-      }
+            _grammarService = grammarService;
+            NatSpeak = natSpeak;
+        }
 
-      protected INatSpeak NatSpeak { get; }
+        protected INatSpeak NatSpeak { get; }
 
-      internal IReadOnlyList<IRule> AllRules => _allRules.Values.ToList();
+        internal IReadOnlyList<IRule> AllRules => _allRules.Values.ToList();
 
-      internal IReadOnlyList<IRule> ExportedRules =>
-         _exportedRules.Values.ToList();
+        internal IReadOnlyList<IRule> ExportedRules =>
+           _exportedRules.Values.ToList();
 
-      internal IReadOnlyList<IRule> ImportedRules =>
-         _importedRules.Values.ToList();
+        internal IReadOnlyList<IRule> ImportedRules =>
+           _importedRules.Values.ToList();
 
-      internal IReadOnlyList<Word> Words => _allWords.Values.ToList();
+        internal IReadOnlyList<Word> Words => _allWords.Values.ToList();
 
-      public IReadOnlyList<string> WordList => _allWords.Keys
-         .OrderBy(word => word.ToLowerInvariant())
-         .ToList();
+        public IReadOnlyList<string> WordList => _allWords.Keys
+           .OrderBy(word => word.ToLowerInvariant())
+           .ToList();
 
-      public void ActivateRule(string name) {
-         _grammarService.ActivateRule(this, IntPtr.Zero, name);
+        public void ActivateRule(string name) {
+            _grammarService.ActivateRule(this, IntPtr.Zero, name);
 
-         if (!_activeRules.ContainsKey(name)) {
-            _activeRules.Add(_exportedRules.Get(name));
-         }
-      }
-
-      public void AddRule(string name, IRule rule) {
-         if (string.IsNullOrWhiteSpace(name)) {
-            throw new ArgumentException(
-               "Value cannot be null or whitespace.",
-               nameof(name)
-            );
-         }
-
-         if (rule == null) {
-            throw new ArgumentNullException(nameof(rule));
-         }
-
-         EnforceRuleNaming(name);
-
-         if (_allRules.ContainsKey(name)) {
-            throw new ArgumentException(
-               $"Grammar already contains a rule called '{name}'.",
-               nameof(name)
-            );
-         }
-
-         foreach (var word in rule.Words) {
-            if (!_allWords.ContainsKey(word.String)) {
-               _allWords.Add(word);
+            if (!_activeRules.ContainsKey(name)) {
+                _activeRules.Add(_exportedRules.Get(name));
             }
-         }
+        }
 
-         _allRules.Add(rule);
-         _exportedRules.Add(rule);
-      }
+        public void AddRule(string name, IRule rule) {
+            if (string.IsNullOrWhiteSpace(name)) {
+                throw new ArgumentException(
+                   "Value cannot be null or whitespace.",
+                   nameof(name)
+                );
+            }
 
-      protected void AddRule(
-         string name,
-         Expression<Action<IRule>> ruleExpression
-      ) {
-         AddRule(name, _ruleFactory.Create(name, _idGenerator, ruleExpression));
-      }
+            if (rule == null) {
+                throw new ArgumentNullException(nameof(rule));
+            }
 
-      public void AddRule(string name, Func<IRule, IRule> ruleFunc) {
-         AddRule(
-            name,
-            rule: ruleFunc?.Invoke(_ruleFactory.Create(name, _idGenerator))
-         );
-      }
+            EnforceRuleNaming(name);
 
-      public void DeactivateRule(string name) {
-         _grammarService.DeactivateRule(this, name);
+            if (_allRules.ContainsKey(name)) {
+                throw new ArgumentException(
+                   $"Grammar already contains a rule called '{name}'.",
+                   nameof(name)
+                );
+            }
 
-         if (_activeRules.ContainsKey(name)) {
-            _activeRules.Remove(name);
-         }
-      }
+            foreach (var word in rule.Words) {
+                if (!_allWords.ContainsKey(word.String)) {
+                    _allWords.Add(word);
+                }
+            }
 
-      public abstract void Dispose();
+            _allRules.Add(rule);
+            _exportedRules.Add(rule);
+        }
 
-      private void EnforceRuleNaming(string ruleName) {
-         var validChars = @"[a-zA-Z0-9_]";
+        protected void AddRule(
+           string name,
+           Expression<Action<IRule>> ruleExpression
+        ) {
+            AddRule(name, _ruleFactory.Create(name, _idGenerator, ruleExpression));
+        }
 
-         if (!Regex.IsMatch(ruleName, $@"^{validChars}+$")) {
-            var invalidChars = Regex.Replace(ruleName, validChars, string.Empty);
-
-            throw new ArgumentOutOfRangeException(
-               nameof(ruleName),
-               $@"Rule name '{ruleName}' contains invalid character(s): '{invalidChars}'"
+        public void AddRule(string name, Func<IRule, IRule> ruleFunc) {
+            AddRule(
+               name,
+               rule: ruleFunc?.Invoke(_ruleFactory.Create(name, _idGenerator))
             );
-         }
-      }
+        }
 
-      public void ImportRule(string name) {
-         if (string.IsNullOrWhiteSpace(name)) {
-            throw new ArgumentException(
-               "Value cannot be null or whitespace.",
-               nameof(name)
-            );
-         }
+        public void DeactivateRule(string name) {
+            _grammarService.DeactivateRule(this, name);
 
-         var rule = _ruleFactory.Create(name, _idGenerator);
+            if (_activeRules.ContainsKey(name)) {
+                _activeRules.Remove(name);
+            }
+        }
 
-         EnforceRuleNaming(name);
+        public abstract void Dispose();
 
-         if (_allRules.ContainsKey(name)) {
-            throw new ArgumentException(
-               $"Grammar already contains a rule called '{name}'.",
-               nameof(name)
-            );
-         }
+        private void EnforceRuleNaming(string ruleName) {
+            var validChars = @"[a-zA-Z0-9_]";
 
-         _allRules.Add(rule);
-         _importedRules.Add(rule);
-      }
+            if (!Regex.IsMatch(ruleName, $@"^{validChars}+$")) {
+                var invalidChars = Regex.Replace(ruleName, validChars, string.Empty);
 
-      public abstract void Initialize();
+                throw new ArgumentOutOfRangeException(
+                   nameof(ruleName),
+                   $@"Rule name '{ruleName}' contains invalid character(s): '{invalidChars}'"
+                );
+            }
+        }
 
-      protected void Load() {
-         _grammarService.LoadGrammar(this);
-      }
+        public void ImportRule(string name) {
+            if (string.IsNullOrWhiteSpace(name)) {
+                throw new ArgumentException(
+                   "Value cannot be null or whitespace.",
+                   nameof(name)
+                );
+            }
 
-      protected void MakeGrammarExclusive() {
-         _grammarService.SetExclusiveGrammar(this, true);
-      }
+            var rule = _ruleFactory.Create(name, _idGenerator);
 
-      protected void MakeGrammarNotExclusive() {
-         _grammarService.SetExclusiveGrammar(this, false);
-      }
+            EnforceRuleNaming(name);
 
-      protected void RemoveRule(string name) {
-         if (string.IsNullOrWhiteSpace(name)) {
-            throw new ArgumentException(
-               "Value cannot be null or whitespace.",
-               nameof(name)
-            );
-         }
+            if (_allRules.ContainsKey(name)) {
+                throw new ArgumentException(
+                   $"Grammar already contains a rule called '{name}'.",
+                   nameof(name)
+                );
+            }
 
-         _exportedRules.Remove(name);
-         _importedRules.Remove(name);
+            _allRules.Add(rule);
+            _importedRules.Add(rule);
+        }
 
-         _allRules.Remove(name);
-      }
+        public abstract void Initialize();
 
-      public void InvokeRule(List<SpokenWord> spokenWords) {
-         Logger.Debug("InvokeRule: {0}", string.Join(", ", spokenWords));
+        protected void Load() {
+            _grammarService.LoadGrammar(this);
+        }
 
-         if (!_activeRules.Any()) {
-            throw new NoActiveRulesException();
-         }
+        protected void MakeGrammarExclusive() {
+            _grammarService.SetExclusiveGrammar(this, true);
+        }
 
-         var startRuleId = spokenWords.First().RuleId;
-         var startRule = _allRules.Get(startRuleId);
+        protected void MakeGrammarNotExclusive() {
+            _grammarService.SetExclusiveGrammar(this, false);
+        }
 
-         Debug.Assert(_activeRules.Contains(startRule));
+        protected void RemoveRule(string name) {
+            if (string.IsNullOrWhiteSpace(name)) {
+                throw new ArgumentException(
+                   "Value cannot be null or whitespace.",
+                   nameof(name)
+                );
+            }
 
-         //ResolveSequence(startRule.Sequence, spokenWords, 0);
-      }
+            _exportedRules.Remove(name);
+            _importedRules.Remove(name);
 
-      /// <summary>
-      /// Due to a problem with Dragon 15, rules we want to remain active
-      /// need to be explicitly re-activated when another is de-activated.
-      /// </summary>
-      /// <param name="name">The name of the rule</param>
-      public void ReactivateRule(string name) {
-         DeactivateRule(name);
-         ActivateRule(name);
-      }
-   }
+            _allRules.Remove(name);
+        }
+
+        public void InvokeRule(List<SpokenWord> spokenWords) {
+            Logger.Debug("InvokeRule: {0}", string.Join(", ", spokenWords));
+
+            if (!_activeRules.Any()) {
+                throw new NoActiveRulesException();
+            }
+
+            var startRuleId = spokenWords.First().RuleId;
+            var startRule = _allRules.Get(startRuleId);
+
+            Debug.Assert(_activeRules.Contains(startRule));
+
+            //ResolveSequence(startRule.Sequence, spokenWords, 0);
+        }
+
+        /// <summary>
+        /// Due to a problem with Dragon 15, rules we want to remain active
+        /// need to be explicitly re-activated when another is de-activated.
+        /// </summary>
+        /// <param name="name">The name of the rule</param>
+        public void ReactivateRule(string name) {
+            DeactivateRule(name);
+            ActivateRule(name);
+        }
+    }
 }

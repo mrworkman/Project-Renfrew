@@ -20,18 +20,18 @@ using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace Renfrew.Core.Grammars.MousePlot {
-   /// <summary>
-   /// Interaction logic for ArrowWindow.xaml
-   /// </summary>
-   public partial class ArrowWindow : BaseWindow {
-      public ArrowWindow() {
-         InitializeComponent();
-      }
+    /// <summary>
+    /// Interaction logic for ArrowWindow.xaml
+    /// </summary>
+    public partial class ArrowWindow : BaseWindow {
+        public ArrowWindow() {
+            InitializeComponent();
+        }
 
-      public override void Rotate(double angle) {
-         Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
-            ((RotateTransform) RenderTransform).Angle = angle;
-         })).Wait();
-      }
-   }
+        public override void Rotate(double angle) {
+            Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+                ((RotateTransform) RenderTransform).Angle = angle;
+            })).Wait();
+        }
+    }
 }

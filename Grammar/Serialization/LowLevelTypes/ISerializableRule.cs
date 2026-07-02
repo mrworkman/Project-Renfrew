@@ -18,8 +18,8 @@
 using System.IO;
 
 namespace Renfrew.Grammar.Serialization.LowLevelTypes {
-   internal interface ISerializableRule {
-      uint Size { get; }
-      void Serialize(BinaryWriter writer);
-   }
+    internal interface ISerializableRule {
+        uint Size { get; }
+        void Serialize(BinaryWriter writer);
+    }
 }

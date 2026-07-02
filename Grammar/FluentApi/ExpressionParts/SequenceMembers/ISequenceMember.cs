@@ -17,5 +17,5 @@
 
 namespace Renfrew.Grammar.FluentApi.ExpressionParts.
    SequenceMembers {
-   public interface ISequenceMember { }
+    public interface ISequenceMember { }
 }

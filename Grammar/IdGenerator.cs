@@ -19,43 +19,43 @@ using System.Collections.Generic;
 using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace Renfrew.Grammar {
-   internal class IdGenerator : IIdGenerator {
-      private readonly Dictionary<string, uint> _listNames = new();
-      private readonly Dictionary<string, uint> _ruleNames = new();
-      private readonly Dictionary<string, uint> _words = new();
+    internal class IdGenerator : IIdGenerator {
+        private readonly Dictionary<string, uint> _listNames = new();
+        private readonly Dictionary<string, uint> _ruleNames = new();
+        private readonly Dictionary<string, uint> _words = new();
 
-      private uint _currentListNameId = 1;
-      private uint _currentRuleNameId = 1;
-      private uint _currentWordId = 1;
+        private uint _currentListNameId = 1;
+        private uint _currentRuleNameId = 1;
+        private uint _currentWordId = 1;
 
-      public uint GetListId(string listName) {
-         var lower = listName.ToLowerInvariant();
+        public uint GetListId(string listName) {
+            var lower = listName.ToLowerInvariant();
 
-         if (!_listNames.ContainsKey(lower)) {
-            _listNames[lower] = _currentListNameId++;
-         }
+            if (!_listNames.ContainsKey(lower)) {
+                _listNames[lower] = _currentListNameId++;
+            }
 
-         return _listNames[lower];
-      }
+            return _listNames[lower];
+        }
 
-      public uint GetRuleId(string ruleName) {
-         var lower = ruleName.ToLowerInvariant();
+        public uint GetRuleId(string ruleName) {
+            var lower = ruleName.ToLowerInvariant();
 
-         if (!_ruleNames.ContainsKey(lower)) {
-            _ruleNames[lower] = _currentRuleNameId++;
-         }
+            if (!_ruleNames.ContainsKey(lower)) {
+                _ruleNames[lower] = _currentRuleNameId++;
+            }
 
-         return _ruleNames[lower];
-      }
+            return _ruleNames[lower];
+        }
 
-      public uint GetWordId(string word) {
-         var lower = word.ToLowerInvariant();
+        public uint GetWordId(string word) {
+            var lower = word.ToLowerInvariant();
 
-         if (!_words.ContainsKey(lower)) {
-            _words[lower] = _currentWordId++;
-         }
+            if (!_words.ContainsKey(lower)) {
+                _words[lower] = _currentWordId++;
+            }
 
-         return _words[lower];
-      }
-   }
+            return _words[lower];
+        }
+    }
 }

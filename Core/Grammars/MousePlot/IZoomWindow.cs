@@ -19,9 +19,9 @@ using System;
 using System.Drawing;
 
 namespace Renfrew.Core.Grammars.MousePlot {
-   public interface IZoomWindow : IWindow {
-      void SetScaleMultiplier(double multiplier);
-      void SetSource(int x, int y, int width, int height);
-      void SetSource(Rectangle sourceRectangle);
-   }
+    public interface IZoomWindow : IWindow {
+        void SetScaleMultiplier(double multiplier);
+        void SetSource(int x, int y, int width, int height);
+        void SetSource(Rectangle sourceRectangle);
+    }
 }

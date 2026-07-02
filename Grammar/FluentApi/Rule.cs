@@ -25,155 +25,155 @@ using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.Grammar.Types;
 
 namespace Renfrew.Grammar.FluentApi {
-   internal class Rule : IRule {
-      private readonly IIdGenerator _idGenerator;
+    internal class Rule : IRule {
+        private readonly IIdGenerator _idGenerator;
 
-      private readonly Dictionary<string, Word> _words = new(
-         StringComparer.CurrentCultureIgnoreCase
-      );
+        private readonly Dictionary<string, Word> _words = new(
+           StringComparer.CurrentCultureIgnoreCase
+        );
 
-      internal Rule(string name, IIdGenerator idGenerator) {
-         _idGenerator = idGenerator
-                        ?? throw new ArgumentNullException(nameof(idGenerator));
+        internal Rule(string name, IIdGenerator idGenerator) {
+            _idGenerator = idGenerator
+                           ?? throw new ArgumentNullException(nameof(idGenerator));
 
-         String = name ?? throw new ArgumentNullException(nameof(name));
-         Id = _idGenerator.GetRuleId(String);
-      }
+            String = name ?? throw new ArgumentNullException(nameof(name));
+            Id = _idGenerator.GetRuleId(String);
+        }
 
-      /// <summary>
-      ///    Numeric rule identifier.
-      /// </summary>
-      public uint Id { get; }
+        /// <summary>
+        ///    Numeric rule identifier.
+        /// </summary>
+        public uint Id { get; }
 
-      /// <summary>
-      ///    The rule's name.
-      /// </summary>
-      public string String { get; }
+        /// <summary>
+        ///    The rule's name.
+        /// </summary>
+        public string String { get; }
 
-      public Sequence Sequence { get; } = new();
+        public Sequence Sequence { get; } = new();
 
-      public IReadOnlyList<Word> Words => _words.Select(entry => entry.Value)
-         .OrderBy(word => word.Id)
-         .ToList();
+        public IReadOnlyList<Word> Words => _words.Select(entry => entry.Value)
+           .OrderBy(word => word.Id)
+           .ToList();
 
-      public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
-         Sequence.AddMember(
-            Alternatives.Create(
-               actions.Select(InvokeActionInNestedRule).ToList()
-            )
-         );
+        public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
+            Sequence.AddMember(
+               Alternatives.Create(
+                  actions.Select(InvokeActionInNestedRule).ToList()
+               )
+            );
 
-         return (ActionableRule) this;
-      }
+            return (ActionableRule) this;
+        }
 
-      public IActionableRule Optionally(Expression<Action<IRule>> action) {
-         Sequence.AddMember(Optional.Create(InvokeActionInNestedRule(action)));
+        public IActionableRule Optionally(Expression<Action<IRule>> action) {
+            Sequence.AddMember(Optional.Create(InvokeActionInNestedRule(action)));
 
-         return (ActionableRule) this;
-      }
+            return (ActionableRule) this;
+        }
 
-      public IActionableRule OptionallyOneOf(
-         params Expression<Action<IRule>>[] actions
-      ) {
-         return Optionally(r => r.OneOf(actions));
-      }
+        public IActionableRule OptionallyOneOf(
+           params Expression<Action<IRule>>[] actions
+        ) {
+            return Optionally(r => r.OneOf(actions));
+        }
 
-      public IActionableRule OptionallySay(string word) {
-         return Optionally(r => r.Say(word));
-      }
+        public IActionableRule OptionallySay(string word) {
+            return Optionally(r => r.Say(word));
+        }
 
-      public IActionableRule OptionallyWithRule(string ruleName) {
-         return Optionally(r => r.WithRule(ruleName));
-      }
+        public IActionableRule OptionallyWithRule(string ruleName) {
+            return Optionally(r => r.WithRule(ruleName));
+        }
 
-      // Repeats: A+
-      public IActionableRule Repeat(Expression<Action<IRule>> action) {
-         Sequence.AddMember(Repeated.Create(InvokeActionInNestedRule(action)));
+        // Repeats: A+
+        public IActionableRule Repeat(Expression<Action<IRule>> action) {
+            Sequence.AddMember(Repeated.Create(InvokeActionInNestedRule(action)));
 
-         return (ActionableRule) this;
-      }
+            return (ActionableRule) this;
+        }
 
-      // Repeats + Alternatives: ( A | B | C )+
-      public IActionableRule RepeatOneOf(
-         params Expression<Action<IRule>>[] actions
-      ) {
-         return Repeat(r => r.OneOf(actions));
-      }
+        // Repeats + Alternatives: ( A | B | C )+
+        public IActionableRule RepeatOneOf(
+           params Expression<Action<IRule>>[] actions
+        ) {
+            return Repeat(r => r.OneOf(actions));
+        }
 
-      public IActionableRule Say(string word) {
-         var wordExpr = Word.Create(_idGenerator.GetWordId(word), word);
-
-         if (!_words.ContainsKey(word)) {
-            _words.Add(word, wordExpr);
-         }
-
-         Sequence.AddMember(wordExpr);
-
-         return (ActionableRule) this;
-      }
-
-      public IActionableRule Say(string word, params string[] additionalWords) {
-         var previousWord = Say(word);
-
-         foreach (var additionalWord in additionalWords) {
-            previousWord = previousWord.Say(additionalWord);
-         }
-
-         return (ActionableRule) this;
-      }
-
-
-      public IActionableRule SayOneOf(params string[] words) {
-         return SayOneOf(words as IEnumerable<string>);
-      }
-
-      public IActionableRule SayOneOf(IEnumerable<string> words) {
-         var wordExprs = new List<Word>();
-
-         foreach (var word in words) {
+        public IActionableRule Say(string word) {
             var wordExpr = Word.Create(_idGenerator.GetWordId(word), word);
 
             if (!_words.ContainsKey(word)) {
-               _words.Add(word, wordExpr);
+                _words.Add(word, wordExpr);
             }
 
-            wordExprs.Add(wordExpr);
-         }
+            Sequence.AddMember(wordExpr);
 
-         Sequence.AddMember(Alternatives.Create(wordExprs));
+            return (ActionableRule) this;
+        }
 
-         return (ActionableRule) this;
-      }
+        public IActionableRule Say(string word, params string[] additionalWords) {
+            var previousWord = Say(word);
 
-      public IActionableRule WithRule(string ruleName) {
-         Sequence.AddMember(
-            RuleName.Create(_idGenerator.GetRuleId(ruleName), ruleName)
-         );
-
-         return (ActionableRule) this;
-      }
-
-      public bool Equals(IIdString other) {
-         return Id == other?.Id && String == other.String;
-      }
-
-      private void AdoptWordsFromRule(Rule r) {
-         foreach (var kvp in r._words) {
-            if (!_words.ContainsKey(kvp.Key)) {
-               _words.Add(kvp.Key, kvp.Value);
+            foreach (var additionalWord in additionalWords) {
+                previousWord = previousWord.Say(additionalWord);
             }
-         }
-      }
 
-      private Sequence InvokeActionInNestedRule(
-         Expression<Action<IRule>> action
-      ) {
-         var nestedRule = new Rule("-", _idGenerator);
+            return (ActionableRule) this;
+        }
 
-         action.Compile()(nestedRule);
-         AdoptWordsFromRule(nestedRule);
 
-         return nestedRule.Sequence;
-      }
-   }
+        public IActionableRule SayOneOf(params string[] words) {
+            return SayOneOf(words as IEnumerable<string>);
+        }
+
+        public IActionableRule SayOneOf(IEnumerable<string> words) {
+            var wordExprs = new List<Word>();
+
+            foreach (var word in words) {
+                var wordExpr = Word.Create(_idGenerator.GetWordId(word), word);
+
+                if (!_words.ContainsKey(word)) {
+                    _words.Add(word, wordExpr);
+                }
+
+                wordExprs.Add(wordExpr);
+            }
+
+            Sequence.AddMember(Alternatives.Create(wordExprs));
+
+            return (ActionableRule) this;
+        }
+
+        public IActionableRule WithRule(string ruleName) {
+            Sequence.AddMember(
+               RuleName.Create(_idGenerator.GetRuleId(ruleName), ruleName)
+            );
+
+            return (ActionableRule) this;
+        }
+
+        public bool Equals(IIdString other) {
+            return Id == other?.Id && String == other.String;
+        }
+
+        private void AdoptWordsFromRule(Rule r) {
+            foreach (var kvp in r._words) {
+                if (!_words.ContainsKey(kvp.Key)) {
+                    _words.Add(kvp.Key, kvp.Value);
+                }
+            }
+        }
+
+        private Sequence InvokeActionInNestedRule(
+           Expression<Action<IRule>> action
+        ) {
+            var nestedRule = new Rule("-", _idGenerator);
+
+            action.Compile()(nestedRule);
+            AdoptWordsFromRule(nestedRule);
+
+            return nestedRule.Sequence;
+        }
+    }
 }

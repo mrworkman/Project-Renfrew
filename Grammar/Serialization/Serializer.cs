@@ -28,137 +28,137 @@ using Renfrew.Grammar.Types;
 using Renfrew.NatSpeakInterop;
 
 namespace Renfrew.Grammar.Serialization {
-   public class Serializer : IGrammarSerializer {
-      private static Logger _logger = LogManager.GetCurrentClassLogger();
+    public class Serializer : IGrammarSerializer {
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
 
-      #region Speech Recognition Constants
+        #region Speech Recognition Constants
 
-      internal enum HeaderTypes : uint {
-         Cfg = 0,
-         Dictation = 2,
-      }
+        internal enum HeaderTypes : uint {
+            Cfg = 0,
+            Dictation = 2,
+        }
 
-      internal enum SrHeaderFlags : uint {
-         Ascii = 0,
-         Unicode = 1,
-      }
+        internal enum SrHeaderFlags : uint {
+            Ascii = 0,
+            Unicode = 1,
+        }
 
-      internal enum ChunkType : uint {
-         Language = 1,
-         Words = 2,
-         Rules = 3,
-         ExportRules = 4,
-         ImportRules = 5,
-      }
+        internal enum ChunkType : uint {
+            Language = 1,
+            Words = 2,
+            Rules = 3,
+            ExportRules = 4,
+            ImportRules = 5,
+        }
 
-      #endregion
+        #endregion
 
-      public Serializer() { }
+        public Serializer() { }
 
-      internal SrChunk CreateExportRulesNamesChunk(
-         IReadOnlyList<IRule> exportRules
-      ) {
-         return CreateStringChunk(ChunkType.ExportRules, exportRules);
-      }
+        internal SrChunk CreateExportRulesNamesChunk(
+           IReadOnlyList<IRule> exportRules
+        ) {
+            return CreateStringChunk(ChunkType.ExportRules, exportRules);
+        }
 
-      internal SrChunk CreateImportRulesNamesChunk(
-         IReadOnlyList<IRule> importRules
-      ) {
-         return CreateStringChunk(ChunkType.ImportRules, importRules);
-      }
+        internal SrChunk CreateImportRulesNamesChunk(
+           IReadOnlyList<IRule> importRules
+        ) {
+            return CreateStringChunk(ChunkType.ImportRules, importRules);
+        }
 
-      internal SrChunk CreateWordsChunk(IReadOnlyList<Word> words) {
-         return CreateStringChunk(ChunkType.Words, words);
-      }
+        internal SrChunk CreateWordsChunk(IReadOnlyList<Word> words) {
+            return CreateStringChunk(ChunkType.Words, words);
+        }
 
-      internal SrChunk CreateStringChunk<T>(
-         ChunkType chunkType,
-         IReadOnlyList<T> idStrings
-      )
-         where T : IIdString {
-         if (chunkType == ChunkType.Rules) {
-            throw new ArgumentException(
-               "Cannot use the Rules chunk type here."
-            );
-         }
+        internal SrChunk CreateStringChunk<T>(
+           ChunkType chunkType,
+           IReadOnlyList<T> idStrings
+        )
+           where T : IIdString {
+            if (chunkType == ChunkType.Rules) {
+                throw new ArgumentException(
+                   "Cannot use the Rules chunk type here."
+                );
+            }
 
-         if (!idStrings.Any()) {
-            return null;
-         }
+            if (!idStrings.Any()) {
+                return null;
+            }
 
-         return new SrChunk {
-            ChunkId = (uint) chunkType,
-            Rules = idStrings.Select(
-                  idString => (ISerializableRule) new SrCfgXRule {
-                     RuleNumber = idString.Id,
-                     String = idString.String,
-                  }
-               )
-               .ToList()
-         };
-      }
+            return new SrChunk {
+                ChunkId = (uint) chunkType,
+                Rules = idStrings.Select(
+                     idString => (ISerializableRule) new SrCfgXRule {
+                         RuleNumber = idString.Id,
+                         String = idString.String,
+                     }
+                  )
+                  .ToList()
+            };
+        }
 
-      internal SrChunk CreateRulesChunk(IReadOnlyList<IRule> exportedRules) {
-         if (!exportedRules.Any()) {
-            return null;
-         }
+        internal SrChunk CreateRulesChunk(IReadOnlyList<IRule> exportedRules) {
+            if (!exportedRules.Any()) {
+                return null;
+            }
 
-         var ruleData = new RuleConverter().Convert(exportedRules);
+            var ruleData = new RuleConverter().Convert(exportedRules);
 
-         return new SrChunk {
-            ChunkId = (uint) ChunkType.Rules,
-            Rules = ruleData.Select(
-                  rule => (ISerializableRule) new SrCfgRule {
-                     UniqueId = rule.Id,
-                     Symbols = rule.Symbols.Select(
-                           symbol => new SrCfgSymbol {
-                              Type = (ushort) symbol.Type,
-                              Probability = symbol.Probability,
-                              Value = symbol.Value
-                           }
-                        )
-                        .ToList(),
-                  }
-               )
-               .ToList()
-         };
-      }
+            return new SrChunk {
+                ChunkId = (uint) ChunkType.Rules,
+                Rules = ruleData.Select(
+                     rule => (ISerializableRule) new SrCfgRule {
+                         UniqueId = rule.Id,
+                         Symbols = rule.Symbols.Select(
+                              symbol => new SrCfgSymbol {
+                                  Type = (ushort) symbol.Type,
+                                  Probability = symbol.Probability,
+                                  Value = symbol.Value
+                              }
+                           )
+                           .ToList(),
+                     }
+                  )
+                  .ToList()
+            };
+        }
 
-      internal (SrHeader Header, List<SrChunk> Chunks)
-         CreateDataStructures(Grammar grammar) {
-         var chunks = new List<SrChunk> {
+        internal (SrHeader Header, List<SrChunk> Chunks)
+           CreateDataStructures(Grammar grammar) {
+            var chunks = new List<SrChunk> {
             CreateExportRulesNamesChunk(grammar.ExportedRules),
             CreateImportRulesNamesChunk(grammar.ImportedRules),
             CreateWordsChunk(grammar.Words),
             CreateRulesChunk(grammar.ExportedRules)
          };
 
-         return (
-            new SrHeader {
-               Type = (uint) HeaderTypes.Cfg,
-               Flags = (uint) SrHeaderFlags.Unicode,
-            },
-            chunks.Where(chunk => chunk != null).ToList()
-         );
-      }
+            return (
+               new SrHeader {
+                   Type = (uint) HeaderTypes.Cfg,
+                   Flags = (uint) SrHeaderFlags.Unicode,
+               },
+               chunks.Where(chunk => chunk != null).ToList()
+            );
+        }
 
-      public byte[] Serialize(IGrammar iGrammar) {
-         var grammar = (Grammar) iGrammar; // FIXME: This doesn't feel right.
+        public byte[] Serialize(IGrammar iGrammar) {
+            var grammar = (Grammar) iGrammar; // FIXME: This doesn't feel right.
 
-         var dataStructures = CreateDataStructures(grammar);
+            var dataStructures = CreateDataStructures(grammar);
 
-         var writer = new BinaryWriter(new MemoryStream());
+            var writer = new BinaryWriter(new MemoryStream());
 
-         dataStructures.Header.Serialize(writer);
-         dataStructures.Chunks.ForEach(chunk => chunk.Serialize(writer));
+            dataStructures.Header.Serialize(writer);
+            dataStructures.Chunks.ForEach(chunk => chunk.Serialize(writer));
 
-         writer.Flush();
+            writer.Flush();
 
-         try {
-            return (writer.BaseStream as MemoryStream)!.ToArray();
-         } finally {
-            writer.Dispose();
-         }
-      }
-   }
+            try {
+                return (writer.BaseStream as MemoryStream)!.ToArray();
+            } finally {
+                writer.Dispose();
+            }
+        }
+    }
 }

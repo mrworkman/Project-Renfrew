@@ -22,185 +22,185 @@ using Renfrew.Grammar.FluentApi.ExpressionParts;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 
 namespace Renfrew.Grammar.Solving {
-   internal class Solver {
-      private readonly Grammar _grammar;
+    internal class Solver {
+        private readonly Grammar _grammar;
 
-      private readonly bool _isTrunkSequence;
-      private readonly List<ISequenceMember> _members;
-      private readonly ListWalker<SpokenWord> _phrase;
-      private int _numberOfMatches;
+        private readonly bool _isTrunkSequence;
+        private readonly List<ISequenceMember> _members;
+        private readonly ListWalker<SpokenWord> _phrase;
+        private int _numberOfMatches;
 
-      private Solver(
-         // Why does this take a Sequence? It already accepts the grammar, and
-         //  it should be looking in the grammar for matching rule(s).
-         Sequence sequence,
-         bool isTrunkSequence,
-         ListWalker<SpokenWord> phrase,
-         Grammar grammar
-      ) {
-         _members = new List<ISequenceMember>(sequence.Members);
-         _phrase = phrase;
-         _grammar = grammar;
-         _isTrunkSequence = isTrunkSequence;
-      }
+        private Solver(
+           // Why does this take a Sequence? It already accepts the grammar, and
+           //  it should be looking in the grammar for matching rule(s).
+           Sequence sequence,
+           bool isTrunkSequence,
+           ListWalker<SpokenWord> phrase,
+           Grammar grammar
+        ) {
+            _members = new List<ISequenceMember>(sequence.Members);
+            _phrase = phrase;
+            _grammar = grammar;
+            _isTrunkSequence = isTrunkSequence;
+        }
 
-      // TODO: Make sure the rule ID is checked to make sure we're looking at
-      //  the right one.
-      public SolveResult VisitMember(int memberIndex) {
-         if (memberIndex >= _members.Count) {
-            if (_phrase.IsAtEnd) {
-               return SolveResult.Succeeded(_numberOfMatches);
+        // TODO: Make sure the rule ID is checked to make sure we're looking at
+        //  the right one.
+        public SolveResult VisitMember(int memberIndex) {
+            if (memberIndex >= _members.Count) {
+                if (_phrase.IsAtEnd) {
+                    return SolveResult.Succeeded(_numberOfMatches);
+                }
+
+                return _isTrunkSequence ?
+                   SolveResult.Failed() :
+                   SolveResult.Succeeded(_numberOfMatches);
             }
 
-            return _isTrunkSequence ?
-               SolveResult.Failed() :
-               SolveResult.Succeeded(_numberOfMatches);
-         }
+            if (_phrase.IsAtEnd && _members[memberIndex] is not Optional) {
+                return SolveResult.Failed();
+            }
 
-         if (_phrase.IsAtEnd && _members[memberIndex] is not Optional) {
+            switch (_members[memberIndex]) {
+                case Alternatives alternatives: {
+                    return VisitAlternatives(alternatives, memberIndex + 1);
+                }
+                case Optional optional: {
+                    return VisitOptional(optional, memberIndex + 1);
+                }
+                case Repeated repeated: {
+                    return VisitRepeated(repeated, memberIndex + 1);
+                }
+                case Word word: {
+                    if (word.Id == _phrase.Current.WordId
+                        && word.String == _phrase.Current.Word) {
+                        _numberOfMatches++;
+                    } else {
+                        return SolveResult.Failed();
+                    }
+
+                    break;
+                }
+                default: {
+                    throw new UnrecognizedMemberType(
+                       _members[memberIndex].GetType()
+                    );
+                }
+            }
+
+            _phrase.MoveForward();
+
+            var result = VisitMember(memberIndex + 1);
+
+            if (result is SolveResult.Failure) {
+                _phrase.MoveBack();
+            }
+
+            return result;
+        }
+
+        public SolveResult VisitAlternatives(
+           Alternatives alternatives,
+           int memberIndex
+        ) {
+            foreach (var alternativeSequence in alternatives.Sequences) {
+                // Visit the alternative sequence.
+                var leftResult = VisitSequence(
+                   alternativeSequence,
+                   false,
+                   _phrase,
+                   _grammar
+                );
+
+                // Visit the next member of the current sequence.
+                var rightResult = VisitMember(memberIndex);
+
+
+                if (leftResult is SolveResult.Success leftSuccess) {
+                    if (rightResult is SolveResult.Success) {
+                        return rightResult;
+                    }
+
+                    _phrase.MoveBack(leftSuccess.NumberOfMatches);
+                }
+            }
+
             return SolveResult.Failed();
-         }
+        }
 
-         switch (_members[memberIndex]) {
-            case Alternatives alternatives: {
-               return VisitAlternatives(alternatives, memberIndex + 1);
-            }
-            case Optional optional: {
-               return VisitOptional(optional, memberIndex + 1);
-            }
-            case Repeated repeated: {
-               return VisitRepeated(repeated, memberIndex + 1);
-            }
-            case Word word: {
-               if (word.Id == _phrase.Current.WordId
-                   && word.String == _phrase.Current.Word) {
-                  _numberOfMatches++;
-               } else {
-                  return SolveResult.Failed();
-               }
-
-               break;
-            }
-            default: {
-               throw new UnrecognizedMemberType(
-                  _members[memberIndex].GetType()
-               );
-            }
-         }
-
-         _phrase.MoveForward();
-
-         var result = VisitMember(memberIndex + 1);
-
-         if (result is SolveResult.Failure) {
-            _phrase.MoveBack();
-         }
-
-         return result;
-      }
-
-      public SolveResult VisitAlternatives(
-         Alternatives alternatives,
-         int memberIndex
-      ) {
-         foreach (var alternativeSequence in alternatives.Sequences) {
-            // Visit the alternative sequence.
+        public SolveResult VisitOptional(Optional optional, int memberIndex) {
+            // Visit the optional sequence.
             var leftResult = VisitSequence(
-               alternativeSequence,
+               optional.Sequence,
                false,
                _phrase,
                _grammar
             );
-
-            // Visit the next member of the current sequence.
-            var rightResult = VisitMember(memberIndex);
-
-
-            if (leftResult is SolveResult.Success leftSuccess) {
-               if (rightResult is SolveResult.Success) {
-                  return rightResult;
-               }
-
-               _phrase.MoveBack(leftSuccess.NumberOfMatches);
-            }
-         }
-
-         return SolveResult.Failed();
-      }
-
-      public SolveResult VisitOptional(Optional optional, int memberIndex) {
-         // Visit the optional sequence.
-         var leftResult = VisitSequence(
-            optional.Sequence,
-            false,
-            _phrase,
-            _grammar
-         );
-
-         // Visit the next member of the current sequence.
-         var rightResult = VisitMember(memberIndex);
-
-         if (rightResult is SolveResult.Success) {
-            return rightResult;
-         }
-
-         //    ┌──── The optional sequence matched, but the remainder of the
-         //    │      parent sequence did not. Try again, assuming the optional
-         //    │      child sequence was the one that did not match.
-         //    │
-         //    ╽
-         // 0--O--1--2
-         //    |
-         //    └─ 1--2
-
-
-         if (leftResult is SolveResult.Success leftSuccess) {
-            _phrase.MoveBack(leftSuccess.NumberOfMatches);
-
-            rightResult = VisitMember(memberIndex);
-
-            if (rightResult is SolveResult.Failure) {
-               return SolveResult.Failed();
-            }
-         } else {
-            return SolveResult.Failed();
-         }
-
-         // Neither branch succeeded.
-         return rightResult;
-      }
-
-      public SolveResult VisitRepeated(Repeated repeated, int memberIndex) {
-         while (true) {
-            // Visit the repeated sequence.
-            var leftResult = VisitSequence(
-               repeated.Sequence,
-               false,
-               _phrase,
-               _grammar
-            );
-
-            if (leftResult is SolveResult.Failure) {
-               return SolveResult.Failed();
-            }
 
             // Visit the next member of the current sequence.
             var rightResult = VisitMember(memberIndex);
 
             if (rightResult is SolveResult.Success) {
-               return rightResult;
+                return rightResult;
             }
-         }
-      }
 
-      public static SolveResult VisitSequence(
-         Sequence sequence,
-         bool isTrunkSequence,
-         ListWalker<SpokenWord> phrase,
-         Grammar grammar
-      ) {
-         return new Solver(sequence, isTrunkSequence, phrase, grammar)
-            .VisitMember(0);
-      }
-   }
+            //    ┌──── The optional sequence matched, but the remainder of the
+            //    │      parent sequence did not. Try again, assuming the optional
+            //    │      child sequence was the one that did not match.
+            //    │
+            //    ╽
+            // 0--O--1--2
+            //    |
+            //    └─ 1--2
+
+
+            if (leftResult is SolveResult.Success leftSuccess) {
+                _phrase.MoveBack(leftSuccess.NumberOfMatches);
+
+                rightResult = VisitMember(memberIndex);
+
+                if (rightResult is SolveResult.Failure) {
+                    return SolveResult.Failed();
+                }
+            } else {
+                return SolveResult.Failed();
+            }
+
+            // Neither branch succeeded.
+            return rightResult;
+        }
+
+        public SolveResult VisitRepeated(Repeated repeated, int memberIndex) {
+            while (true) {
+                // Visit the repeated sequence.
+                var leftResult = VisitSequence(
+                   repeated.Sequence,
+                   false,
+                   _phrase,
+                   _grammar
+                );
+
+                if (leftResult is SolveResult.Failure) {
+                    return SolveResult.Failed();
+                }
+
+                // Visit the next member of the current sequence.
+                var rightResult = VisitMember(memberIndex);
+
+                if (rightResult is SolveResult.Success) {
+                    return rightResult;
+                }
+            }
+        }
+
+        public static SolveResult VisitSequence(
+           Sequence sequence,
+           bool isTrunkSequence,
+           ListWalker<SpokenWord> phrase,
+           Grammar grammar
+        ) {
+            return new Solver(sequence, isTrunkSequence, phrase, grammar)
+               .VisitMember(0);
+        }
+    }
 }

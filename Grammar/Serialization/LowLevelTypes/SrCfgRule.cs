@@ -21,32 +21,32 @@ using System.Linq;
 
 #pragma warning disable CS0659
 namespace Renfrew.Grammar.Serialization.LowLevelTypes {
-   internal class SrCfgRule : ISerializableRule {
-      public const uint SrCfgRuleSize = 8;
-      public const uint SrCfgSymbolSize = 8;
+    internal class SrCfgRule : ISerializableRule {
+        public const uint SrCfgRuleSize = 8;
+        public const uint SrCfgSymbolSize = 8;
 
-      public uint Size =>
-         SrCfgRuleSize + (uint) Symbols.Count * SrCfgSymbolSize;
+        public uint Size =>
+           SrCfgRuleSize + (uint) Symbols.Count * SrCfgSymbolSize;
 
-      public uint UniqueId { get; set; }
-      public List<SrCfgSymbol> Symbols { get; set; }
+        public uint UniqueId { get; set; }
+        public List<SrCfgSymbol> Symbols { get; set; }
 
-      public void Serialize(BinaryWriter writer) {
-         writer.Write(Size);
-         writer.Write(UniqueId);
-         Symbols.ForEach(symbol => symbol.Serialize(writer));
-      }
+        public void Serialize(BinaryWriter writer) {
+            writer.Write(Size);
+            writer.Write(UniqueId);
+            Symbols.ForEach(symbol => symbol.Serialize(writer));
+        }
 
-      public override bool Equals(object obj) {
-         var other = obj as SrCfgRule;
+        public override bool Equals(object obj) {
+            var other = obj as SrCfgRule;
 
-         if (other == null) {
-            return false;
-         }
+            if (other == null) {
+                return false;
+            }
 
-         return Size == other.Size
-                && UniqueId == other.UniqueId
-                && Symbols.SequenceEqual(other.Symbols);
-      }
-   }
+            return Size == other.Size
+                   && UniqueId == other.UniqueId
+                   && Symbols.SequenceEqual(other.Symbols);
+        }
+    }
 }

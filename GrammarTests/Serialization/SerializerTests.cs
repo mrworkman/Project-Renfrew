@@ -28,58 +28,58 @@ using Renfrew.Grammar.Serialization.LowLevelTypes;
 using Renfrew.NatSpeakInterop;
 
 namespace GrammarTests.Serialization {
-   [TestFixture]
-   internal class SerializerTests {
-      [OneTimeSetUp]
-      public void OneTimeSetup() {
-         var settings = new JsonSerializerSettings {
-            TypeNameHandling = TypeNameHandling.Objects,
-            Formatting = Formatting.Indented
-         };
+    [TestFixture]
+    internal class SerializerTests {
+        [OneTimeSetUp]
+        public void OneTimeSetup() {
+            var settings = new JsonSerializerSettings {
+                TypeNameHandling = TypeNameHandling.Objects,
+                Formatting = Formatting.Indented
+            };
 
-         TestContext.AddFormatter<SrHeader>(
-            o => JsonConvert.SerializeObject(o, settings)
-         );
-         TestContext.AddFormatter<SrChunk>(
-            o => JsonConvert.SerializeObject(o, settings)
-         );
-      }
+            TestContext.AddFormatter<SrHeader>(
+               o => JsonConvert.SerializeObject(o, settings)
+            );
+            TestContext.AddFormatter<SrChunk>(
+               o => JsonConvert.SerializeObject(o, settings)
+            );
+        }
 
-      [SetUp]
-      public void Setup() {
-         _serializer = new Serializer();
+        [SetUp]
+        public void Setup() {
+            _serializer = new Serializer();
 
-         _grammar = new TestGrammar(
-            new Mock<IGrammarService>().Object,
-            new Mock<INatSpeak>().Object
-         );
-      }
+            _grammar = new TestGrammar(
+               new Mock<IGrammarService>().Object,
+               new Mock<INatSpeak>().Object
+            );
+        }
 
-      private class TestGrammar : Grammar {
-         #region Boilerplate
+        private class TestGrammar : Grammar {
+            #region Boilerplate
 
-         public TestGrammar(
-            IGrammarService grammarService,
-            INatSpeak natSpeak
-         ) :
-            base(grammarService, natSpeak) { }
+            public TestGrammar(
+               IGrammarService grammarService,
+               INatSpeak natSpeak
+            ) :
+               base(grammarService, natSpeak) { }
 
-         public override void Dispose() { }
-         public override void Initialize() { }
+            public override void Dispose() { }
+            public override void Initialize() { }
 
-         public void Initialize(string ruleName, Func<IRule, IRule> ruleFunc) {
-            AddRule(ruleName, ruleFunc);
-         }
+            public void Initialize(string ruleName, Func<IRule, IRule> ruleFunc) {
+                AddRule(ruleName, ruleFunc);
+            }
 
-         #endregion
-      }
+            #endregion
+        }
 
-      private Serializer _serializer;
-      private TestGrammar _grammar;
+        private Serializer _serializer;
+        private TestGrammar _grammar;
 
-      [Test]
-      public void Repeat_SayOneOf_SayOneOf() {
-         var expectedChunks = new List<SrChunk> {
+        [Test]
+        public void Repeat_SayOneOf_SayOneOf() {
+            var expectedChunks = new List<SrChunk> {
             #region Expected Chunks
 
             new() {
@@ -192,27 +192,27 @@ namespace GrammarTests.Serialization {
             #endregion
          };
 
-         _grammar.Initialize(
-            "test_rule",
-            rule => rule
-               .Repeat(
-                  command => command
-                     .SayOneOf("alpha", "bravo", "charlie")
-                     .SayOneOf("one", "two")
-               )
-         );
+            _grammar.Initialize(
+               "test_rule",
+               rule => rule
+                  .Repeat(
+                     command => command
+                        .SayOneOf("alpha", "bravo", "charlie")
+                        .SayOneOf("one", "two")
+                  )
+            );
 
 
-         var (actualHeader, actualChunks) =
-            _serializer.CreateDataStructures(_grammar);
+            var (actualHeader, actualChunks) =
+               _serializer.CreateDataStructures(_grammar);
 
-         Assert.AreEqual(
-            new SrHeader {
-               Flags = (uint) Serializer.SrHeaderFlags.Unicode
-            },
-            actualHeader
-         );
-         Assert.AreEqual(expectedChunks, actualChunks);
-      }
-   }
+            Assert.AreEqual(
+               new SrHeader {
+                   Flags = (uint) Serializer.SrHeaderFlags.Unicode
+               },
+               actualHeader
+            );
+            Assert.AreEqual(expectedChunks, actualChunks);
+        }
+    }
 }

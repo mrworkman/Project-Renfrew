@@ -18,18 +18,18 @@
 using System;
 
 namespace Renfrew.Grammar.Exceptions {
-   public class SolveException : Exception {
-      public SolveException(string message) : base(message) { }
+    public class SolveException : Exception {
+        public SolveException(string message) : base(message) { }
 
-      public SolveException(string message, Exception innerException) : base(
-         message,
-         innerException
-      ) { }
-   }
+        public SolveException(string message, Exception innerException) : base(
+           message,
+           innerException
+        ) { }
+    }
 
-   public class UnrecognizedMemberType : SolveException {
-      public UnrecognizedMemberType(Type memberType) : base(
-         $"Unrecognized member type: {memberType.Name}"
-      ) { }
-   }
+    public class UnrecognizedMemberType : SolveException {
+        public UnrecognizedMemberType(Type memberType) : base(
+           $"Unrecognized member type: {memberType.Name}"
+        ) { }
+    }
 }

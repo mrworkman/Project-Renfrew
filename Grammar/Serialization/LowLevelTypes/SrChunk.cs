@@ -21,30 +21,30 @@ using System.Linq;
 
 #pragma warning disable CS0659
 namespace Renfrew.Grammar.Serialization.LowLevelTypes {
-   internal class SrChunk {
-      public uint ChunkId { get; set; }
+    internal class SrChunk {
+        public uint ChunkId { get; set; }
 
-      public uint ChunkSize => (uint) Rules.Sum(rule => rule.Size);
+        public uint ChunkSize => (uint) Rules.Sum(rule => rule.Size);
 
-      public List<ISerializableRule> Rules { get; set; }
+        public List<ISerializableRule> Rules { get; set; }
 
-      public void Serialize(BinaryWriter writer) {
-         writer.Write(ChunkId);
-         writer.Write(ChunkSize);
+        public void Serialize(BinaryWriter writer) {
+            writer.Write(ChunkId);
+            writer.Write(ChunkSize);
 
-         Rules.ForEach(rule => rule.Serialize(writer));
-      }
+            Rules.ForEach(rule => rule.Serialize(writer));
+        }
 
-      public override bool Equals(object obj) {
-         var other = obj as SrChunk;
+        public override bool Equals(object obj) {
+            var other = obj as SrChunk;
 
-         if (other == null) {
-            return false;
-         }
+            if (other == null) {
+                return false;
+            }
 
-         return ChunkId == other.ChunkId
-                && ChunkSize == other.ChunkSize
-                && Rules.SequenceEqual(other.Rules);
-      }
-   }
+            return ChunkId == other.ChunkId
+                   && ChunkSize == other.ChunkSize
+                   && Rules.SequenceEqual(other.Rules);
+        }
+    }
 }

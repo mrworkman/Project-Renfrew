@@ -26,34 +26,34 @@ using Renfrew.Grammar.Serialization.HighLevelTypes;
 using Renfrew.Grammar.Serialization.LowLevelTypes;
 
 namespace GrammarTests.Serialization {
-   internal class CreateRulesChunkTests {
-      private Serializer _serializer;
-      private IIdGenerator _idGenerator;
+    internal class CreateRulesChunkTests {
+        private Serializer _serializer;
+        private IIdGenerator _idGenerator;
 
-      [OneTimeSetUp]
-      public void OneTimeSetup() {
-         TestContext.AddFormatter<SrChunk>(
-            o => JsonConvert.SerializeObject(
-               o,
-               new JsonSerializerSettings {
-                  //TypeNameHandling = TypeNameHandling.Objects,
-                  Formatting = Formatting.Indented
-               }
-            )
-         );
-      }
+        [OneTimeSetUp]
+        public void OneTimeSetup() {
+            TestContext.AddFormatter<SrChunk>(
+               o => JsonConvert.SerializeObject(
+                  o,
+                  new JsonSerializerSettings {
+                      //TypeNameHandling = TypeNameHandling.Objects,
+                      Formatting = Formatting.Indented
+                  }
+               )
+            );
+        }
 
-      [SetUp]
-      public void Setup() {
-         _serializer = new Serializer();
-         _idGenerator = new IdGenerator();
-      }
+        [SetUp]
+        public void Setup() {
+            _serializer = new Serializer();
+            _idGenerator = new IdGenerator();
+        }
 
-      [Test]
-      public void ShouldHandleSimpleRuleWithImport() {
-         var expectedResult = new SrChunk {
-            ChunkId = (uint) Serializer.ChunkType.Rules,
-            Rules = new List<ISerializableRule> {
+        [Test]
+        public void ShouldHandleSimpleRuleWithImport() {
+            var expectedResult = new SrChunk {
+                ChunkId = (uint) Serializer.ChunkType.Rules,
+                Rules = new List<ISerializableRule> {
                new SrCfgRule {
                   UniqueId = 1,
                   Symbols = new List<SrCfgSymbol> {
@@ -76,24 +76,24 @@ namespace GrammarTests.Serialization {
                   }
                }
             }
-         };
+            };
 
-         var actualResult = _serializer.CreateRulesChunk(
-            new List<IRule> {
+            var actualResult = _serializer.CreateRulesChunk(
+               new List<IRule> {
                new Rule("-", _idGenerator).Say("hello").WithRule("dgndictation")
-            }
-         );
+               }
+            );
 
-         Assert.AreEqual(expectedResult, actualResult);
-         Assert.AreEqual(40, actualResult.ChunkSize);
-         Assert.AreEqual(40, actualResult.Rules[0].Size);
-      }
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(40, actualResult.ChunkSize);
+            Assert.AreEqual(40, actualResult.Rules[0].Size);
+        }
 
-      [Test]
-      public void ShouldHandleSay_SayOneOf() {
-         var expectedResult = new SrChunk {
-            ChunkId = (uint) Serializer.ChunkType.Rules,
-            Rules = new List<ISerializableRule> {
+        [Test]
+        public void ShouldHandleSay_SayOneOf() {
+            var expectedResult = new SrChunk {
+                ChunkId = (uint) Serializer.ChunkType.Rules,
+                Rules = new List<ISerializableRule> {
                new SrCfgRule {
                   UniqueId = 1,
                   Symbols = new List<SrCfgSymbol> {
@@ -128,26 +128,26 @@ namespace GrammarTests.Serialization {
                   }
                }
             }
-         };
+            };
 
-         var actualResult = _serializer.CreateRulesChunk(
-            new List<IRule> {
+            var actualResult = _serializer.CreateRulesChunk(
+               new List<IRule> {
                new Rule("-", _idGenerator)
                   .Say("hello")
                   .SayOneOf("abe", "bob")
-            }
-         );
+               }
+            );
 
-         Assert.AreEqual(expectedResult, actualResult);
-         Assert.AreEqual(64, actualResult.ChunkSize);
-         Assert.AreEqual(64, actualResult.Rules[0].Size);
-      }
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(64, actualResult.ChunkSize);
+            Assert.AreEqual(64, actualResult.Rules[0].Size);
+        }
 
-      [Test]
-      public void ShouldHandleSay_OptionallySay() {
-         var expectedResult = new SrChunk {
-            ChunkId = (uint) Serializer.ChunkType.Rules,
-            Rules = new List<ISerializableRule> {
+        [Test]
+        public void ShouldHandleSay_OptionallySay() {
+            var expectedResult = new SrChunk {
+                ChunkId = (uint) Serializer.ChunkType.Rules,
+                Rules = new List<ISerializableRule> {
                new SrCfgRule {
                   UniqueId = 1,
                   Symbols = new List<SrCfgSymbol> {
@@ -178,19 +178,19 @@ namespace GrammarTests.Serialization {
                   }
                }
             }
-         };
+            };
 
-         var actualResult = _serializer.CreateRulesChunk(
-            new List<IRule> {
+            var actualResult = _serializer.CreateRulesChunk(
+               new List<IRule> {
                new Rule("-", _idGenerator)
                   .Say("hello")
                   .OptionallySay("abe")
-            }
-         );
+               }
+            );
 
-         Assert.AreEqual(expectedResult, actualResult);
-         Assert.AreEqual(56, actualResult.ChunkSize);
-         Assert.AreEqual(56, actualResult.Rules[0].Size);
-      }
-   }
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(56, actualResult.ChunkSize);
+            Assert.AreEqual(56, actualResult.Rules[0].Size);
+        }
+    }
 }

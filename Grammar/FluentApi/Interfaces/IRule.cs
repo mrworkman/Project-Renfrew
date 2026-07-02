@@ -23,29 +23,29 @@ using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.Types;
 
 namespace Renfrew.Grammar.FluentApi.Interfaces {
-   public interface IRule : IIdString {
-      Sequence Sequence { get; }
-      IReadOnlyList<Word> Words { get; }
+    public interface IRule : IIdString {
+        Sequence Sequence { get; }
+        IReadOnlyList<Word> Words { get; }
 
-      IActionableRule Say(string word);
-      IActionableRule Say(string firstWord, params string[] additionalWords);
-      IActionableRule SayOneOf(IEnumerable<string> words);
-      IActionableRule SayOneOf(params string[] words);
+        IActionableRule Say(string word);
+        IActionableRule Say(string firstWord, params string[] additionalWords);
+        IActionableRule SayOneOf(IEnumerable<string> words);
+        IActionableRule SayOneOf(params string[] words);
 
-      IActionableRule OneOf(params Expression<Action<IRule>>[] actions);
+        IActionableRule OneOf(params Expression<Action<IRule>>[] actions);
 
-      IActionableRule Optionally(Expression<Action<IRule>> action);
+        IActionableRule Optionally(Expression<Action<IRule>> action);
 
-      IActionableRule OptionallyOneOf(
-         params Expression<Action<IRule>>[] actions
-      );
+        IActionableRule OptionallyOneOf(
+           params Expression<Action<IRule>>[] actions
+        );
 
-      IActionableRule OptionallySay(string word);
+        IActionableRule OptionallySay(string word);
 
-      IActionableRule Repeat(Expression<Action<IRule>> action);
-      IActionableRule RepeatOneOf(params Expression<Action<IRule>>[] actions);
+        IActionableRule Repeat(Expression<Action<IRule>> action);
+        IActionableRule RepeatOneOf(params Expression<Action<IRule>>[] actions);
 
-      IActionableRule OptionallyWithRule(string ruleName);
-      IActionableRule WithRule(string ruleName);
-   }
+        IActionableRule OptionallyWithRule(string ruleName);
+        IActionableRule WithRule(string ruleName);
+    }
 }

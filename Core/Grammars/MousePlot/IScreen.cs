@@ -24,9 +24,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Renfrew.Core.Grammars.MousePlot {
-   public interface IScreen {
-      IScreen[] AllScreens { get; }
-      Rectangle Bounds { get; }
-      IScreen PrimaryScreen { get; }
-   }
+    public interface IScreen {
+        IScreen[] AllScreens { get; }
+        Rectangle Bounds { get; }
+        IScreen PrimaryScreen { get; }
+    }
 }

@@ -19,8 +19,8 @@ using System;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 
 namespace Renfrew.Grammar.Types {
-   public interface IIdString : ISequenceMember, IEquatable<IIdString> {
-      uint Id { get; }
-      string String { get; }
-   }
+    public interface IIdString : ISequenceMember, IEquatable<IIdString> {
+        uint Id { get; }
+        string String { get; }
+    }
 }

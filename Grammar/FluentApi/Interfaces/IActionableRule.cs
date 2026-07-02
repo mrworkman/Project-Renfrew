@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 
 namespace Renfrew.Grammar.FluentApi.Interfaces {
-   public interface IActionableRule : IRule {
-      IRule Do(Action action);
-      IRule Do(Action<IEnumerable<string>> action);
-   }
+    public interface IActionableRule : IRule {
+        IRule Do(Action action);
+        IRule Do(Action<IEnumerable<string>> action);
+    }
 }

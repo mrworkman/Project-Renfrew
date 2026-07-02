@@ -19,24 +19,24 @@ using System.IO;
 
 #pragma warning disable CS0659
 namespace Renfrew.Grammar.Serialization.LowLevelTypes {
-   internal class SrHeader {
-      public uint Type { get; set; }
-      public uint Flags { get; set; }
+    internal class SrHeader {
+        public uint Type { get; set; }
+        public uint Flags { get; set; }
 
-      public void Serialize(BinaryWriter writer) {
-         writer.Write(Type);
-         writer.Write(Flags);
-      }
+        public void Serialize(BinaryWriter writer) {
+            writer.Write(Type);
+            writer.Write(Flags);
+        }
 
-      public override bool Equals(object obj) {
-         var other = obj as SrHeader;
+        public override bool Equals(object obj) {
+            var other = obj as SrHeader;
 
-         if (other == null) {
-            return false;
-         }
+            if (other == null) {
+                return false;
+            }
 
-         return Type == other.Type
-                && Flags == other.Flags;
-      }
-   }
+            return Type == other.Type
+                   && Flags == other.Flags;
+        }
+    }
 }

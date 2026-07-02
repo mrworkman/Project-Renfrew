@@ -24,93 +24,93 @@ using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.Grammar.Types;
 
 namespace Renfrew.Grammar.FluentApi {
-   internal class ActionableRule : IActionableRule {
-      private readonly Rule _rule;
+    internal class ActionableRule : IActionableRule {
+        private readonly Rule _rule;
 
-      private ActionableRule(Rule baseRule) {
-         _rule = baseRule;
-      }
+        private ActionableRule(Rule baseRule) {
+            _rule = baseRule;
+        }
 
-      public uint Id => _rule.Id;
-      public string String => _rule.String;
+        public uint Id => _rule.Id;
+        public string String => _rule.String;
 
-      public Sequence Sequence => _rule.Sequence;
-      public IReadOnlyList<Word> Words => _rule.Words;
+        public Sequence Sequence => _rule.Sequence;
+        public IReadOnlyList<Word> Words => _rule.Words;
 
-      public IRule Do(Action action) {
-         // FIXME: Support actions.
-         //_rule.AddElementToContainer( new GrammarAction(action) );
-         return _rule;
-      }
+        public IRule Do(Action action) {
+            // FIXME: Support actions.
+            //_rule.AddElementToContainer( new GrammarAction(action) );
+            return _rule;
+        }
 
-      public IRule Do(Action<IEnumerable<string>> action) {
-         // FIXME: Support actions.
-         //_rule.AddElementToContainer( new GrammarAction(action) );
-         return _rule;
-      }
+        public IRule Do(Action<IEnumerable<string>> action) {
+            // FIXME: Support actions.
+            //_rule.AddElementToContainer( new GrammarAction(action) );
+            return _rule;
+        }
 
-      public bool Equals(IIdString other) {
-         return Id == other?.Id && String == other.String;
-      }
+        public bool Equals(IIdString other) {
+            return Id == other?.Id && String == other.String;
+        }
 
-      public static explicit operator ActionableRule(Rule rule) {
-         return new ActionableRule(rule);
-      }
+        public static explicit operator ActionableRule(Rule rule) {
+            return new ActionableRule(rule);
+        }
 
-      #region Defer to Base Rule
+        #region Defer to Base Rule
 
-      public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
-         return _rule.OneOf(actions);
-      }
+        public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
+            return _rule.OneOf(actions);
+        }
 
-      public IActionableRule Optionally(Expression<Action<IRule>> action) {
-         return _rule.Optionally(action);
-      }
+        public IActionableRule Optionally(Expression<Action<IRule>> action) {
+            return _rule.Optionally(action);
+        }
 
-      public IActionableRule OptionallyOneOf(
-         params Expression<Action<IRule>>[] actions
-      ) {
-         return _rule.OptionallyOneOf(actions);
-      }
+        public IActionableRule OptionallyOneOf(
+           params Expression<Action<IRule>>[] actions
+        ) {
+            return _rule.OptionallyOneOf(actions);
+        }
 
-      public IActionableRule OptionallySay(string word) {
-         return _rule.OptionallySay(word);
-      }
+        public IActionableRule OptionallySay(string word) {
+            return _rule.OptionallySay(word);
+        }
 
-      public IActionableRule OptionallyWithRule(string ruleName) {
-         return _rule.OptionallyWithRule(ruleName);
-      }
+        public IActionableRule OptionallyWithRule(string ruleName) {
+            return _rule.OptionallyWithRule(ruleName);
+        }
 
-      public IActionableRule Repeat(Expression<Action<IRule>> action) {
-         return _rule.Repeat(action);
-      }
+        public IActionableRule Repeat(Expression<Action<IRule>> action) {
+            return _rule.Repeat(action);
+        }
 
-      public IActionableRule RepeatOneOf(
-         params Expression<Action<IRule>>[] actions
-      ) {
-         return _rule.RepeatOneOf(actions);
-      }
+        public IActionableRule RepeatOneOf(
+           params Expression<Action<IRule>>[] actions
+        ) {
+            return _rule.RepeatOneOf(actions);
+        }
 
-      public IActionableRule Say(string word) {
-         return _rule.Say(word);
-      }
+        public IActionableRule Say(string word) {
+            return _rule.Say(word);
+        }
 
-      public IActionableRule Say(string word, string[] additionalWords) {
-         return _rule.Say(word, additionalWords);
-      }
+        public IActionableRule Say(string word, string[] additionalWords) {
+            return _rule.Say(word, additionalWords);
+        }
 
-      public IActionableRule SayOneOf(params string[] words) {
-         return _rule.SayOneOf(words);
-      }
+        public IActionableRule SayOneOf(params string[] words) {
+            return _rule.SayOneOf(words);
+        }
 
-      public IActionableRule SayOneOf(IEnumerable<string> words) {
-         return _rule.SayOneOf(words);
-      }
+        public IActionableRule SayOneOf(IEnumerable<string> words) {
+            return _rule.SayOneOf(words);
+        }
 
-      public IActionableRule WithRule(string ruleName) {
-         return _rule.WithRule(ruleName);
-      }
+        public IActionableRule WithRule(string ruleName) {
+            return _rule.WithRule(ruleName);
+        }
 
-      #endregion
-   }
+        #endregion
+    }
 }

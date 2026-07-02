@@ -21,28 +21,28 @@ using System.Windows.Forms;
 using NLog;
 
 namespace Renfrew.Launcher {
-   public class Program {
-      private static Logger _logger = LogManager.GetCurrentClassLogger();
+    public class Program {
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
 
-      [STAThread]
-      public static void Main(params string[] args) {
-         try {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(true);
+        [STAThread]
+        public static void Main(params string[] args) {
+            try {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(true);
 
-            Application.Run(new LauncherApplicationContext(
-               new Launcher()
-            ));
-         } catch (Exception e) {
-            _logger.Fatal(e, "An unexpected exception occurred.");
+                Application.Run(new LauncherApplicationContext(
+                   new Launcher()
+                ));
+            } catch (Exception e) {
+                _logger.Fatal(e, "An unexpected exception occurred.");
 
-            MessageBox.Show(
-               "An unexpected exception occurred. Please see the log for more information.",
-               "Project Renfrew",
-               MessageBoxButtons.OK, MessageBoxIcon.Error
-            );
+                MessageBox.Show(
+                   "An unexpected exception occurred. Please see the log for more information.",
+                   "Project Renfrew",
+                   MessageBoxButtons.OK, MessageBoxIcon.Error
+                );
 
-         }
-      }
-   }
+            }
+        }
+    }
 }

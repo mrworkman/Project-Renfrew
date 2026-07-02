@@ -30,278 +30,278 @@ using Renfrew.Grammar.Serialization;
 using Application = System.Windows.Forms.Application;
 
 namespace Renfrew.Core {
-   using Grammar;
-   using NatSpeakInterop;
+    using Grammar;
+    using NatSpeakInterop;
 
-   public class CoreApplication : ApplicationContext {
-      private static readonly Logger Logger =
-         LogManager.GetCurrentClassLogger();
+    public class CoreApplication : ApplicationContext {
+        private static readonly Logger Logger =
+           LogManager.GetCurrentClassLogger();
 
-      private static CoreApplication _instance;
+        private static CoreApplication _instance;
 
-      // Main interface to dragon
-      private NatSpeakService _natSpeakService;
+        // Main interface to dragon
+        private NatSpeakService _natSpeakService;
 
-      private IGrammarService _grammarService;
+        private IGrammarService _grammarService;
 
-      // System tray icon and menu
-      private NotifyIcon _notifyIcon;
-      private ContextMenuStrip _contextMenuStrip;
+        // System tray icon and menu
+        private NotifyIcon _notifyIcon;
+        private ContextMenuStrip _contextMenuStrip;
 
-      private bool _isTerminated = false;
+        private bool _isTerminated = false;
 
-      #region Application Init
+        #region Application Init
 
-      private CoreApplication() {
-         InitializeComponent();
-      }
+        private CoreApplication() {
+            InitializeComponent();
+        }
 
-      private void CloseConsole() {
-         InfoConsole.Instance.Close();
-      }
+        private void CloseConsole() {
+            InfoConsole.Instance.Close();
+        }
 
-      private void InitializeComponent() {
-         // Add application exit event handler(s)
-         Application.ApplicationExit += OnApplicationExit;
-         Application.ThreadExit += OnApplicationExit;
+        private void InitializeComponent() {
+            // Add application exit event handler(s)
+            Application.ApplicationExit += OnApplicationExit;
+            Application.ThreadExit += OnApplicationExit;
 
-         // Set up the system tray icon
-         _notifyIcon = new NotifyIcon();
-         _notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
-         _notifyIcon.Text = "Project Renfrew";
-         _notifyIcon.Icon = Resources.SystemTrayIcon;
+            // Set up the system tray icon
+            _notifyIcon = new NotifyIcon();
+            _notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
+            _notifyIcon.Text = "Project Renfrew";
+            _notifyIcon.Icon = Resources.SystemTrayIcon;
 
-         // Create a new context menu for the system tray icon
-         _contextMenuStrip = new ContextMenuStrip();
+            // Create a new context menu for the system tray icon
+            _contextMenuStrip = new ContextMenuStrip();
 
-         // Assign the context menu to the system tray icon
-         _notifyIcon.ContextMenuStrip = _contextMenuStrip;
+            // Assign the context menu to the system tray icon
+            _notifyIcon.ContextMenuStrip = _contextMenuStrip;
 
 
-         _notifyIcon.DoubleClick += delegate (object sender, EventArgs args) {
-            Logger.Debug(
-               $"Dragon is alive: {_natSpeakService.IsDragonAlive()}"
+            _notifyIcon.DoubleClick += delegate (object sender, EventArgs args) {
+                Logger.Debug(
+                   $"Dragon is alive: {_natSpeakService.IsDragonAlive()}"
+                );
+            };
+
+            // Add menu items to system tray icon menu
+            _contextMenuStrip.Items.Add(
+               "&Show Console",
+               null,
+               delegate (object sender, EventArgs e) { ShowConsole(); }
             );
-         };
-
-         // Add menu items to system tray icon menu
-         _contextMenuStrip.Items.Add(
-            "&Show Console",
-            null,
-            delegate (object sender, EventArgs e) { ShowConsole(); }
-         );
-         _contextMenuStrip.Items.Add("-");
-         _contextMenuStrip.Items.Add(
-            "E&xit Project Renfrew",
-            null,
-            OnApplicationExit
-         );
-
-         _notifyIcon.Visible = true;
-      }
-
-      public static CoreApplication Instance =>
-         _instance ?? (_instance = new CoreApplication());
-
-      #endregion
-
-      #region Application Termination
-
-      private void OnApplicationExit(object sender = null, EventArgs e = null) {
-         if (_isTerminated == true) {
-            return;
-         }
-
-         _notifyIcon.Visible = false;
-
-         CloseConsole();
-
-         Application.Exit();
-         Application.ExitThread();
-
-         _isTerminated = true;
-      }
-
-      public void Stop() {
-         OnApplicationExit();
-      }
-
-      #endregion
-
-      private void InitializeGrammarsFromAssembly(Assembly assembly) {
-         // Get a list of all of the classes marked with the GrammarExportAttribute.
-         var types = assembly.GetTypes()
-            .Select(
-               e => new {
-                  Type = e,
-                  Attr = e.GetCustomAttributes<GrammarExportAttribute>()
-                     .FirstOrDefault()
-               }
-            )
-            .Where(e => e.Attr != null && e.Type.IsClass)
-            .ToList();
-
-         Logger.Info($"Found {types.Count} grammars in assembly.");
-
-         // Enumerate the available types in the assembly.
-         foreach (var type in types) {
-            var a = type.Attr;
-
-            // Make sure the class extends from the Grammar base class.
-            if (type.Type.IsSubclassOf(typeof(Grammar)) == false) {
-               var fileName = Path.GetFileName(assembly.Location);
-
-               Logger.Warn(
-                  $"Class '{type.Type.FullName}' in {fileName} marked as exported grammar, "
-                  + $"but it does not extend {typeof(Grammar).FullName}. Ignoring."
-               );
-
-               continue;
-            }
-
-            Logger.Info($"Initializing '{a.Name}'.");
-
-            // TODO: Find a way to break a grammar's dependency on NatSpeakInterop
-            var grammar = (Grammar) Activator.CreateInstance(
-               type.Type,
-               _grammarService,
-               _natSpeakService
+            _contextMenuStrip.Items.Add("-");
+            _contextMenuStrip.Items.Add(
+               "E&xit Project Renfrew",
+               null,
+               OnApplicationExit
             );
 
-            try {
-               grammar.Initialize();
-            } catch (Exception e) {
-               Logger.Error();
-               Logger.Error("---=== EXCEPTION CAUGHT ===---");
-               Logger.Error(e);
-               Logger.Error("---=== END OF EXCEPTION DETAIL ===---");
-               continue;
+            _notifyIcon.Visible = true;
+        }
+
+        public static CoreApplication Instance =>
+           _instance ?? (_instance = new CoreApplication());
+
+        #endregion
+
+        #region Application Termination
+
+        private void OnApplicationExit(object sender = null, EventArgs e = null) {
+            if (_isTerminated == true) {
+                return;
             }
 
-            Logger.Info($"Grammar, '{a.Name}', initialized.");
+            _notifyIcon.Visible = false;
 
-            Logger.Debug(
-               $"Grammar's words: {string.Join(", ", grammar.WordList)}"
+            CloseConsole();
+
+            Application.Exit();
+            Application.ExitThread();
+
+            _isTerminated = true;
+        }
+
+        public void Stop() {
+            OnApplicationExit();
+        }
+
+        #endregion
+
+        private void InitializeGrammarsFromAssembly(Assembly assembly) {
+            // Get a list of all of the classes marked with the GrammarExportAttribute.
+            var types = assembly.GetTypes()
+               .Select(
+                  e => new {
+                      Type = e,
+                      Attr = e.GetCustomAttributes<GrammarExportAttribute>()
+                        .FirstOrDefault()
+                  }
+               )
+               .Where(e => e.Attr != null && e.Type.IsClass)
+               .ToList();
+
+            Logger.Info($"Found {types.Count} grammars in assembly.");
+
+            // Enumerate the available types in the assembly.
+            foreach (var type in types) {
+                var a = type.Attr;
+
+                // Make sure the class extends from the Grammar base class.
+                if (type.Type.IsSubclassOf(typeof(Grammar)) == false) {
+                    var fileName = Path.GetFileName(assembly.Location);
+
+                    Logger.Warn(
+                       $"Class '{type.Type.FullName}' in {fileName} marked as exported grammar, "
+                       + $"but it does not extend {typeof(Grammar).FullName}. Ignoring."
+                    );
+
+                    continue;
+                }
+
+                Logger.Info($"Initializing '{a.Name}'.");
+
+                // TODO: Find a way to break a grammar's dependency on NatSpeakInterop
+                var grammar = (Grammar) Activator.CreateInstance(
+                   type.Type,
+                   _grammarService,
+                   _natSpeakService
+                );
+
+                try {
+                    grammar.Initialize();
+                } catch (Exception e) {
+                    Logger.Error();
+                    Logger.Error("---=== EXCEPTION CAUGHT ===---");
+                    Logger.Error(e);
+                    Logger.Error("---=== END OF EXCEPTION DETAIL ===---");
+                    continue;
+                }
+
+                Logger.Info($"Grammar, '{a.Name}', initialized.");
+
+                Logger.Debug(
+                   $"Grammar's words: {string.Join(", ", grammar.WordList)}"
+                );
+            }
+        }
+
+        private void LoadGrammars() {
+            LoadInternalGrammars();
+            LoadExternalGrammars();
+        }
+
+        private void LoadExternalGrammars() {
+            var currentDirectory = Directory.GetCurrentDirectory();
+            var grammarDirectory = Path.Combine(currentDirectory, @"Grammars");
+
+            Logger.Info("Looking for external grammars.");
+
+            // Do nothing if the Grammars subdirectory doesn't exist.
+            if (Directory.Exists(grammarDirectory) == false) {
+                return;
+            }
+
+            // Load each DLL in the directory.
+            foreach (var f in Directory.EnumerateFiles(
+                        grammarDirectory,
+                        "*.dll"
+                     )) {
+                Logger.Info($"Found grammar file {f}.");
+
+                // Get the full path to the DLL file.
+                var path = Path.Combine(grammarDirectory, f);
+
+                try {
+                    InitializeGrammarsFromAssembly(Assembly.LoadFrom(path));
+                } catch (FileLoadException e) {
+                    Logger.Error(e, "Could not load assembly!");
+                }
+            }
+        }
+
+        private void LoadInternalGrammars() {
+            Logger.Info("Looking for internal (system) grammars.");
+
+            InitializeGrammarsFromAssembly(Assembly.GetExecutingAssembly());
+        }
+
+        private void ShowConsole() {
+            if (InfoConsole.Instance.IsVisible == false) {
+                InfoConsole.Instance.ShowDialog();
+                return;
+            }
+
+            InfoConsole.Instance.Focus();
+        }
+
+        public void ShowNotifyError(
+           string message,
+           string title = "Project Renfrew"
+        ) {
+            _notifyIcon.ShowBalloonTip(2000, title, message, ToolTipIcon.Error);
+        }
+
+        public void ShowNotifyInfo(
+           string message,
+           string title = "Project Renfrew"
+        ) {
+            _notifyIcon.ShowBalloonTip(2000, title, message, ToolTipIcon.Info);
+        }
+
+        public async Task Start(NatSpeakService natSpeakService) {
+            _natSpeakService = natSpeakService
+                               ?? throw new ArgumentNullException(
+                                  nameof(natSpeakService)
+                               );
+
+            ShowConsole();
+
+            Logger.Info("Starting...");
+            Logger.Info(
+               $"Product version: {Assembly.GetExecutingAssembly().GetName().Version}"
             );
-         }
-      }
 
-      private void LoadGrammars() {
-         LoadInternalGrammars();
-         LoadExternalGrammars();
-      }
+            // Get a reference to the GrammarService instance.
+            _grammarService = _natSpeakService.GrammarService;
+            _grammarService.GrammarSerializer = new Serializer();
 
-      private void LoadExternalGrammars() {
-         var currentDirectory = Directory.GetCurrentDirectory();
-         var grammarDirectory = Path.Combine(currentDirectory, @"Grammars");
+            Logger.Info("Querying Dragon Naturally Speaking...");
 
-         Logger.Info("Looking for external grammars.");
+            Logger.Info($"Dragon Version: {_natSpeakService.GetDragonVersion()}");
 
-         // Do nothing if the Grammars subdirectory doesn't exist.
-         if (Directory.Exists(grammarDirectory) == false) {
-            return;
-         }
+            string profileName;
+            string profilePath;
 
-         // Load each DLL in the directory.
-         foreach (var f in Directory.EnumerateFiles(
-                     grammarDirectory,
-                     "*.dll"
-                  )) {
-            Logger.Info($"Found grammar file {f}.");
+            for (var notified = false; ; notified = true) {
+                profileName = _natSpeakService.GetCurrentUserProfileName();
 
-            // Get the full path to the DLL file.
-            var path = Path.Combine(grammarDirectory, f);
+                // If a profile name could not be retrieved, then either the user
+                // hasn't selected a profile yet, or NatSpeak hasn't been started.
+                if (profileName == null) {
+                    if (notified == false) {
+                        Logger.Info("Could not load profile. Will try again.");
+                        ShowNotifyInfo("Could not load profile. Will try again.");
+                    }
 
-            try {
-               InitializeGrammarsFromAssembly(Assembly.LoadFrom(path));
-            } catch (FileLoadException e) {
-               Logger.Error(e, "Could not load assembly!");
-            }
-         }
-      }
+                    // Wait for a bit.
+                    await Task.Delay(2000);
 
-      private void LoadInternalGrammars() {
-         Logger.Info("Looking for internal (system) grammars.");
+                    // Try again...
+                    continue;
+                }
 
-         InitializeGrammarsFromAssembly(Assembly.GetExecutingAssembly());
-      }
+                // Get the file-system location of the user's profile (for informational purposes).
+                profilePath = _natSpeakService.GetUserDirectory(profileName);
 
-      private void ShowConsole() {
-         if (InfoConsole.Instance.IsVisible == false) {
-            InfoConsole.Instance.ShowDialog();
-            return;
-         }
-
-         InfoConsole.Instance.Focus();
-      }
-
-      public void ShowNotifyError(
-         string message,
-         string title = "Project Renfrew"
-      ) {
-         _notifyIcon.ShowBalloonTip(2000, title, message, ToolTipIcon.Error);
-      }
-
-      public void ShowNotifyInfo(
-         string message,
-         string title = "Project Renfrew"
-      ) {
-         _notifyIcon.ShowBalloonTip(2000, title, message, ToolTipIcon.Info);
-      }
-
-      public async Task Start(NatSpeakService natSpeakService) {
-         _natSpeakService = natSpeakService
-                            ?? throw new ArgumentNullException(
-                               nameof(natSpeakService)
-                            );
-
-         ShowConsole();
-
-         Logger.Info("Starting...");
-         Logger.Info(
-            $"Product version: {Assembly.GetExecutingAssembly().GetName().Version}"
-         );
-
-         // Get a reference to the GrammarService instance.
-         _grammarService = _natSpeakService.GrammarService;
-         _grammarService.GrammarSerializer = new Serializer();
-
-         Logger.Info("Querying Dragon Naturally Speaking...");
-
-         Logger.Info($"Dragon Version: {_natSpeakService.GetDragonVersion()}");
-
-         string profileName;
-         string profilePath;
-
-         for (var notified = false; ; notified = true) {
-            profileName = _natSpeakService.GetCurrentUserProfileName();
-
-            // If a profile name could not be retrieved, then either the user
-            // hasn't selected a profile yet, or NatSpeak hasn't been started.
-            if (profileName == null) {
-               if (notified == false) {
-                  Logger.Info("Could not load profile. Will try again.");
-                  ShowNotifyInfo("Could not load profile. Will try again.");
-               }
-
-               // Wait for a bit.
-               await Task.Delay(2000);
-
-               // Try again...
-               continue;
+                // Profile found.
+                break;
             }
 
-            // Get the file-system location of the user's profile (for informational purposes).
-            profilePath = _natSpeakService.GetUserDirectory(profileName);
+            Logger.Info($"Dragon Profile Loaded: {profileName}");
+            Logger.Info($"Dragon Profile Path: {profilePath}");
 
-            // Profile found.
-            break;
-         }
-
-         Logger.Info($"Dragon Profile Loaded: {profileName}");
-         Logger.Info($"Dragon Profile Path: {profilePath}");
-
-         LoadGrammars();
-      }
-   }
+            LoadGrammars();
+        }
+    }
 }

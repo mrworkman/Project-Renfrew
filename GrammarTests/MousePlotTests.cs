@@ -26,378 +26,378 @@ using Renfrew.Core.Grammars.MousePlot;
 using Renfrew.NatSpeakInterop;
 
 namespace GrammarTests {
-   [TestFixture]
-   public class MousePlotTests {
-      private Mock<IScreen> _screenMock;
-      private MousePlotGrammar _grammar;
+    [TestFixture]
+    public class MousePlotTests {
+        private Mock<IScreen> _screenMock;
+        private MousePlotGrammar _grammar;
 
-      private Mock<IWindow> _plotWindowMock;
-      private Mock<IWindow> _cellWindowMock;
-      private Mock<IWindow> _arrowWindowMock;
-      private Mock<IZoomWindow> _zoomWindowMock;
+        private Mock<IWindow> _plotWindowMock;
+        private Mock<IWindow> _cellWindowMock;
+        private Mock<IWindow> _arrowWindowMock;
+        private Mock<IZoomWindow> _zoomWindowMock;
 
-      [SetUp]
-      public void SetUp() {
-         _screenMock = new Mock<IScreen>(MockBehavior.Strict);
-         _plotWindowMock = new Mock<IWindow>();
-         _zoomWindowMock = new Mock<IZoomWindow>();
-         _cellWindowMock = new Mock<IWindow>();
-         _arrowWindowMock = new Mock<IWindow>();
+        [SetUp]
+        public void SetUp() {
+            _screenMock = new Mock<IScreen>(MockBehavior.Strict);
+            _plotWindowMock = new Mock<IWindow>();
+            _zoomWindowMock = new Mock<IZoomWindow>();
+            _cellWindowMock = new Mock<IWindow>();
+            _arrowWindowMock = new Mock<IWindow>();
 
-         _grammar = new MousePlotGrammar(
-            grammarService: new Mock<IGrammarService>().Object,
-            natSpeak: new Mock<INatSpeak>().Object,
-            screen: _screenMock.Object,
-            plotWindow: _plotWindowMock.Object,
-            zoomWindow: _zoomWindowMock.Object,
-            cellWindow: _cellWindowMock.Object,
-            markArrowWindow: _arrowWindowMock.Object
-         );
-      }
+            _grammar = new MousePlotGrammar(
+               grammarService: new Mock<IGrammarService>().Object,
+               natSpeak: new Mock<INatSpeak>().Object,
+               screen: _screenMock.Object,
+               plotWindow: _plotWindowMock.Object,
+               zoomWindow: _zoomWindowMock.Object,
+               cellWindow: _cellWindowMock.Object,
+               markArrowWindow: _arrowWindowMock.Object
+            );
+        }
 
-      [Test]
-      [TestCase("Zero", 0x0)]
-      [TestCase("Two", 0x2)]
-      [TestCase("Three", 0x3)]
-      [TestCase("Alpha", 0xa)]
-      [TestCase("Bravo", 0xb)]
-      [TestCase("Zulu", 0x23)]
-      [TestCase("A", 0xa)]
-      [TestCase("B", 0xb)]
-      [TestCase("Z", 0x23)]
-      public void ShouldReturnCorrectOrdinalsForCoordinate(string c, int expected) {
-         Assert.That(_grammar.GetCoordinateOrdinal(c), Is.EqualTo(expected));
-      }
+        [Test]
+        [TestCase("Zero", 0x0)]
+        [TestCase("Two", 0x2)]
+        [TestCase("Three", 0x3)]
+        [TestCase("Alpha", 0xa)]
+        [TestCase("Bravo", 0xb)]
+        [TestCase("Zulu", 0x23)]
+        [TestCase("A", 0xa)]
+        [TestCase("B", 0xb)]
+        [TestCase("Z", 0x23)]
+        public void ShouldReturnCorrectOrdinalsForCoordinate(string c, int expected) {
+            Assert.That(_grammar.GetCoordinateOrdinal(c), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase("10", 0)]
-      [TestCase("99", 0)]
-      [TestCase("a", 0)]
-      [TestCase("alpha", 0)]
-      [TestCase("Bob", 0)]
-      public void InvalidCoordinateShouldThrowException(string c, int expected) {
-         Assert.That(
-            () => _grammar.GetCoordinateOrdinal(c),
-            Throws.InstanceOf<ArgumentOutOfRangeException>()
-         );
-      }
+        [Test]
+        [TestCase("10", 0)]
+        [TestCase("99", 0)]
+        [TestCase("a", 0)]
+        [TestCase("alpha", 0)]
+        [TestCase("Bob", 0)]
+        public void InvalidCoordinateShouldThrowException(string c, int expected) {
+            Assert.That(
+               () => _grammar.GetCoordinateOrdinal(c),
+               Throws.InstanceOf<ArgumentOutOfRangeException>()
+            );
+        }
 
-      [Test]
-      [TestCase(0, 50)]
-      [TestCase(1, 150)]
-      [TestCase(2, 250)]
-      [TestCase(7, 750)]
-      [TestCase(12, 1250)]
-      [TestCase(15, 1550)]
-      [TestCase(19, 1919)] // <-- Beyond the edge of the screen
-      [TestCase(20, 1919)] // <-- Beyond the edge of the screen
-      [TestCase(36, 1919)] // <-- Beyond the edge of the screen
-      public void ShouldGetCorrectXCoordFor100X100CellsOn1920X1080Screen(int x, int expected) {
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(0, 0, 1920, 1080)
-         );
+        [Test]
+        [TestCase(0, 50)]
+        [TestCase(1, 150)]
+        [TestCase(2, 250)]
+        [TestCase(7, 750)]
+        [TestCase(12, 1250)]
+        [TestCase(15, 1550)]
+        [TestCase(19, 1919)] // <-- Beyond the edge of the screen
+        [TestCase(20, 1919)] // <-- Beyond the edge of the screen
+        [TestCase(36, 1919)] // <-- Beyond the edge of the screen
+        public void ShouldGetCorrectXCoordFor100X100CellsOn1920X1080Screen(int x, int expected) {
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(0, 0, 1920, 1080)
+            );
 
-         Assert.That(_grammar.GetMouseXCoord(x), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetMouseXCoord(x), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 50)]
-      [TestCase(1, 150)]
-      [TestCase(2, 250)]
-      [TestCase(7, 750)]
-      [TestCase(10, 1050)]
-      [TestCase(11, 1079)] // <-- Beyond the edge of the screen
-      [TestCase(36, 1079)] // <-- Beyond the edge of the screen
-      public void ShouldGetCorrectYCoord100X100CellsOn1920X1080Screen(int y, int expected) {
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(0, 0, 1920, 1080)
-         );
+        [Test]
+        [TestCase(0, 50)]
+        [TestCase(1, 150)]
+        [TestCase(2, 250)]
+        [TestCase(7, 750)]
+        [TestCase(10, 1050)]
+        [TestCase(11, 1079)] // <-- Beyond the edge of the screen
+        [TestCase(36, 1079)] // <-- Beyond the edge of the screen
+        public void ShouldGetCorrectYCoord100X100CellsOn1920X1080Screen(int y, int expected) {
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(0, 0, 1920, 1080)
+            );
 
-         Assert.That(_grammar.GetMouseYCoord(y), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetMouseYCoord(y), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 50)]
-      [TestCase(1, 150)]
-      [TestCase(2, 250)]
-      [TestCase(7, 750)]
-      [TestCase(9, 950)]
-      [TestCase(10, 1023)] // <-- Beyond the edge of the screen
-      [TestCase(15, 1023)] // <-- Beyond the edge of the screen
-      public void ShouldGetCorrectXCoordFor100X100CellsOn1024X768Screen(int x, int expected) {
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(0, 0, 1024, 768)
-         );
+        [Test]
+        [TestCase(0, 50)]
+        [TestCase(1, 150)]
+        [TestCase(2, 250)]
+        [TestCase(7, 750)]
+        [TestCase(9, 950)]
+        [TestCase(10, 1023)] // <-- Beyond the edge of the screen
+        [TestCase(15, 1023)] // <-- Beyond the edge of the screen
+        public void ShouldGetCorrectXCoordFor100X100CellsOn1024X768Screen(int x, int expected) {
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(0, 0, 1024, 768)
+            );
 
-         Assert.That(_grammar.GetMouseXCoord(x), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetMouseXCoord(x), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 50)]
-      [TestCase(1, 150)]
-      [TestCase(2, 250)]
-      [TestCase(7, 750)]
-      [TestCase(8, 767)] // <-- Beyond the edge of the screen
-      [TestCase(9, 767)] // <-- Beyond the edge of the screen
-      [TestCase(36, 767)] // <-- Beyond the edge of the screen
-      public void ShouldGetCorrectYCoord100X100CellsOn1024X768Screen(int y, int expected) {
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(0, 0, 1024, 768)
-         );
+        [Test]
+        [TestCase(0, 50)]
+        [TestCase(1, 150)]
+        [TestCase(2, 250)]
+        [TestCase(7, 750)]
+        [TestCase(8, 767)] // <-- Beyond the edge of the screen
+        [TestCase(9, 767)] // <-- Beyond the edge of the screen
+        [TestCase(36, 767)] // <-- Beyond the edge of the screen
+        public void ShouldGetCorrectYCoord100X100CellsOn1024X768Screen(int y, int expected) {
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(0, 0, 1024, 768)
+            );
 
-         Assert.That(_grammar.GetMouseYCoord(y), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetMouseYCoord(y), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 50 - 1920)]
-      [TestCase(1, 150 - 1920)]
-      [TestCase(2, 250 - 1920)]
-      [TestCase(7, 750 - 1920)]
-      [TestCase(12, 1250 - 1920)]
-      [TestCase(15, 1550 - 1920)]
-      [TestCase(19, 1919 - 1920)] // <-- Beyond the edge of the screen
-      [TestCase(20, 1919 - 1920)] // <-- Beyond the edge of the screen
-      [TestCase(36, 1919 - 1920)] // <-- Beyond the edge of the screen
-      public void ShouldGetCorrectXCoordFor100X100CellsOn1920X1080SecondaryScreen(int x, int expected) {
+        [Test]
+        [TestCase(0, 50 - 1920)]
+        [TestCase(1, 150 - 1920)]
+        [TestCase(2, 250 - 1920)]
+        [TestCase(7, 750 - 1920)]
+        [TestCase(12, 1250 - 1920)]
+        [TestCase(15, 1550 - 1920)]
+        [TestCase(19, 1919 - 1920)] // <-- Beyond the edge of the screen
+        [TestCase(20, 1919 - 1920)] // <-- Beyond the edge of the screen
+        [TestCase(36, 1919 - 1920)] // <-- Beyond the edge of the screen
+        public void ShouldGetCorrectXCoordFor100X100CellsOn1920X1080SecondaryScreen(int x, int expected) {
 
-         // Simulate a secondary screen that's to the left of the primary screen
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(-1920, 0, 1920, 1080)
-         );
+            // Simulate a secondary screen that's to the left of the primary screen
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(-1920, 0, 1920, 1080)
+            );
 
-         Assert.That(_grammar.GetMouseXCoord(x), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetMouseXCoord(x), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 50 - 1024)]
-      [TestCase(1, 150 - 1024)]
-      [TestCase(2, 250 - 1024)]
-      [TestCase(7, 750 - 1024)]
-      [TestCase(9, 950 - 1024)]
-      [TestCase(10, 1023 - 1024)] // <-- Beyond the edge of the screen
-      [TestCase(11, 1023 - 1024)] // <-- Beyond the edge of the screen
-      public void ShouldGetCorrectYCoord100X100CellsOn1920X1080SecondaryScreen(int y, int expected) {
-         // Simulate a secondary screen that's above the primary screen
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(0, -1024, 1280, 1024)
-         );
+        [Test]
+        [TestCase(0, 50 - 1024)]
+        [TestCase(1, 150 - 1024)]
+        [TestCase(2, 250 - 1024)]
+        [TestCase(7, 750 - 1024)]
+        [TestCase(9, 950 - 1024)]
+        [TestCase(10, 1023 - 1024)] // <-- Beyond the edge of the screen
+        [TestCase(11, 1023 - 1024)] // <-- Beyond the edge of the screen
+        public void ShouldGetCorrectYCoord100X100CellsOn1920X1080SecondaryScreen(int y, int expected) {
+            // Simulate a secondary screen that's above the primary screen
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(0, -1024, 1280, 1024)
+            );
 
-         Assert.That(_grammar.GetMouseYCoord(y), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetMouseYCoord(y), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 50 + 1080)]
-      [TestCase(1, 150 + 1080)]
-      [TestCase(2, 250 + 1080)]
-      [TestCase(7, 750 + 1080)]
-      [TestCase(9, 950 + 1080)]
-      [TestCase(10, 1023 + 1080)] // <-- Beyond the edge of the screen
-      [TestCase(11, 1023 + 1080)] // <-- Beyond the edge of the screen
-      public void ShouldGetCorrectYCoord100X100CellsOn1920X1080SecondaryScreenBelow(int y, int expected) {
-         // Simulate a secondary screen that's below a larger primary screen
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(0, 1080, 1280, 1024)
-         );
+        [Test]
+        [TestCase(0, 50 + 1080)]
+        [TestCase(1, 150 + 1080)]
+        [TestCase(2, 250 + 1080)]
+        [TestCase(7, 750 + 1080)]
+        [TestCase(9, 950 + 1080)]
+        [TestCase(10, 1023 + 1080)] // <-- Beyond the edge of the screen
+        [TestCase(11, 1023 + 1080)] // <-- Beyond the edge of the screen
+        public void ShouldGetCorrectYCoord100X100CellsOn1920X1080SecondaryScreenBelow(int y, int expected) {
+            // Simulate a secondary screen that's below a larger primary screen
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(0, 1080, 1280, 1024)
+            );
 
-         Assert.That(_grammar.GetMouseYCoord(y), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetMouseYCoord(y), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 0)]
-      [TestCase(1, 100)]
-      [TestCase(2, 200)]
-      [TestCase(7, 700)]
-      [TestCase(12, 1200)]
-      [TestCase(15, 1500)]
-      [TestCase(19, 1900)]
-      [TestCase(20, 1900)] // <-- Beyond the edge of the screen
-      [TestCase(36, 1900)] // <-- Beyond the edge of the screen
-      public void ShouldGetCorrectCellXCoordFor100X100CellsOn1920X1080Screen(int x, int expected) {
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(0, 0, 1920, 1080)
-         );
+        [Test]
+        [TestCase(0, 0)]
+        [TestCase(1, 100)]
+        [TestCase(2, 200)]
+        [TestCase(7, 700)]
+        [TestCase(12, 1200)]
+        [TestCase(15, 1500)]
+        [TestCase(19, 1900)]
+        [TestCase(20, 1900)] // <-- Beyond the edge of the screen
+        [TestCase(36, 1900)] // <-- Beyond the edge of the screen
+        public void ShouldGetCorrectCellXCoordFor100X100CellsOn1920X1080Screen(int x, int expected) {
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(0, 0, 1920, 1080)
+            );
 
-         Assert.That(_grammar.GetCellXCoord(x), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetCellXCoord(x), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 0)]
-      [TestCase(1, 100)]
-      [TestCase(2, 200)]
-      [TestCase(7, 700)]
-      [TestCase(10, 1000)]
-      [TestCase(11, 1000)] // <-- Beyond the edge of the screen
-      [TestCase(36, 1000)] // <-- Beyond the edge of the screen
-      public void ShouldGetCorrectCellYCoord100X100CellsOn1920X1080Screen(int y, int expected) {
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(0, 0, 1920, 1080)
-         );
+        [Test]
+        [TestCase(0, 0)]
+        [TestCase(1, 100)]
+        [TestCase(2, 200)]
+        [TestCase(7, 700)]
+        [TestCase(10, 1000)]
+        [TestCase(11, 1000)] // <-- Beyond the edge of the screen
+        [TestCase(36, 1000)] // <-- Beyond the edge of the screen
+        public void ShouldGetCorrectCellYCoord100X100CellsOn1920X1080Screen(int y, int expected) {
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(0, 0, 1920, 1080)
+            );
 
-         Assert.That(_grammar.GetCellYCoord(y), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetCellYCoord(y), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 0 - 1920)]
-      [TestCase(1, 100 - 1920)]
-      [TestCase(2, 200 - 1920)]
-      [TestCase(7, 700 - 1920)]
-      [TestCase(12, 1200 - 1920)] // <-- Beyond the edge of the screen
-      [TestCase(15, 1200 - 1920)] // <-- Beyond the edge of the screen
-      [TestCase(19, 1200 - 1920)] // <-- Beyond the edge of the screen
-      [TestCase(20, 1200 - 1920)] // <-- Beyond the edge of the screen
-      [TestCase(36, 1200 - 1920)] // <-- Beyond the edge of the screen
-      public void ShouldGetCorrectCellXCoordFor100X100CellsOn1280X720SecondaryScreen(int x, int expected) {
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(-1920, 0, 1280, 720)
-         );
+        [Test]
+        [TestCase(0, 0 - 1920)]
+        [TestCase(1, 100 - 1920)]
+        [TestCase(2, 200 - 1920)]
+        [TestCase(7, 700 - 1920)]
+        [TestCase(12, 1200 - 1920)] // <-- Beyond the edge of the screen
+        [TestCase(15, 1200 - 1920)] // <-- Beyond the edge of the screen
+        [TestCase(19, 1200 - 1920)] // <-- Beyond the edge of the screen
+        [TestCase(20, 1200 - 1920)] // <-- Beyond the edge of the screen
+        [TestCase(36, 1200 - 1920)] // <-- Beyond the edge of the screen
+        public void ShouldGetCorrectCellXCoordFor100X100CellsOn1280X720SecondaryScreen(int x, int expected) {
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(-1920, 0, 1280, 720)
+            );
 
-         Assert.That(_grammar.GetCellXCoord(x), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetCellXCoord(x), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 0 - 1080)]
-      [TestCase(1, 100 - 1080)]
-      [TestCase(2, 200 - 1080)]
-      [TestCase(7, 700 - 1080)]
-      [TestCase(10, 700 - 1080)]
-      [TestCase(11, 700 - 1080)] // <-- Beyond the edge of the screen
-      [TestCase(36, 700 - 1080)] // <-- Beyond the edge of the screen
-      public void ShouldGetCorrectCellYCoord100X100CellsOn1280X720SecondaryScreen(int y, int expected) {
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(0, -1080, 1280, 720)
-         );
+        [Test]
+        [TestCase(0, 0 - 1080)]
+        [TestCase(1, 100 - 1080)]
+        [TestCase(2, 200 - 1080)]
+        [TestCase(7, 700 - 1080)]
+        [TestCase(10, 700 - 1080)]
+        [TestCase(11, 700 - 1080)] // <-- Beyond the edge of the screen
+        [TestCase(36, 700 - 1080)] // <-- Beyond the edge of the screen
+        public void ShouldGetCorrectCellYCoord100X100CellsOn1280X720SecondaryScreen(int y, int expected) {
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(0, -1080, 1280, 720)
+            );
 
-         Assert.That(_grammar.GetCellYCoord(y), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetCellYCoord(y), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 0)]
-      [TestCase(1, 100)]
-      [TestCase(2, 200)]
-      [TestCase(7, 700)]
-      [TestCase(12, 1200)]
-      [TestCase(15, 1500)]
-      [TestCase(19, 1900)]
-      [TestCase(20, 2000)]
-      [TestCase(36, 3600)]
-      public void ShouldGetCorrectXOffsetFor100X100CellsOn1920X1080Screen(int x, int expected) {
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(0, 0, 1920, 1080)
-         );
+        [Test]
+        [TestCase(0, 0)]
+        [TestCase(1, 100)]
+        [TestCase(2, 200)]
+        [TestCase(7, 700)]
+        [TestCase(12, 1200)]
+        [TestCase(15, 1500)]
+        [TestCase(19, 1900)]
+        [TestCase(20, 2000)]
+        [TestCase(36, 3600)]
+        public void ShouldGetCorrectXOffsetFor100X100CellsOn1920X1080Screen(int x, int expected) {
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(0, 0, 1920, 1080)
+            );
 
-         Assert.That(_grammar.GetXScreenOffset(x), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetXScreenOffset(x), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 0)]
-      [TestCase(1, 100)]
-      [TestCase(2, 200)]
-      [TestCase(7, 700)]
-      [TestCase(10, 1000)]
-      [TestCase(11, 1100)]
-      [TestCase(36, 3600)]
-      public void ShouldGetCorrectYOffsetFor100X100CellsOn1920X1080Screen(int y, int expected) {
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(0, 0, 1920, 1080)
-         );
+        [Test]
+        [TestCase(0, 0)]
+        [TestCase(1, 100)]
+        [TestCase(2, 200)]
+        [TestCase(7, 700)]
+        [TestCase(10, 1000)]
+        [TestCase(11, 1100)]
+        [TestCase(36, 3600)]
+        public void ShouldGetCorrectYOffsetFor100X100CellsOn1920X1080Screen(int y, int expected) {
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(0, 0, 1920, 1080)
+            );
 
-         Assert.That(_grammar.GetYScreenOffset(y), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetYScreenOffset(y), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 0 - 1920)]
-      [TestCase(1, 100 - 1920)]
-      [TestCase(2, 200 - 1920)]
-      [TestCase(7, 700 - 1920)]
-      [TestCase(12, 1200 - 1920)]
-      [TestCase(15, 1500 - 1920)]
-      [TestCase(19, 1900 - 1920)]
-      [TestCase(20, 2000 - 1920)]
-      [TestCase(36, 3600 - 1920)]
-      public void ShouldGetCorrectXOffsetFor100X100CellsOn1920X1080SecondaryScreen(int x, int expected) {
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(-1920, -10, 1920, 1080)
-         );
+        [Test]
+        [TestCase(0, 0 - 1920)]
+        [TestCase(1, 100 - 1920)]
+        [TestCase(2, 200 - 1920)]
+        [TestCase(7, 700 - 1920)]
+        [TestCase(12, 1200 - 1920)]
+        [TestCase(15, 1500 - 1920)]
+        [TestCase(19, 1900 - 1920)]
+        [TestCase(20, 2000 - 1920)]
+        [TestCase(36, 3600 - 1920)]
+        public void ShouldGetCorrectXOffsetFor100X100CellsOn1920X1080SecondaryScreen(int x, int expected) {
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(-1920, -10, 1920, 1080)
+            );
 
-         Assert.That(_grammar.GetXScreenOffset(x), Is.EqualTo(expected));
-      }
+            Assert.That(_grammar.GetXScreenOffset(x), Is.EqualTo(expected));
+        }
 
-      [Test]
-      [TestCase(0, 0 - 1080)]
-      [TestCase(1, 100 - 1080)]
-      [TestCase(2, 200 - 1080)]
-      [TestCase(7, 700 - 1080)]
-      [TestCase(10, 1000 - 1080)]
-      [TestCase(11, 1100 - 1080)]
-      [TestCase(36, 3600 - 1080)]
-      public void ShouldGetCorrectYOffsetFor100X100CellsOn1920X1080SecondaryScreen(int y, int expected) {
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(-1300, -1080, 1920, 1080)
-         );
+        [Test]
+        [TestCase(0, 0 - 1080)]
+        [TestCase(1, 100 - 1080)]
+        [TestCase(2, 200 - 1080)]
+        [TestCase(7, 700 - 1080)]
+        [TestCase(10, 1000 - 1080)]
+        [TestCase(11, 1100 - 1080)]
+        [TestCase(36, 3600 - 1080)]
+        public void ShouldGetCorrectYOffsetFor100X100CellsOn1920X1080SecondaryScreen(int y, int expected) {
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(-1300, -1080, 1920, 1080)
+            );
 
-         Assert.That(_grammar.GetYScreenOffset(y), Is.EqualTo(expected));
-      }
-
-
-      [Test]
-      public void ShouldOpenZoomWindowAndCloseMainPlotWindow() {
-         // Arrange
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(0, 0, 1920, 1080)
-         );
-
-         _zoomWindowMock.Setup(e => e.Width).Returns(300);
-         _zoomWindowMock.Setup(e => e.Height).Returns(300);
-
-         // Act
-         _grammar.Zoom("One", "One");
-
-         // Assert
-         _plotWindowMock.Verify(e => e.Close(), Times.Once);
-
-         //_zoomWindowMock.Verify(e => e.SetImage(It.IsAny<Bitmap>()), Times.Once);
-         _zoomWindowMock.Verify(e => e.Move(225, 225), Times.Once);
-         _zoomWindowMock.Verify(e => e.Show(), Times.Once);
-
-         _cellWindowMock.Verify(e => e.Move(96.0, 96.0), Times.Once);
-         _cellWindowMock.Verify(e => e.Show(), Times.Once);
-      }
+            Assert.That(_grammar.GetYScreenOffset(y), Is.EqualTo(expected));
+        }
 
 
-      [Test]
-      [TestCase("Zero", "Zero", 0, 0)]
-      [TestCase("Nine", "Zero", 0, 900)]
-      [TestCase("Zero", "India", 1800, 0)]
-      [TestCase("Nine", "India", 1800, 900)]
-      public void ShouldRepositionZoomWindowSoItStaysOnScreen(string y, string x, int ox, int oy) {
-         // Arrange
-         _screenMock.Setup(e => e.Bounds).Returns(
-            new Rectangle(0, 0, 1920, 1080)
-         );
+        [Test]
+        public void ShouldOpenZoomWindowAndCloseMainPlotWindow() {
+            // Arrange
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(0, 0, 1920, 1080)
+            );
 
-         var cellSize = 100;
-         var zoomWindowSize = 350;
-         var zoomx = ox + cellSize + 25;
-         var zoomy = oy + cellSize + 25;
+            _zoomWindowMock.Setup(e => e.Width).Returns(300);
+            _zoomWindowMock.Setup(e => e.Height).Returns(300);
 
-         if (ox + zoomWindowSize > 1920) {
-            zoomx -= zoomWindowSize + cellSize + 50;
-         }
+            // Act
+            _grammar.Zoom("One", "One");
 
-         if (oy + zoomWindowSize > 1080) {
-            zoomy -= zoomWindowSize + cellSize + 50;
-         }
+            // Assert
+            _plotWindowMock.Verify(e => e.Close(), Times.Once);
 
-         _zoomWindowMock.Setup(e => e.Width).Returns(zoomWindowSize);
-         _zoomWindowMock.Setup(e => e.Height).Returns(zoomWindowSize);
+            //_zoomWindowMock.Verify(e => e.SetImage(It.IsAny<Bitmap>()), Times.Once);
+            _zoomWindowMock.Verify(e => e.Move(225, 225), Times.Once);
+            _zoomWindowMock.Verify(e => e.Show(), Times.Once);
 
-         // Act
-         _grammar.Zoom(x, y);
+            _cellWindowMock.Verify(e => e.Move(96.0, 96.0), Times.Once);
+            _cellWindowMock.Verify(e => e.Show(), Times.Once);
+        }
 
-         // Assert
-         _cellWindowMock.Verify(e => e.Move(ox - 4, oy - 4), Times.Once);
-         _zoomWindowMock.Verify(e => e.Move(zoomx, zoomy), Times.Once);
-      }
 
-   }
+        [Test]
+        [TestCase("Zero", "Zero", 0, 0)]
+        [TestCase("Nine", "Zero", 0, 900)]
+        [TestCase("Zero", "India", 1800, 0)]
+        [TestCase("Nine", "India", 1800, 900)]
+        public void ShouldRepositionZoomWindowSoItStaysOnScreen(string y, string x, int ox, int oy) {
+            // Arrange
+            _screenMock.Setup(e => e.Bounds).Returns(
+               new Rectangle(0, 0, 1920, 1080)
+            );
+
+            var cellSize = 100;
+            var zoomWindowSize = 350;
+            var zoomx = ox + cellSize + 25;
+            var zoomy = oy + cellSize + 25;
+
+            if (ox + zoomWindowSize > 1920) {
+                zoomx -= zoomWindowSize + cellSize + 50;
+            }
+
+            if (oy + zoomWindowSize > 1080) {
+                zoomy -= zoomWindowSize + cellSize + 50;
+            }
+
+            _zoomWindowMock.Setup(e => e.Width).Returns(zoomWindowSize);
+            _zoomWindowMock.Setup(e => e.Height).Returns(zoomWindowSize);
+
+            // Act
+            _grammar.Zoom(x, y);
+
+            // Assert
+            _cellWindowMock.Verify(e => e.Move(ox - 4, oy - 4), Times.Once);
+            _zoomWindowMock.Verify(e => e.Move(zoomx, zoomy), Times.Once);
+        }
+
+    }
 }

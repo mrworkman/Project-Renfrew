@@ -19,29 +19,29 @@ using System;
 using System.Collections.Generic;
 
 namespace Renfrew.Grammar {
-   public class GrammarAction {
-      private Action _action;
-      private Action<IEnumerable<string>> _actionWithWords;
+    public class GrammarAction {
+        private Action _action;
+        private Action<IEnumerable<string>> _actionWithWords;
 
-      public GrammarAction(Action action) {
-         _action = action;
-      }
+        public GrammarAction(Action action) {
+            _action = action;
+        }
 
-      public GrammarAction(Action<IEnumerable<string>> action) {
-         _actionWithWords = action;
-      }
+        public GrammarAction(Action<IEnumerable<string>> action) {
+            _actionWithWords = action;
+        }
 
-      public void InvokeAction(IEnumerable<string> words) {
-         // Call the parameterless form?
-         if (_action != null) {
-            _action();
-            return;
-         }
+        public void InvokeAction(IEnumerable<string> words) {
+            // Call the parameterless form?
+            if (_action != null) {
+                _action();
+                return;
+            }
 
-         // Call the parametered form
-         _actionWithWords(words);
-      }
+            // Call the parametered form
+            _actionWithWords(words);
+        }
 
-      public override string ToString() => "Grammar Action";
-   }
+        public override string ToString() => "Grammar Action";
+    }
 }

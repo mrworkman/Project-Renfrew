@@ -22,25 +22,25 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Renfrew.Core.Grammars.MousePlot {
-   public class TestableScreen : IScreen {
+    public class TestableScreen : IScreen {
 
-      private Screen _screen;
+        private Screen _screen;
 
-      public TestableScreen() {
-         _screen = Screen.PrimaryScreen;
-      }
+        public TestableScreen() {
+            _screen = Screen.PrimaryScreen;
+        }
 
-      private TestableScreen(Screen screen) {
-         _screen = screen;
-      }
+        private TestableScreen(Screen screen) {
+            _screen = screen;
+        }
 
-      public IScreen[] AllScreens =>
-         Screen.AllScreens.Select(e => (IScreen) new TestableScreen(e)).ToArray();
+        public IScreen[] AllScreens =>
+           Screen.AllScreens.Select(e => (IScreen) new TestableScreen(e)).ToArray();
 
-      public Rectangle Bounds =>
-         _screen.Bounds;
+        public Rectangle Bounds =>
+           _screen.Bounds;
 
-      public IScreen PrimaryScreen =>
-         new TestableScreen(Screen.PrimaryScreen);
-   }
+        public IScreen PrimaryScreen =>
+           new TestableScreen(Screen.PrimaryScreen);
+    }
 }

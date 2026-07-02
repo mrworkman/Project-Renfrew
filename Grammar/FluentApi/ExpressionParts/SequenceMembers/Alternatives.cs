@@ -20,74 +20,74 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
-   public class Alternatives : ISequenceMember, IEquatable<Alternatives> {
-      private Alternatives() { }
+    public class Alternatives : ISequenceMember, IEquatable<Alternatives> {
+        private Alternatives() { }
 
-      public List<Sequence> Sequences { get; private set; }
+        public List<Sequence> Sequences { get; private set; }
 
-      public bool Equals(Alternatives other) {
-         if (other is null) {
-            return false;
-         }
+        public bool Equals(Alternatives other) {
+            if (other is null) {
+                return false;
+            }
 
-         if (Sequences.Count != other.Sequences.Count) {
-            return false;
-         }
+            if (Sequences.Count != other.Sequences.Count) {
+                return false;
+            }
 
-         return !Sequences.Where((t, i) => !t.Equals(other.Sequences[i])).Any();
-      }
+            return !Sequences.Where((t, i) => !t.Equals(other.Sequences[i])).Any();
+        }
 
-      internal static Alternatives Create(Sequence sequence) {
-         return new Alternatives {
-            Sequences = new List<Sequence> {
+        internal static Alternatives Create(Sequence sequence) {
+            return new Alternatives {
+                Sequences = new List<Sequence> {
                sequence
             }
-         };
-      }
+            };
+        }
 
-      internal static Alternatives Create(
-         Sequence sequence,
-         params Sequence[] additionalSequences
-      ) {
-         var alternatives = Create(sequence);
-         alternatives.Sequences.AddRange(additionalSequences);
+        internal static Alternatives Create(
+           Sequence sequence,
+           params Sequence[] additionalSequences
+        ) {
+            var alternatives = Create(sequence);
+            alternatives.Sequences.AddRange(additionalSequences);
 
-         return alternatives;
-      }
+            return alternatives;
+        }
 
-      internal static Alternatives Create(IEnumerable<Sequence> sequences) {
-         var alternatives = new Alternatives {
-            Sequences = new List<Sequence>(sequences)
-         };
+        internal static Alternatives Create(IEnumerable<Sequence> sequences) {
+            var alternatives = new Alternatives {
+                Sequences = new List<Sequence>(sequences)
+            };
 
-         if (alternatives.Sequences.Count == 0) {
-            throw new ArgumentException(
-               "At least one sequence must be provided.",
-               nameof(sequences)
+            if (alternatives.Sequences.Count == 0) {
+                throw new ArgumentException(
+                   "At least one sequence must be provided.",
+                   nameof(sequences)
+                );
+            }
+
+            return alternatives;
+        }
+
+        internal static Alternatives Create(
+           IEnumerable<ISequenceMember> sequenceMembers
+        ) {
+            return Create(sequenceMembers.Select(Sequence.Create));
+        }
+
+        internal static Alternatives Create(
+           ISequenceMember sequenceMember,
+           params ISequenceMember[] additionalSequenceMembers
+        ) {
+            return Create(
+               Sequence.Create(sequenceMember),
+               additionalSequenceMembers.Select(Sequence.Create).ToArray()
             );
-         }
+        }
 
-         return alternatives;
-      }
-
-      internal static Alternatives Create(
-         IEnumerable<ISequenceMember> sequenceMembers
-      ) {
-         return Create(sequenceMembers.Select(Sequence.Create));
-      }
-
-      internal static Alternatives Create(
-         ISequenceMember sequenceMember,
-         params ISequenceMember[] additionalSequenceMembers
-      ) {
-         return Create(
-            Sequence.Create(sequenceMember),
-            additionalSequenceMembers.Select(Sequence.Create).ToArray()
-         );
-      }
-
-      internal void Add(Sequence sequence) {
-         Sequences.Add(sequence);
-      }
-   }
+        internal void Add(Sequence sequence) {
+            Sequences.Add(sequence);
+        }
+    }
 }

@@ -16,25 +16,25 @@
 //
 
 namespace Renfrew.Grammar.Solving {
-   internal class SolveResult {
-      private SolveResult() { }
+    internal class SolveResult {
+        private SolveResult() { }
 
-      public static SolveResult Succeeded(int numberOfMatches) {
-         return new Success(numberOfMatches);
-      }
+        public static SolveResult Succeeded(int numberOfMatches) {
+            return new Success(numberOfMatches);
+        }
 
-      public static SolveResult Failed() {
-         return new Failure();
-      }
+        public static SolveResult Failed() {
+            return new Failure();
+        }
 
-      public class Failure : SolveResult { }
+        public class Failure : SolveResult { }
 
-      public class Success : SolveResult {
-         internal Success(int numberOfMatches) {
-            NumberOfMatches = numberOfMatches;
-         }
+        public class Success : SolveResult {
+            internal Success(int numberOfMatches) {
+                NumberOfMatches = numberOfMatches;
+            }
 
-         public int NumberOfMatches { get; }
-      }
-   }
+            public int NumberOfMatches { get; }
+        }
+    }
 }

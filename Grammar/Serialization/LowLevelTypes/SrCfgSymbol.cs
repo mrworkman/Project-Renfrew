@@ -18,15 +18,15 @@
 using System.IO;
 
 namespace Renfrew.Grammar.Serialization.LowLevelTypes {
-   internal struct SrCfgSymbol {
-      public ushort Type { get; set; }
-      public ushort Probability { get; set; }
-      public uint Value { get; set; }
+    internal struct SrCfgSymbol {
+        public ushort Type { get; set; }
+        public ushort Probability { get; set; }
+        public uint Value { get; set; }
 
-      public void Serialize(BinaryWriter writer) {
-         writer.Write(Type);
-         writer.Write(Probability);
-         writer.Write(Value);
-      }
-   }
+        public void Serialize(BinaryWriter writer) {
+            writer.Write(Type);
+            writer.Write(Probability);
+            writer.Write(Value);
+        }
+    }
 }

@@ -18,21 +18,21 @@
 using Renfrew.Grammar.Types;
 
 namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
-   public class RuleName : IIdString {
-      private RuleName(uint id, string str) {
-         Id = id;
-         String = str;
-      }
+    public class RuleName : IIdString {
+        private RuleName(uint id, string str) {
+            Id = id;
+            String = str;
+        }
 
-      public uint Id { get; }
-      public string String { get; }
+        public uint Id { get; }
+        public string String { get; }
 
-      public bool Equals(IIdString other) {
-         return Id == other?.Id && String == other.String;
-      }
+        public bool Equals(IIdString other) {
+            return Id == other?.Id && String == other.String;
+        }
 
-      internal static RuleName Create(uint id, string value) {
-         return new RuleName(id, value);
-      }
-   }
+        internal static RuleName Create(uint id, string value) {
+            return new RuleName(id, value);
+        }
+    }
 }

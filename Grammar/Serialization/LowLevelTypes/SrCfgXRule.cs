@@ -20,46 +20,46 @@ using System.Text;
 
 #pragma warning disable CS0659
 namespace Renfrew.Grammar.Serialization.LowLevelTypes {
-   internal class SrCfgXRule : ISerializableRule {
-      public const uint SrCfgXRuleSize = 8;
+    internal class SrCfgXRule : ISerializableRule {
+        public const uint SrCfgXRuleSize = 8;
 
-      public uint RuleNumber { get; set; }
-      public string String { get; set; }
+        public uint RuleNumber { get; set; }
+        public string String { get; set; }
 
-      public uint Size => SrCfgXRuleSize + GetPaddedStringLength(String);
+        public uint Size => SrCfgXRuleSize + GetPaddedStringLength(String);
 
-      public void Serialize(BinaryWriter writer) {
-         writer.Write(Size);
-         writer.Write(RuleNumber);
+        public void Serialize(BinaryWriter writer) {
+            writer.Write(Size);
+            writer.Write(RuleNumber);
 
-         var stringLength = GetPaddedStringLength(String);
+            var stringLength = GetPaddedStringLength(String);
 
-         var encodedString = Encoding.Unicode.GetBytes(String);
+            var encodedString = Encoding.Unicode.GetBytes(String);
 
-         writer.Write(encodedString);
+            writer.Write(encodedString);
 
-         if (stringLength - encodedString.Length != 0) {
-            writer.Write(new byte[stringLength - encodedString.Length]);
-         }
-      }
+            if (stringLength - encodedString.Length != 0) {
+                writer.Write(new byte[stringLength - encodedString.Length]);
+            }
+        }
 
-      internal static uint GetPaddedStringLength(string s) {
-         var numBytes = (uint) Encoding.Unicode.GetByteCount(s) + 2u;
+        internal static uint GetPaddedStringLength(string s) {
+            var numBytes = (uint) Encoding.Unicode.GetByteCount(s) + 2u;
 
-         // Pad to 4-byte boundary.
-         return (numBytes + 3u) & ~3u;
-      }
+            // Pad to 4-byte boundary.
+            return (numBytes + 3u) & ~3u;
+        }
 
-      public override bool Equals(object obj) {
-         var other = obj as SrCfgXRule;
+        public override bool Equals(object obj) {
+            var other = obj as SrCfgXRule;
 
-         if (other == null) {
-            return false;
-         }
+            if (other == null) {
+                return false;
+            }
 
-         return Size == other.Size
-                && RuleNumber == other.RuleNumber
-                && String == other.String;
-      }
-   }
+            return Size == other.Size
+                   && RuleNumber == other.RuleNumber
+                   && String == other.String;
+        }
+    }
 }

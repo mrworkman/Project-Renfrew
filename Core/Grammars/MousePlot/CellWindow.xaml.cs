@@ -20,22 +20,22 @@ using System.Drawing;
 using System.Windows.Threading;
 
 namespace Renfrew.Core.Grammars.MousePlot {
-   public partial class CellWindow : BaseWindow, IWindow {
-      private Rectangle _screenBounds = Rectangle.Empty;
+    public partial class CellWindow : BaseWindow, IWindow {
+        private Rectangle _screenBounds = Rectangle.Empty;
 
-      public CellWindow() {
-         InitializeComponent();
-      }
+        public CellWindow() {
+            InitializeComponent();
+        }
 
-      public override void SetScreenBounds(Rectangle rectangle) {
-         _screenBounds = rectangle;
+        public override void SetScreenBounds(Rectangle rectangle) {
+            _screenBounds = rectangle;
 
-         var r = Rectangle.Intersect(_screenBounds, new Rectangle((int) Left, (int) Top, 108, 108));
+            var r = Rectangle.Intersect(_screenBounds, new Rectangle((int) Left, (int) Top, 108, 108));
 
-         Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
-            Width = r.Width + 4;
-            Height = r.Height + 4;
-         })).Wait();
-      }
-   }
+            Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+                Width = r.Width + 4;
+                Height = r.Height + 4;
+            })).Wait();
+        }
+    }
 }

@@ -18,28 +18,28 @@
 using System;
 
 namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
-   public class Repeated : ISequenceMember, IEquatable<Repeated> {
-      private Repeated() { }
-      public Sequence Sequence { get; private set; }
+    public class Repeated : ISequenceMember, IEquatable<Repeated> {
+        private Repeated() { }
+        public Sequence Sequence { get; private set; }
 
-      public bool Equals(Repeated other) {
-         if (other is null) {
-            return false;
-         }
+        public bool Equals(Repeated other) {
+            if (other is null) {
+                return false;
+            }
 
-         return Sequence.Equals(other.Sequence);
-      }
+            return Sequence.Equals(other.Sequence);
+        }
 
-      internal static Repeated Create(Sequence sequence) {
-         return new Repeated {
-            Sequence = sequence
-         };
-      }
+        internal static Repeated Create(Sequence sequence) {
+            return new Repeated {
+                Sequence = sequence
+            };
+        }
 
-      internal static Repeated Create(ISequenceMember sequenceMember) {
-         return new Repeated {
-            Sequence = Sequence.Create(sequenceMember)
-         };
-      }
-   }
+        internal static Repeated Create(ISequenceMember sequenceMember) {
+            return new Repeated {
+                Sequence = Sequence.Create(sequenceMember)
+            };
+        }
+    }
 }

@@ -19,25 +19,25 @@ using System;
 using Renfrew.Grammar.Types;
 
 namespace Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers {
-   public class Word : IIdString {
-      private Word(uint id, string str) {
-         Id = id;
-         String = str;
-      }
+    public class Word : IIdString {
+        private Word(uint id, string str) {
+            Id = id;
+            String = str;
+        }
 
-      public uint Id { get; }
-      public string String { get; }
+        public uint Id { get; }
+        public string String { get; }
 
-      public bool Equals(IIdString other) {
-         return Id == other?.Id
-                && String.Equals(
-                   other.String,
-                   StringComparison.CurrentCultureIgnoreCase
-                );
-      }
+        public bool Equals(IIdString other) {
+            return Id == other?.Id
+                   && String.Equals(
+                      other.String,
+                      StringComparison.CurrentCultureIgnoreCase
+                   );
+        }
 
-      internal static Word Create(uint id, string value) {
-         return new Word(id, value);
-      }
-   }
+        internal static Word Create(uint id, string value) {
+            return new Word(id, value);
+        }
+    }
 }

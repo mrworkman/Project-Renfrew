@@ -18,8 +18,8 @@
 using System.Collections.Generic;
 
 namespace Renfrew.Grammar.Serialization.HighLevelTypes {
-   public class RuleInfo {
-      public uint Id { get; set; }
-      public List<Symbol> Symbols { get; set; }
-   }
+    public class RuleInfo {
+        public uint Id { get; set; }
+        public List<Symbol> Symbols { get; set; }
+    }
 }

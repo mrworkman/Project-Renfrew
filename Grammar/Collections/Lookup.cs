@@ -22,78 +22,78 @@ using System.Diagnostics.CodeAnalysis;
 using Renfrew.Grammar.Types;
 
 namespace Renfrew.Grammar.Collections {
-   internal class Lookup<TValue> : IEnumerable<TValue>
-      where TValue : IIdString {
-      private readonly Dictionary<uint, TValue> _dictById;
-      private readonly Dictionary<string, TValue> _dictByString;
+    internal class Lookup<TValue> : IEnumerable<TValue>
+       where TValue : IIdString {
+        private readonly Dictionary<uint, TValue> _dictById;
+        private readonly Dictionary<string, TValue> _dictByString;
 
-      [SuppressMessage("ReSharper", "ConvertConstructorToMemberInitializers")]
-      public Lookup() {
-         _dictByString =
-            new Dictionary<string, TValue>(
-               StringComparer.CurrentCultureIgnoreCase
-            );
-         _dictById = new Dictionary<uint, TValue>();
-      }
+        [SuppressMessage("ReSharper", "ConvertConstructorToMemberInitializers")]
+        public Lookup() {
+            _dictByString =
+               new Dictionary<string, TValue>(
+                  StringComparer.CurrentCultureIgnoreCase
+               );
+            _dictById = new Dictionary<uint, TValue>();
+        }
 
-      public Dictionary<string, TValue>.KeyCollection Keys =>
-         _dictByString.Keys;
+        public Dictionary<string, TValue>.KeyCollection Keys =>
+           _dictByString.Keys;
 
-      public Dictionary<string, TValue>.ValueCollection Values =>
-         _dictByString.Values;
+        public Dictionary<string, TValue>.ValueCollection Values =>
+           _dictByString.Values;
 
-      public IEnumerator<TValue> GetEnumerator() {
-         return Values.GetEnumerator();
-      }
+        public IEnumerator<TValue> GetEnumerator() {
+            return Values.GetEnumerator();
+        }
 
-      IEnumerator IEnumerable.GetEnumerator() {
-         return GetEnumerator();
-      }
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
+        }
 
-      public void Add(TValue idString) {
-         if (_dictById.ContainsKey(idString.Id)) {
-            return;
-         }
+        public void Add(TValue idString) {
+            if (_dictById.ContainsKey(idString.Id)) {
+                return;
+            }
 
-         _dictById.Add(idString.Id, idString);
-         _dictByString.Add(idString.String, idString);
-      }
+            _dictById.Add(idString.Id, idString);
+            _dictByString.Add(idString.String, idString);
+        }
 
-      public bool Contains(TValue idString) {
-         return _dictById.ContainsKey(idString.Id);
-      }
+        public bool Contains(TValue idString) {
+            return _dictById.ContainsKey(idString.Id);
+        }
 
-      public bool ContainsKey(string key) {
-         return _dictByString.ContainsKey(key);
-      }
+        public bool ContainsKey(string key) {
+            return _dictByString.ContainsKey(key);
+        }
 
-      public bool ContainsKey(uint key) {
-         return _dictById.ContainsKey(key);
-      }
+        public bool ContainsKey(uint key) {
+            return _dictById.ContainsKey(key);
+        }
 
-      public TValue Get(string key) {
-         return _dictByString[key];
-      }
+        public TValue Get(string key) {
+            return _dictByString[key];
+        }
 
-      public TValue Get(uint key) {
-         return _dictById[key];
-      }
+        public TValue Get(uint key) {
+            return _dictById[key];
+        }
 
-      public bool Remove(IIdString idString) {
-         return _dictById.Remove(idString.Id)
-                && _dictByString.Remove(idString.String);
-      }
+        public bool Remove(IIdString idString) {
+            return _dictById.Remove(idString.Id)
+                   && _dictByString.Remove(idString.String);
+        }
 
-      public bool Remove(string key) {
-         var exists = _dictByString.TryGetValue(key, out var idString);
+        public bool Remove(string key) {
+            var exists = _dictByString.TryGetValue(key, out var idString);
 
-         return exists && Remove(idString);
-      }
+            return exists && Remove(idString);
+        }
 
-      public bool Remove(uint key) {
-         var exists = _dictById.TryGetValue(key, out var idString);
+        public bool Remove(uint key) {
+            var exists = _dictById.TryGetValue(key, out var idString);
 
-         return exists && Remove(idString);
-      }
-   }
+            return exists && Remove(idString);
+        }
+    }
 }
