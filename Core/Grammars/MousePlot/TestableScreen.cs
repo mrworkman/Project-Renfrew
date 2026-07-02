@@ -35,7 +35,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
         }
 
         public IScreen[] AllScreens =>
-           Screen.AllScreens.Select(e => (IScreen) new TestableScreen(e)).ToArray();
+           Screen.AllScreens.Select(e => (IScreen)new TestableScreen(e)).ToArray();
 
         public Rectangle Bounds =>
            _screen.Bounds;

@@ -29,14 +29,14 @@ namespace VKCodeGen {
 
             // Numeric Digits.
             for (int digit = '0'; digit <= '9'; digit++) {
-                var name = $"D{(char) digit}";
+                var name = $"D{(char)digit}";
                 AddKeyPressClassDef(outputFileContents, name, value: digit);
                 names.Add(name);
             }
 
             // English/Latin Letters.
             for (int letter = 'A'; letter <= 'Z'; letter++) {
-                var name = $"{(char) letter}";
+                var name = $"{(char)letter}";
                 AddKeyPressClassDef(outputFileContents, name, value: letter);
                 names.Add(name);
             }

@@ -26,7 +26,7 @@ namespace Renfrew.Grammar.Serialization.LowLevelTypes {
         public const uint SrCfgSymbolSize = 8;
 
         public uint Size =>
-           SrCfgRuleSize + (uint) Symbols.Count * SrCfgSymbolSize;
+           SrCfgRuleSize + (uint)Symbols.Count * SrCfgSymbolSize;
 
         public uint UniqueId { get; set; }
         public List<SrCfgSymbol> Symbols { get; set; }

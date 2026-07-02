@@ -87,9 +87,9 @@ namespace Renfrew.Grammar.Serialization {
             }
 
             return new SrChunk {
-                ChunkId = (uint) chunkType,
+                ChunkId = (uint)chunkType,
                 Rules = idStrings.Select(
-                     idString => (ISerializableRule) new SrCfgXRule {
+                     idString => (ISerializableRule)new SrCfgXRule {
                          RuleNumber = idString.Id,
                          String = idString.String,
                      }
@@ -106,13 +106,13 @@ namespace Renfrew.Grammar.Serialization {
             var ruleData = new RuleConverter().Convert(exportedRules);
 
             return new SrChunk {
-                ChunkId = (uint) ChunkType.Rules,
+                ChunkId = (uint)ChunkType.Rules,
                 Rules = ruleData.Select(
-                     rule => (ISerializableRule) new SrCfgRule {
+                     rule => (ISerializableRule)new SrCfgRule {
                          UniqueId = rule.Id,
                          Symbols = rule.Symbols.Select(
                               symbol => new SrCfgSymbol {
-                                  Type = (ushort) symbol.Type,
+                                  Type = (ushort)symbol.Type,
                                   Probability = symbol.Probability,
                                   Value = symbol.Value
                               }
@@ -135,15 +135,15 @@ namespace Renfrew.Grammar.Serialization {
 
             return (
                new SrHeader {
-                   Type = (uint) HeaderTypes.Cfg,
-                   Flags = (uint) SrHeaderFlags.Unicode,
+                   Type = (uint)HeaderTypes.Cfg,
+                   Flags = (uint)SrHeaderFlags.Unicode,
                },
                chunks.Where(chunk => chunk != null).ToList()
             );
         }
 
         public byte[] Serialize(IGrammar iGrammar) {
-            var grammar = (Grammar) iGrammar; // FIXME: This doesn't feel right.
+            var grammar = (Grammar)iGrammar; // FIXME: This doesn't feel right.
 
             var dataStructures = CreateDataStructures(grammar);
 

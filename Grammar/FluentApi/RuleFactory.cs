@@ -41,7 +41,7 @@ namespace Renfrew.Grammar.FluentApi {
            IIdGenerator idGenerator,
            Expression<Action<IRule>> expression
         ) {
-            IActionableRule rule = (ActionableRule) new Rule(name, idGenerator);
+            IActionableRule rule = (ActionableRule)new Rule(name, idGenerator);
             expression.Compile()(rule);
             return rule;
         }

@@ -36,19 +36,19 @@ namespace GrammarTests.Serialization {
             symbol.Serialize(mockWriter.Object);
 
             mockWriter.Verify(
-               writer => writer.Write((ushort) 1),
+               writer => writer.Write((ushort)1),
                Times.Once,
                "Expected an unsigned short == 1"
             );
 
             mockWriter.Verify(
-               writer => writer.Write((ushort) 2),
+               writer => writer.Write((ushort)2),
                Times.Once,
                "Expected an unsigned short == 2"
             );
 
             mockWriter.Verify(
-               writer => writer.Write((uint) 3),
+               writer => writer.Write((uint)3),
                Times.Once,
                "Expected an unsigned int == 1"
             );

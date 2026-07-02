@@ -208,7 +208,7 @@ namespace GrammarTests.Serialization {
 
             Assert.AreEqual(
                new SrHeader {
-                   Flags = (uint) Serializer.SrHeaderFlags.Unicode
+                   Flags = (uint)Serializer.SrHeaderFlags.Unicode
                },
                actualHeader
             );

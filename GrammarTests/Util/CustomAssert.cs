@@ -102,7 +102,7 @@ namespace GrammarTests.Util {
                     var c = Convert.ToByte(byteDigits, 16);
 
                     if (c is > 31 and < 127) {
-                        decoded.Append((char) c);
+                        decoded.Append((char)c);
                     } else {
                         decoded.Append('.');
                     }

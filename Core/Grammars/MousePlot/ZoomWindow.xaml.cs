@@ -98,10 +98,10 @@ namespace Renfrew.Core.Grammars.MousePlot {
 
         private string GetDigitValue(int i) {
             if (i < 10) {
-                return ((char) ('0' + i)).ToString();
+                return ((char)('0' + i)).ToString();
             }
 
-            return ((char) ('A' + i - 10)).ToString();
+            return ((char)('A' + i - 10)).ToString();
         }
 
         public override void Close() {

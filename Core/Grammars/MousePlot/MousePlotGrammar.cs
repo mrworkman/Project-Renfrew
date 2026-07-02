@@ -473,12 +473,12 @@ namespace Renfrew.Core.Grammars.MousePlot {
             // Position and rotate the "mark" arrow
 
             if (offsetX + _markArrowWindow.Width >= _currentScreen.Bounds.Right) {
-                offsetX = x - (int) _markArrowWindow.Width;
+                offsetX = x - (int)_markArrowWindow.Width;
                 angle = 90;
             }
 
             if (offsetY + _markArrowWindow.Height >= _currentScreen.Bounds.Bottom) {
-                offsetY = y - (int) _markArrowWindow.Height;
+                offsetY = y - (int)_markArrowWindow.Height;
 
                 if (offsetX == x) {
                     angle = -90;
@@ -563,15 +563,15 @@ namespace Renfrew.Core.Grammars.MousePlot {
             var bottom = ScaleToScreen(top + _cellWindow.Height - borderThickness * 2 - 1);
 
             if (x >= right) {
-                x = (int) right;
+                x = (int)right;
             } else if (x < left) {
-                x = (int) left;
+                x = (int)left;
             }
 
             if (y >= bottom) {
-                y = (int) bottom;
+                y = (int)bottom;
             } else if (y < top) {
-                y = (int) top;
+                y = (int)top;
             }
 
             // Move the pointer
@@ -673,11 +673,11 @@ namespace Renfrew.Core.Grammars.MousePlot {
             var offsetY = (_cellSize.Height / 4) * 3;
 
             if (mouseX + offsetX + ScaleToScreen(_zoomWindow.Width) >= _currentScreen.Bounds.Right) {
-                offsetX = -offsetX - (int) _zoomWindow.Width;
+                offsetX = -offsetX - (int)_zoomWindow.Width;
             }
 
             if (mouseY + offsetY + ScaleToScreen(_zoomWindow.Height) >= _currentScreen.Bounds.Bottom) {
-                offsetY = -offsetY - (int) _zoomWindow.Height;
+                offsetY = -offsetY - (int)_zoomWindow.Height;
             }
 
             _cellWindow.Move(cellX - 4, cellY - 4);
@@ -704,7 +704,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
         }
 
         private int ScaleToScreen(int value) {
-            return (int) (value * _displayScaleMultiplier);
+            return (int)(value * _displayScaleMultiplier);
         }
 
         private double ScaleToScreen(double value) {
@@ -712,7 +712,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
         }
 
         private int ScaleToWindow(int value) {
-            return (int) (value / _displayScaleMultiplier);
+            return (int)(value / _displayScaleMultiplier);
         }
 
         private double ScaleToWindow(double value) {

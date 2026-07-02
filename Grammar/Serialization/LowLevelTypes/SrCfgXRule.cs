@@ -44,7 +44,7 @@ namespace Renfrew.Grammar.Serialization.LowLevelTypes {
         }
 
         internal static uint GetPaddedStringLength(string s) {
-            var numBytes = (uint) Encoding.Unicode.GetByteCount(s) + 2u;
+            var numBytes = (uint)Encoding.Unicode.GetByteCount(s) + 2u;
 
             // Pad to 4-byte boundary.
             return (numBytes + 3u) & ~3u;

@@ -24,7 +24,7 @@ namespace Renfrew.Grammar.Serialization.LowLevelTypes {
     internal class SrChunk {
         public uint ChunkId { get; set; }
 
-        public uint ChunkSize => (uint) Rules.Sum(rule => rule.Size);
+        public uint ChunkSize => (uint)Rules.Sum(rule => rule.Size);
 
         public List<ISerializableRule> Rules { get; set; }
 

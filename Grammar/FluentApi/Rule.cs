@@ -63,13 +63,13 @@ namespace Renfrew.Grammar.FluentApi {
                )
             );
 
-            return (ActionableRule) this;
+            return (ActionableRule)this;
         }
 
         public IActionableRule Optionally(Expression<Action<IRule>> action) {
             Sequence.AddMember(Optional.Create(InvokeActionInNestedRule(action)));
 
-            return (ActionableRule) this;
+            return (ActionableRule)this;
         }
 
         public IActionableRule OptionallyOneOf(
@@ -90,7 +90,7 @@ namespace Renfrew.Grammar.FluentApi {
         public IActionableRule Repeat(Expression<Action<IRule>> action) {
             Sequence.AddMember(Repeated.Create(InvokeActionInNestedRule(action)));
 
-            return (ActionableRule) this;
+            return (ActionableRule)this;
         }
 
         // Repeats + Alternatives: ( A | B | C )+
@@ -109,7 +109,7 @@ namespace Renfrew.Grammar.FluentApi {
 
             Sequence.AddMember(wordExpr);
 
-            return (ActionableRule) this;
+            return (ActionableRule)this;
         }
 
         public IActionableRule Say(string word, params string[] additionalWords) {
@@ -119,7 +119,7 @@ namespace Renfrew.Grammar.FluentApi {
                 previousWord = previousWord.Say(additionalWord);
             }
 
-            return (ActionableRule) this;
+            return (ActionableRule)this;
         }
 
 
@@ -142,7 +142,7 @@ namespace Renfrew.Grammar.FluentApi {
 
             Sequence.AddMember(Alternatives.Create(wordExprs));
 
-            return (ActionableRule) this;
+            return (ActionableRule)this;
         }
 
         public IActionableRule WithRule(string ruleName) {
@@ -150,7 +150,7 @@ namespace Renfrew.Grammar.FluentApi {
                RuleName.Create(_idGenerator.GetRuleId(ruleName), ruleName)
             );
 
-            return (ActionableRule) this;
+            return (ActionableRule)this;
         }
 
         public bool Equals(IIdString other) {

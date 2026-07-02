@@ -30,7 +30,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
 
         public override void Rotate(double angle) {
             Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
-                ((RotateTransform) RenderTransform).Angle = angle;
+                ((RotateTransform)RenderTransform).Angle = angle;
             })).Wait();
         }
     }

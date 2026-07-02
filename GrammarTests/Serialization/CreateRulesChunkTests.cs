@@ -52,7 +52,7 @@ namespace GrammarTests.Serialization {
         [Test]
         public void ShouldHandleSimpleRuleWithImport() {
             var expectedResult = new SrChunk {
-                ChunkId = (uint) Serializer.ChunkType.Rules,
+                ChunkId = (uint)Serializer.ChunkType.Rules,
                 Rules = new List<ISerializableRule> {
                new SrCfgRule {
                   UniqueId = 1,
@@ -92,7 +92,7 @@ namespace GrammarTests.Serialization {
         [Test]
         public void ShouldHandleSay_SayOneOf() {
             var expectedResult = new SrChunk {
-                ChunkId = (uint) Serializer.ChunkType.Rules,
+                ChunkId = (uint)Serializer.ChunkType.Rules,
                 Rules = new List<ISerializableRule> {
                new SrCfgRule {
                   UniqueId = 1,
@@ -146,7 +146,7 @@ namespace GrammarTests.Serialization {
         [Test]
         public void ShouldHandleSay_OptionallySay() {
             var expectedResult = new SrChunk {
-                ChunkId = (uint) Serializer.ChunkType.Rules,
+                ChunkId = (uint)Serializer.ChunkType.Rules,
                 Rules = new List<ISerializableRule> {
                new SrCfgRule {
                   UniqueId = 1,

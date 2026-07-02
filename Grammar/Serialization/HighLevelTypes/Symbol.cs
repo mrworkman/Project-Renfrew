@@ -28,11 +28,11 @@ namespace Renfrew.Grammar.Serialization.HighLevelTypes {
         public uint Value {
             get {
                 if (OperationType != null) {
-                    return (uint) OperationType;
+                    return (uint)OperationType;
                 }
 
                 if (Id != null) {
-                    return (uint) Id;
+                    return (uint)Id;
                 }
 
                 throw new ArgumentNullException();
@@ -40,7 +40,7 @@ namespace Renfrew.Grammar.Serialization.HighLevelTypes {
         }
 
         public override bool Equals(object obj) {
-            var other = (Symbol) obj;
+            var other = (Symbol)obj;
 
             if (other == null) {
                 return false;
