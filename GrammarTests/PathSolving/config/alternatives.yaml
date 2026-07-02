@@ -1,0 +1,43 @@
+- name: alternatives1
+  rules:
+    - rule: hello | jello
+      name: alternatives1_rule
+      export: false
+  tests:
+    good:
+      - hello:1@1
+      - jello:2@1
+    bad:
+      - hello:1@1,jello:2@1
+
+- name: alternatives2
+  rules:
+    - rule: one (two | three) four
+      name: alternatives2_rule
+      export: false
+  tests:
+    good:
+      - one:1@1,two:2@1,four:4@1
+      - one:1@1,three:3@1,four:4@1
+    bad:
+      - one:1@1,two:2@1,three:3@1,four:4@1
+      - one:1@1,four:4@1
+      - three:3@1,four:4@1
+
+- name: alternatives3
+  rules:
+    - rule: one (two three | two three four | two three four five | two three four five six) two three four five six
+      name: alternatives3_rule
+      export: false
+  tests:
+    good:
+      - one:1@1,two:2@1,three:3@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1
+      - one:1@1,two:2@1,three:3@1,four:4@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1
+      - one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1
+      - one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1
+    bad:
+      - one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1
+      - one:1@1,two:2@1,three:3@1
+      - one:1@1,two:2@1,three:3@1,four:4@1,five:5@1
+      - two:2@1,three:3@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1
+      - one:1@1,six:6@1

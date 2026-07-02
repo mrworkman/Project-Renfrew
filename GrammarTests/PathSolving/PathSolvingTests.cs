@@ -1,34 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+using GrammarTests.PathSolving.Yaml;
+using GrammarTests.Util;
+
 using Moq;
 using NUnit.Framework;
 using Renfrew.Grammar;
+using Renfrew.Grammar.Collections;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.Interfaces;
+using Renfrew.Grammar.Solving;
 using Renfrew.NatSpeakInterop;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
 namespace GrammarTests.PathSolving {
-   public class TestRuleTests {
-      public List<string> Good { get; set; }
-      public List<string> Bad { get; set; }
-   }
-
-   public class TestRuleSpec {
-      public string Name { get; set; }
-      public string Rule { get; set; }
-      public bool Export { get; set; }
-   }
-
-   public class TestGrammarSpec {
-      public string Name { get; set; }
-      public List<TestRuleSpec> Rules { get; set; }
-      public TestRuleTests Tests { get; set; }
-   }
-
    public class TestCase {
       public TestGrammar TestGrammar { get; set; }
       public int TestCaseIndex { get; set; }
@@ -73,7 +61,7 @@ namespace GrammarTests.PathSolving {
    }
 
    [TestFixture]
-   public class PathSolvingTests2 {
+   public class PathSolvingTests {
       private static readonly List<TestCase> TestCases = LoadTestCases();
 
       private static IEnumerable<TestCaseData> TestGrammarCases() {
@@ -100,7 +88,7 @@ namespace GrammarTests.PathSolving {
             .Build();
 
          var directory = Path.Combine(
-            Path.GetDirectoryName(typeof(PathSolvingTests2).Assembly.Location)
+            Path.GetDirectoryName(typeof(PathSolvingTests).Assembly.Location)
             ?? string.Empty,
             "PathSolving",
             "config"
@@ -182,7 +170,22 @@ namespace GrammarTests.PathSolving {
       [Test]
       [TestCaseSource(nameof(TestGrammarCases))]
       public void PathSolvingTest(TestCase testCase) {
-         TestContext.WriteLine(testCase.TestGrammar.ToString());
+         var phrase = new ListWalker<SpokenWord>(testCase.TestCaseWords);
+
+         var result = Solver.VisitSequence(
+            null,
+            isTrunkSequence: true,
+            phrase: phrase,
+            grammar: testCase.TestGrammar
+         );
+         
+         // var result = solver.Solve(phrase: phrase);
+         
+         if (testCase.ExpectedSuccess) {
+            Assert.IsInstanceOf<SolveResult.Success>(result);
+         } else {
+            Assert.IsInstanceOf<SolveResult.Failure>(result);
+         }
       }
    }
 }

@@ -19,10 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.Interfaces;
 
-namespace GrammarTests.PathSolving {
+namespace GrammarTests.Util {
    /// <summary>
    ///    Parses a Dragon/SRGS-style grammar rule string into the fluent
    ///    <see cref="IRule" /> structure consumed by the solver.
