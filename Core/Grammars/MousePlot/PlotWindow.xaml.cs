@@ -33,12 +33,13 @@ namespace Renfrew.Core.Grammars.MousePlot {
          InitializeComponent();
       }
 
-      private void Canvas_Loaded(Object sender, RoutedEventArgs e) {
+      private void Canvas_Loaded(object sender, RoutedEventArgs e) {
 
-         for (int i = 0; i < 36; i++) {
-            for (int j = 0; j < 36; j++) {
-               if (i == 0 && j == 0)
+         for (var i = 0; i < 36; i++) {
+            for (var j = 0; j < 36; j++) {
+               if (i == 0 && j == 0) {
                   continue;
+               }
 
                var label = new Label {
                   Style = Resources["DigitLabel"] as Style,
@@ -54,13 +55,15 @@ namespace Renfrew.Core.Grammars.MousePlot {
          }
       }
 
-      private String GetDigitValue(int i) {
-         if (i < 10)
-            return ((char)('0' + i)).ToString();
-         return ((char)('A' + i - 10)).ToString();
+      private string GetDigitValue(int i) {
+         if (i < 10) {
+            return ((char) ('0' + i)).ToString();
+         }
+
+         return ((char) ('A' + i - 10)).ToString();
       }
 
-      public override void Move(Double x, Double y) {
+      public override void Move(double x, double y) {
          Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
             WindowState = WindowState.Normal;
             Left = x;

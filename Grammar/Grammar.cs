@@ -133,7 +133,7 @@ namespace Renfrew.Grammar {
       ) {
          AddRule(name, _ruleFactory.Create(name, _idGenerator, ruleExpression));
       }
-      
+
       public void AddRule(string name, Func<IRule, IRule> ruleFunc) {
          AddRule(
             name,
@@ -155,11 +155,11 @@ namespace Renfrew.Grammar {
          var validChars = @"[a-zA-Z0-9_]";
 
          if (!Regex.IsMatch(ruleName, $@"^{validChars}+$")) {
+            var invalidChars = Regex.Replace(ruleName, validChars, string.Empty);
+
             throw new ArgumentOutOfRangeException(
                nameof(ruleName),
-               $@"Rule name '{ruleName}' contains invalid character(s): '{
-                  Regex.Replace(ruleName, validChars, string.Empty)
-               }'"
+               $@"Rule name '{ruleName}' contains invalid character(s): '{invalidChars}'"
             );
          }
       }

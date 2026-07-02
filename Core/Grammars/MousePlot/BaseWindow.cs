@@ -23,7 +23,7 @@ using System.Windows.Threading;
 
 namespace Renfrew.Core.Grammars.MousePlot {
    public abstract class BaseWindow : Window, IWindow {
-      private readonly String DefaultColourName = "Yellow";
+      private readonly string DefaultColourName = "Yellow";
 
       public BaseWindow() {
 
@@ -45,14 +45,14 @@ namespace Renfrew.Core.Grammars.MousePlot {
 
       public new double Height {
          get {
-            return (double)Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Height));
+            return (double) Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Height));
          }
          protected set => base.Height = value;
       }
 
       public new double Left {
          get {
-            return (double)Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Left));
+            return (double) Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Left));
          }
          protected set => base.Left = value;
       }
@@ -71,14 +71,14 @@ namespace Renfrew.Core.Grammars.MousePlot {
 
       public new double Top {
          get {
-            return (double)Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Top));
+            return (double) Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Top));
          }
          protected set => base.Top = value;
       }
 
       public new double Width {
          get {
-            return (double)Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Width));
+            return (double) Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Width));
          }
          protected set => base.Width = value;
       }
@@ -101,7 +101,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
          })).Wait();
       }
 
-      private void SetColour(String c) {
+      private void SetColour(string c) {
          var merged = this.Resources.MergedDictionaries;
 
          merged.Clear();

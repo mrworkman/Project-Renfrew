@@ -66,18 +66,18 @@ namespace GrammarTests.PathSolving {
 
       private static IEnumerable<TestCaseData> TestGrammarCases() {
          return TestCases.Select(testCase => {
-               var name = testCase.TestGrammar.Name;
-               var kind = testCase.ExpectedSuccess ? "good" : "bad ";
-               var index = testCase.TestCaseIndex;
-               var words = string.Join(
-                  " ",
-                  testCase.TestCaseWords.Select(w => $"{w.Word}")
-               );
+            var name = testCase.TestGrammar.Name;
+            var kind = testCase.ExpectedSuccess ? "good" : "bad ";
+            var index = testCase.TestCaseIndex;
+            var words = string.Join(
+               " ",
+               testCase.TestCaseWords.Select(w => $"{w.Word}")
+            );
 
-               return new TestCaseData(testCase).SetName(
-                  $"{name}: {kind} [{index}] {words}"
-               );
-            }
+            return new TestCaseData(testCase).SetName(
+               $"{name}: {kind} [{index}] {words}"
+            );
+         }
          );
       }
 
@@ -124,22 +124,22 @@ namespace GrammarTests.PathSolving {
                testCases.AddRange(
                   ParseTestCases(grammarSpec.Tests.Good)
                      .Select((testCaseWords, index) => new TestCase {
-                           TestGrammar = testGrammar,
-                           TestCaseIndex = index,
-                           TestCaseWords = testCaseWords,
-                           ExpectedSuccess = true
-                        }
+                        TestGrammar = testGrammar,
+                        TestCaseIndex = index,
+                        TestCaseWords = testCaseWords,
+                        ExpectedSuccess = true
+                     }
                      )
                );
 
                testCases.AddRange(
                   ParseTestCases(grammarSpec.Tests.Bad)
                      .Select((spokenWords, index) => new TestCase {
-                           TestGrammar = testGrammar,
-                           TestCaseIndex = index,
-                           TestCaseWords = spokenWords,
-                           ExpectedSuccess = false
-                        }
+                        TestGrammar = testGrammar,
+                        TestCaseIndex = index,
+                        TestCaseWords = spokenWords,
+                        ExpectedSuccess = false
+                     }
                      )
                );
             }
@@ -178,9 +178,9 @@ namespace GrammarTests.PathSolving {
             phrase: phrase,
             grammar: testCase.TestGrammar
          );
-         
+
          // var result = solver.Solve(phrase: phrase);
-         
+
          if (testCase.ExpectedSuccess) {
             Assert.IsInstanceOf<SolveResult.Success>(result);
          } else {

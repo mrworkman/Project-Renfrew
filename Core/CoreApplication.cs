@@ -78,7 +78,7 @@ namespace Renfrew.Core {
          _notifyIcon.ContextMenuStrip = _contextMenuStrip;
 
 
-         _notifyIcon.DoubleClick += delegate(object sender, EventArgs args) {
+         _notifyIcon.DoubleClick += delegate (object sender, EventArgs args) {
             Logger.Debug(
                $"Dragon is alive: {_natSpeakService.IsDragonAlive()}"
             );
@@ -88,7 +88,7 @@ namespace Renfrew.Core {
          _contextMenuStrip.Items.Add(
             "&Show Console",
             null,
-            delegate(Object sender, EventArgs e) { ShowConsole(); }
+            delegate (object sender, EventArgs e) { ShowConsole(); }
          );
          _contextMenuStrip.Items.Add("-");
          _contextMenuStrip.Items.Add(
@@ -107,8 +107,10 @@ namespace Renfrew.Core {
 
       #region Application Termination
 
-      private void OnApplicationExit(Object sender = null, EventArgs e = null) {
-         if (_isTerminated == true) return;
+      private void OnApplicationExit(object sender = null, EventArgs e = null) {
+         if (_isTerminated == true) {
+            return;
+         }
 
          _notifyIcon.Visible = false;
 
@@ -179,7 +181,7 @@ namespace Renfrew.Core {
             Logger.Info($"Grammar, '{a.Name}', initialized.");
 
             Logger.Debug(
-               $"Grammar's words: {String.Join(", ", grammar.WordList)}"
+               $"Grammar's words: {string.Join(", ", grammar.WordList)}"
             );
          }
       }
@@ -196,7 +198,9 @@ namespace Renfrew.Core {
          Logger.Info("Looking for external grammars.");
 
          // Do nothing if the Grammars subdirectory doesn't exist.
-         if (Directory.Exists(grammarDirectory) == false) return;
+         if (Directory.Exists(grammarDirectory) == false) {
+            return;
+         }
 
          // Load each DLL in the directory.
          foreach (var f in Directory.EnumerateFiles(
@@ -232,15 +236,15 @@ namespace Renfrew.Core {
       }
 
       public void ShowNotifyError(
-         String message,
-         String title = "Project Renfrew"
+         string message,
+         string title = "Project Renfrew"
       ) {
          _notifyIcon.ShowBalloonTip(2000, title, message, ToolTipIcon.Error);
       }
 
       public void ShowNotifyInfo(
-         String message,
-         String title = "Project Renfrew"
+         string message,
+         string title = "Project Renfrew"
       ) {
          _notifyIcon.ShowBalloonTip(2000, title, message, ToolTipIcon.Info);
       }
@@ -266,10 +270,10 @@ namespace Renfrew.Core {
 
          Logger.Info($"Dragon Version: {_natSpeakService.GetDragonVersion()}");
 
-         String profileName;
-         String profilePath;
+         string profileName;
+         string profilePath;
 
-         for (var notified = false;; notified = true) {
+         for (var notified = false; ; notified = true) {
             profileName = _natSpeakService.GetCurrentUserProfileName();
 
             // If a profile name could not be retrieved, then either the user

@@ -21,17 +21,17 @@ using System.Collections.Generic;
 namespace Renfrew.Grammar {
    public class GrammarAction {
       private Action _action;
-      private Action<IEnumerable<String>> _actionWithWords;
+      private Action<IEnumerable<string>> _actionWithWords;
 
       public GrammarAction(Action action) {
          _action = action;
       }
 
-      public GrammarAction(Action<IEnumerable<String>> action) {
+      public GrammarAction(Action<IEnumerable<string>> action) {
          _actionWithWords = action;
       }
 
-      public void InvokeAction(IEnumerable<String> words) {
+      public void InvokeAction(IEnumerable<string> words) {
          // Call the parameterless form?
          if (_action != null) {
             _action();
@@ -42,6 +42,6 @@ namespace Renfrew.Grammar {
          _actionWithWords(words);
       }
 
-      public override String ToString() => "Grammar Action";
+      public override string ToString() => "Grammar Action";
    }
 }

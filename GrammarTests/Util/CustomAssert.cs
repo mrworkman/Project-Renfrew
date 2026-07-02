@@ -47,8 +47,8 @@ namespace GrammarTests.Util {
 
          var diffs = Diff.Compute(expectedHex, actualHex);
 
-         string expectedDumpStr = GetMarkedUpDiff(diffs, Operation.Delete);
-         string actualDumpStr = GetMarkedUpDiff(diffs, Operation.Insert);
+         var expectedDumpStr = GetMarkedUpDiff(diffs, Operation.Delete);
+         var actualDumpStr = GetMarkedUpDiff(diffs, Operation.Insert);
 
          return $"Expected\r\n{expectedDumpStr}\r\nActual\r\n{actualDumpStr}";
       }

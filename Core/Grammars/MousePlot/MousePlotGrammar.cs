@@ -35,7 +35,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
    public class MousePlotGrammar : Grammar {
 
       private IScreen _currentScreen;
-      private Size _cellSize = new Size(100, 100);
+      private Size _cellSize = new(100, 100);
 
       private bool _firstLoad = true;
 
@@ -56,11 +56,11 @@ namespace Renfrew.Core.Grammars.MousePlot {
 
       private bool _isZoomed = false;
 
-      private bool  _dragSet = false;
+      private bool _dragSet = false;
       private Point _dragAnchor = Point.Empty;
 
       #region Word Lists
-      private Dictionary<String, String> _alphaList = new Dictionary<String, String> {
+      private Dictionary<string, string> _alphaList = new() {
          { "Alpha"   , "A" }, { "A", "A" },
          { "Bravo"   , "B" }, { "B", "B" },
          { "Charlie" , "C" }, { "C", "C" },
@@ -99,7 +99,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
          { "Eight", "8" },
          { "Nine",  "9" },
       };
-      private List<String> _colourList = new List<String> {
+      private List<string> _colourList = new() {
          "Black",
          "Blue",
          "Green",
@@ -108,13 +108,13 @@ namespace Renfrew.Core.Grammars.MousePlot {
          "White",
          "Yellow",
       };
-      private List<String> _clickList = new List<String> {
+      private List<string> _clickList = new() {
          "Click",        "Right Click",
          "Double Click", "Right Double",
          "Triple Click", "Right Triple",
          "Middle Click",
       };
-      private Dictionary<String, Int32> _numbersList = new Dictionary<String, Int32> {
+      private Dictionary<string, int> _numbersList = new() {
          { "One",    1 },
          { "Two",    2 },
          { "Three",  3 },
@@ -139,10 +139,10 @@ namespace Renfrew.Core.Grammars.MousePlot {
                               IWindow markArrowWindow)
          : base(grammarService, natSpeak) {
 
-         _currentScreen   = screen;
-         _plotWindow      = plotWindow;
-         _zoomWindow      = zoomWindow;
-         _cellWindow      = cellWindow;
+         _currentScreen = screen;
+         _plotWindow = plotWindow;
+         _zoomWindow = zoomWindow;
+         _cellWindow = cellWindow;
          _markArrowWindow = markArrowWindow;
       }
 
@@ -179,7 +179,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
                p => p
                   .SayOneOf("Monitor", "Screen")
                   .SayOneOf(_numbersList.Keys)
-                     .Do(spokenWords => SwitchScreen( _numbersList[spokenWords.Last()] )),
+                     .Do(spokenWords => SwitchScreen(_numbersList[spokenWords.Last()])),
 
                p => p
                   .SayOneOf(_colourList)
@@ -232,7 +232,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
 
          // Load grammar into the grammar service
          Load();
-         
+
          ActivateRule("mouse_plot");
          ActivateRule("scroll");
       }
@@ -242,7 +242,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
          ReactivateRule("scroll");
       }
 
-      private void Click(IEnumerable<String> spokenWords) {
+      private void Click(IEnumerable<string> spokenWords) {
          MakeGrammarNotExclusive();
          DeactivateRule("post_plot");
 
@@ -260,25 +260,32 @@ namespace Renfrew.Core.Grammars.MousePlot {
          var c = 1;
 
          // Which button ?
-         if (s.Contains("Right") == true)
+         if (s.Contains("Right") == true) {
             b = MouseButtons.Right;
-         if (s.Contains("Middle") == true)
+         }
+
+         if (s.Contains("Middle") == true) {
             b = MouseButtons.Middle;
+         }
 
          // How many clicks ?
-         if (s.Contains("Double") == true)
+         if (s.Contains("Double") == true) {
             c = 2;
-         if (s.Contains("Triple") == true)
+         }
+
+         if (s.Contains("Triple") == true) {
             c = 3;
+         }
 
          ClickMouse(b, c);
 
          _isZoomed = false;
       }
 
-      private void ClickMouse(MouseButtons buttons, Int32 times) {
-         for (int i = 0; i < times; i++)
+      private void ClickMouse(MouseButtons buttons, int times) {
+         for (var i = 0; i < times; i++) {
             Mouse.Click(buttons);
+         }
       }
 
       private void CloseWindows() {
@@ -306,8 +313,8 @@ namespace Renfrew.Core.Grammars.MousePlot {
       }
 
       public void Drag() {
-         Int32 x = Cursor.Position.X;
-         Int32 y = Cursor.Position.Y;
+         var x = Cursor.Position.X;
+         var y = Cursor.Position.Y;
 
          CloseWindows();
 
@@ -319,8 +326,9 @@ namespace Renfrew.Core.Grammars.MousePlot {
          ReactivateDefaultRules();
 
          // If no start point has been selected, then don't do anything.
-         if (_dragSet == false)
+         if (_dragSet == false) {
             return;
+         }
 
          // Show the arrow, wherever it was last time.
          _markArrowWindow.Show();
@@ -343,93 +351,107 @@ namespace Renfrew.Core.Grammars.MousePlot {
          _isZoomed = false;
       }
 
-      public Int32 GetCellXCoord(Int32 x) {
+      public int GetCellXCoord(int x) {
          var i = GetXScreenOffset(x);
 
          // Integer truncation will have the desired effect
-         if (i > _currentScreen.Bounds.Right)
+         if (i > _currentScreen.Bounds.Right) {
             i = _currentScreen.Bounds.Left + (_currentScreen.Bounds.Width / _cellSize.Width) * _cellSize.Width;
+         }
 
          return i;
       }
 
-      public Int32 GetCellYCoord(Int32 y) {
+      public int GetCellYCoord(int y) {
          var i = GetYScreenOffset(y);
 
          // Integer truncation will have the desired effect
-         if (i > _currentScreen.Bounds.Bottom)
+         if (i > _currentScreen.Bounds.Bottom) {
             i = _currentScreen.Bounds.Top + (_currentScreen.Bounds.Height / _cellSize.Height) * _cellSize.Height;
+         }
 
          return i;
       }
 
-      public Int32 GetCoordinateOrdinal(String c) {
-         if (_alphaList.ContainsKey(c) == false)
+      public int GetCoordinateOrdinal(string c) {
+         if (_alphaList.ContainsKey(c) == false) {
             throw new ArgumentOutOfRangeException(nameof(c), c);
+         }
 
          c = _alphaList[c];
 
-         if (Int32.TryParse(c, out int i) == true)
+         if (int.TryParse(c, out var i) == true) {
             return i;
+         }
 
          return c.First() - 'A' + 10;
       }
 
-      public Int32 GetMouseXCoord(Int32 x) {
+      public int GetMouseXCoord(int x) {
          x = GetXScreenOffset(x) + (_cellSize.Width / 2);
 
-         if (x > _currentScreen.Bounds.Right)
+         if (x > _currentScreen.Bounds.Right) {
             x = _currentScreen.Bounds.Right - 1;
+         }
 
          return ScaleToScreen(x);
       }
 
-      public Int32 GetMouseYCoord(Int32 y) {
+      public int GetMouseYCoord(int y) {
          y = GetYScreenOffset(y) + (_cellSize.Height / 2);
 
-         if (y > _currentScreen.Bounds.Bottom)
+         if (y > _currentScreen.Bounds.Bottom) {
             y = _currentScreen.Bounds.Bottom - 1;
+         }
 
          return ScaleToScreen(y);
       }
 
-      public Int32 GetXScreenOffset(Int32 x) =>
+      public int GetXScreenOffset(int x) =>
          _currentScreen.Bounds.Left + (_cellSize.Width * x);
 
-      public Int32 GetYScreenOffset(Int32 y) =>
+      public int GetYScreenOffset(int y) =>
          _currentScreen.Bounds.Top + (_cellSize.Height * y);
 
-      public Int32 GetZoomedCellXCoord(Int32 x) {
-         if (x > 8) x = 8;
+      public int GetZoomedCellXCoord(int x) {
+         if (x > 8) {
+            x = 8;
+         }
 
          var subCellWidth = _cellSize.Width * 3 / 9;
          return (subCellWidth * x) + (subCellWidth / 2);
       }
 
-      public Int32 GetZoomedCellYCoord(Int32 y) {
-         if (y > 8) y = 8;
+      public int GetZoomedCellYCoord(int y) {
+         if (y > 8) {
+            y = 8;
+         }
 
          var subCellHeight = _cellSize.Height * 3 / 9;
          return (subCellHeight * y) + (subCellHeight / 2);
       }
 
-      public Int32 GetZoomedMouseXCoord(Int32 x) {
-         if (x > 8) x = 8;
+      public int GetZoomedMouseXCoord(int x) {
+         if (x > 8) {
+            x = 8;
+         }
 
          var subCellWidth = _cellSize.Width / 9;
          return ScaleToScreen(_currentCell.X + (subCellWidth * x) + (subCellWidth / 2));
       }
 
-      public Int32 GetZoomedMouseYCoord(Int32 y) {
-         if (y > 8) y = 8;
+      public int GetZoomedMouseYCoord(int y) {
+         if (y > 8) {
+            y = 8;
+         }
 
          var subCellHeight = _cellSize.Height / 9;
          return ScaleToScreen(_currentCell.Y + (subCellHeight * y) + (subCellHeight / 2));
       }
 
       public void Mark() {
-         Int32 x = Cursor.Position.X;
-         Int32 y = Cursor.Position.Y;
+         var x = Cursor.Position.X;
+         var y = Cursor.Position.Y;
 
          MakeGrammarNotExclusive();
          DeactivateRule("post_plot");
@@ -441,22 +463,22 @@ namespace Renfrew.Core.Grammars.MousePlot {
          CloseWindows();
 
          _dragAnchor = new Point(x, y);
-         _dragSet    = true;
-         _isZoomed   = false;
+         _dragSet = true;
+         _isZoomed = false;
 
-         Int32  offsetX = x;
-         Int32  offsetY = y;
+         var offsetX = x;
+         var offsetY = y;
          double angle = 0;
 
          // Position and rotate the "mark" arrow
 
          if (offsetX + _markArrowWindow.Width >= _currentScreen.Bounds.Right) {
-            offsetX = x - (Int32) _markArrowWindow.Width;
+            offsetX = x - (int) _markArrowWindow.Width;
             angle = 90;
          }
 
          if (offsetY + _markArrowWindow.Height >= _currentScreen.Bounds.Bottom) {
-            offsetY = y - (Int32) _markArrowWindow.Height;
+            offsetY = y - (int) _markArrowWindow.Height;
 
             if (offsetX == x) {
                angle = -90;
@@ -471,8 +493,8 @@ namespace Renfrew.Core.Grammars.MousePlot {
          _markArrowWindow.Show();
       }
 
-      public void MoveCursor(String x, String y) {
-         Int32 mouseX, mouseY;
+      public void MoveCursor(string x, string y) {
+         int mouseX, mouseY;
 
          if (_isZoomed == true) {
             mouseX = GetZoomedMouseXCoord(GetCoordinateOrdinal(x));
@@ -497,22 +519,24 @@ namespace Renfrew.Core.Grammars.MousePlot {
          Mouse.SetPosition(mouseX, mouseY);
       }
 
-      public void NudgeCursor(String[] spokenWords) {
-         String direction = spokenWords[0];
-         String countStr = null;
+      public void NudgeCursor(string[] spokenWords) {
+         var direction = spokenWords[0];
+         string countStr = null;
 
-         if (spokenWords.Length == 2)
+         if (spokenWords.Length == 2) {
             countStr = spokenWords[1];
+         }
 
-         Int32 count = 1;
+         var count = 1;
 
-         if (countStr != null)
+         if (countStr != null) {
             count = _numbersList[countStr];
+         }
 
          var x = Cursor.Position.X;
          var y = Cursor.Position.Y;
 
-         for (int i = 0; i < count; i++) {
+         for (var i = 0; i < count; i++) {
             switch (direction) {
                case "Up":
                   y--;
@@ -533,35 +557,37 @@ namespace Renfrew.Core.Grammars.MousePlot {
 
          var borderThickness = 4;
 
-         var left   = ScaleToScreen(_cellWindow.Left + borderThickness);
-         var top    = ScaleToScreen(_cellWindow.Top + borderThickness);
-         var right  = ScaleToScreen(left + _cellWindow.Width - borderThickness * 2 - 1);
+         var left = ScaleToScreen(_cellWindow.Left + borderThickness);
+         var top = ScaleToScreen(_cellWindow.Top + borderThickness);
+         var right = ScaleToScreen(left + _cellWindow.Width - borderThickness * 2 - 1);
          var bottom = ScaleToScreen(top + _cellWindow.Height - borderThickness * 2 - 1);
 
-         if (x >= right)
-            x = (Int32) right;
-         else if (x < left)
-            x = (Int32) left;
+         if (x >= right) {
+            x = (int) right;
+         } else if (x < left) {
+            x = (int) left;
+         }
 
-         if (y >= bottom)
-            y = (Int32) bottom;
-         else if (y < top)
-            y = (Int32) top;
+         if (y >= bottom) {
+            y = (int) bottom;
+         } else if (y < top) {
+            y = (int) top;
+         }
 
          // Move the pointer
 
          Mouse.SetPosition(x, y);
       }
 
-      private void ScrollMouse(String[] spokenWords) {
-         String actionWord = spokenWords[0];
-         String countStr = null;
+      private void ScrollMouse(string[] spokenWords) {
+         var actionWord = spokenWords[0];
+         string countStr = null;
 
          if (spokenWords.Length == 2) {
             countStr = spokenWords[1];
          }
 
-         Int32 count = 1;
+         var count = 1;
 
          if (countStr != null) {
             count = _numbersList[countStr];
@@ -569,14 +595,15 @@ namespace Renfrew.Core.Grammars.MousePlot {
 
          var direction = (actionWord == "Scroll") ? MouseScrollDirection.Down : MouseScrollDirection.Up;
 
-         for (int i = 0; i < count; i++) {
+         for (var i = 0; i < count; i++) {
             Mouse.Scroll(direction, _scrollWheelDelta);
          }
       }
 
-      private void SetColour(String colourName) {
-         if (Enum.TryParse(colourName, out GridColour colour) == false)
+      private void SetColour(string colourName) {
+         if (Enum.TryParse(colourName, out GridColour colour) == false) {
             colour = GridColour.Yellow;
+         }
 
          _plotWindow.SetColour(colour);
          _zoomWindow.SetColour(colour);
@@ -603,11 +630,12 @@ namespace Renfrew.Core.Grammars.MousePlot {
          _isZoomed = false;
       }
 
-      private void SwitchScreen(Int32 screenNumber) {
+      private void SwitchScreen(int screenNumber) {
          screenNumber--;
 
-         if (screenNumber >= Screen.AllScreens.Length)
+         if (screenNumber >= Screen.AllScreens.Length) {
             return;
+         }
 
          _currentScreen = _currentScreen.AllScreens[screenNumber];
 
@@ -615,7 +643,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
          _plotWindow.Show();
       }
 
-      private void TakeScreenshot(Int32 x, Int32 y, Int32 width, Int32 height) {
+      private void TakeScreenshot(int x, int y, int width, int height) {
          if (_bitmap != null) {
             _bitmap.Dispose();
          }
@@ -631,26 +659,28 @@ namespace Renfrew.Core.Grammars.MousePlot {
          }
       }
 
-      public void Zoom(String x, String y) {
+      public void Zoom(string x, string y) {
          var mouseX = GetMouseXCoord(GetCoordinateOrdinal(x));
          var mouseY = GetMouseYCoord(GetCoordinateOrdinal(y));
-         var cellX  = GetCellXCoord(GetCoordinateOrdinal(x));
-         var cellY  = GetCellYCoord(GetCoordinateOrdinal(y));
+         var cellX = GetCellXCoord(GetCoordinateOrdinal(x));
+         var cellY = GetCellYCoord(GetCoordinateOrdinal(y));
 
          _plotWindow.Close();
 
          // Position the zoom window so it appears
          // on the current screen in its entirety.
-         Int32 offsetX = (_cellSize.Width / 4) * 3;
-         Int32 offsetY = (_cellSize.Height / 4) * 3;
+         var offsetX = (_cellSize.Width / 4) * 3;
+         var offsetY = (_cellSize.Height / 4) * 3;
 
-         if (mouseX + offsetX + ScaleToScreen(_zoomWindow.Width) >= _currentScreen.Bounds.Right)
-            offsetX = -offsetX - (Int32) _zoomWindow.Width;
+         if (mouseX + offsetX + ScaleToScreen(_zoomWindow.Width) >= _currentScreen.Bounds.Right) {
+            offsetX = -offsetX - (int) _zoomWindow.Width;
+         }
 
-         if (mouseY + offsetY + ScaleToScreen(_zoomWindow.Height) >= _currentScreen.Bounds.Bottom)
-            offsetY = -offsetY - (Int32) _zoomWindow.Height;
+         if (mouseY + offsetY + ScaleToScreen(_zoomWindow.Height) >= _currentScreen.Bounds.Bottom) {
+            offsetY = -offsetY - (int) _zoomWindow.Height;
+         }
 
-         _cellWindow.Move(cellX-4, cellY-4);
+         _cellWindow.Move(cellX - 4, cellY - 4);
          _cellWindow.Show();
 
          _zoomWindow.SetScaleMultiplier(_displayScaleMultiplier);
@@ -674,7 +704,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
       }
 
       private int ScaleToScreen(int value) {
-         return (int)(value * _displayScaleMultiplier);
+         return (int) (value * _displayScaleMultiplier);
       }
 
       private double ScaleToScreen(double value) {
@@ -682,7 +712,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
       }
 
       private int ScaleToWindow(int value) {
-         return (int)(value / _displayScaleMultiplier);
+         return (int) (value / _displayScaleMultiplier);
       }
 
       private double ScaleToWindow(double value) {

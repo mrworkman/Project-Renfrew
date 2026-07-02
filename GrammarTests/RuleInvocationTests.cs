@@ -50,8 +50,9 @@ namespace GrammarTests {
                         words => {
                            rule1Result = 1;
 
-                           foreach (var word in words)
+                           foreach (var word in words) {
                               Debug.WriteLine($"Rule1: RECEIVED WORD: {word}");
+                           }
                         }
                      )
             );
@@ -69,8 +70,9 @@ namespace GrammarTests {
                         words => {
                            rule2Result = 1;
 
-                           foreach (var word in words)
+                           foreach (var word in words) {
                               Debug.WriteLine($"Rule2: RECEIVED WORD: {word}");
+                           }
                         }
                      )
             );
@@ -90,8 +92,9 @@ namespace GrammarTests {
                      .Do(
                         words => {
                            rule3Result = 1;
-                           foreach (var word in words)
+                           foreach (var word in words) {
                               Debug.WriteLine($"Rule3: RECEIVED WORD: {word}");
+                           }
                         }
                      )
             );

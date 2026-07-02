@@ -30,7 +30,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
       public override void SetScreenBounds(Rectangle rectangle) {
          _screenBounds = rectangle;
 
-         var r = Rectangle.Intersect(_screenBounds, new Rectangle((Int32) Left, (Int32) Top, 108, 108));
+         var r = Rectangle.Intersect(_screenBounds, new Rectangle((int) Left, (int) Top, 108, 108));
 
          Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
             Width = r.Width + 4;

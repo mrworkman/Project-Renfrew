@@ -47,7 +47,7 @@ namespace Renfrew.Core.Grammars {
          #endregion
       };
 
-      private static readonly Dictionary<string, KeyPress> LetterKeys = new () {
+      private static readonly Dictionary<string, KeyPress> LetterKeys = new() {
          #region Letter -> Key
          { "alpha",    Key.A },
          { "bravo",    Key.B },
@@ -122,10 +122,12 @@ namespace Renfrew.Core.Grammars {
       )
          : base(grammarService, natSpeak) {
          // @formatter:off
+         #pragma warning disable format
+
          AddChordCommand("dismiss", Key.Escape);
          AddChordCommand("slap",    Key.Return);
          AddChordCommand("slam",    Key.Control, Key.Return);
-         
+
          // Cursor movement commands.
          AddChordCommand("york",  Key.Home);
          AddChordCommand("pork",  Key.End);
@@ -259,6 +261,7 @@ namespace Renfrew.Core.Grammars {
          AddChordCommand("window right", Key.LWin, Key.Shift, Key.Right);
          AddChordCommand("switchy",      Key.Menu, Key.Tab);
          AddChordCommand("switchy boo",  Key.Menu, Key.Control, Key.Tab);
+         #pragma warning restore format
          // @formatter:on
 
          // Add letters as commands.
@@ -354,9 +357,9 @@ namespace Renfrew.Core.Grammars {
       }
 
       private void ExecuteCommand(string word) {
-         uint times = word != null ? Numbers[word] : 1;
+         var times = word != null ? Numbers[word] : 1;
 
-         for (int i = 0; i < times; i++) {
+         for (var i = 0; i < times; i++) {
             Keyboard.PlayKeys(_currentCommand);
          }
       }

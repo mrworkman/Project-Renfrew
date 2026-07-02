@@ -42,7 +42,7 @@ namespace Renfrew.Launcher {
       public async void Launch() {
 
          Application.ApplicationExit += OnApplicationExit;
-         Application.ThreadExit      += OnApplicationExit;
+         Application.ThreadExit += OnApplicationExit;
 
          _logger.Info("Renfrew starting...");
 
@@ -78,13 +78,14 @@ namespace Renfrew.Launcher {
 
       }
 
-      private void OnApplicationExit(Object sender, EventArgs eventArgs) {
+      private void OnApplicationExit(object sender, EventArgs eventArgs) {
          Terminate();
       }
 
       private void Terminate() {
-         if (_isTerminated == true)
+         if (_isTerminated == true) {
             return;
+         }
 
          // Stop the application
          CoreApplication.Instance.Stop();

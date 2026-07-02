@@ -23,7 +23,7 @@ using Renfrew.Grammar.Types;
 
 namespace Renfrew.Grammar.Collections {
    internal class Lookup<TValue> : IEnumerable<TValue>
-      where TValue: IIdString {
+      where TValue : IIdString {
       private readonly Dictionary<uint, TValue> _dictById;
       private readonly Dictionary<string, TValue> _dictByString;
 

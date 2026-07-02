@@ -24,8 +24,9 @@ namespace Renfrew.Launcher {
 
       // Constructor
       public LauncherApplicationContext(Launcher launcher) {
-         if (launcher == null)
+         if (launcher == null) {
             throw new ArgumentNullException();
+         }
 
          _launcher = launcher;
 

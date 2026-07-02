@@ -23,7 +23,7 @@ namespace Renfrew.Grammar.Exceptions {
          : base() {
       }
 
-      public InvalidSequenceInCallbackException(String message) 
+      public InvalidSequenceInCallbackException(string message)
          : base(message) {
       }
    }

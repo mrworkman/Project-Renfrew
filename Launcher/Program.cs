@@ -25,7 +25,7 @@ namespace Renfrew.Launcher {
       private static Logger _logger = LogManager.GetCurrentClassLogger();
 
       [STAThread]
-      public static void Main(params String[] args) {
+      public static void Main(params string[] args) {
          try {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);

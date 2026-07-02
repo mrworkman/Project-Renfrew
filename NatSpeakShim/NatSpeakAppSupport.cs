@@ -35,11 +35,11 @@ namespace Renfrew.NatSpeakShim {
       }
 
       #region Unneeded Dragon Methods
-      public unsafe void AddProcess(UInt32 A_0, Char* A_1, Char* A_2, UInt32 A_3) {
+      public unsafe void AddProcess(uint A_0, char* A_1, char* A_2, uint A_3) {
 
       }
 
-      public void EndProcess(UInt32 A_0) {
+      public void EndProcess(uint A_0) {
 
       }
       #endregion
@@ -53,6 +53,6 @@ namespace Renfrew.NatSpeakShim {
          CoreApplication.Instance.Stop();
          _natSpeakService.Disconnect();
       }
-      
+
    }
 }

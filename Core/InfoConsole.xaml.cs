@@ -47,7 +47,7 @@ namespace Renfrew.Core {
       /// <summary>
       /// Prevents multiple threads from initializing the singleton.
       /// </summary>
-      private static readonly object Lock = new object();
+      private static readonly object Lock = new();
 
       /// <summary>
       /// Registers the InfoConsoleTarget NLog target.
@@ -142,17 +142,17 @@ namespace Renfrew.Core {
       /// Print a message to the console.
       /// </summary>
       /// <param name="message">The message to be printed.</param>
-      private void WriteText(String message, Brush brush, FontWeight fontWeight) {
+      private void WriteText(string message, Brush brush, FontWeight fontWeight) {
          Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
 
             var end = RtbConsole.Document.ContentEnd;
             var r = new TextRange(end, end) {
                Text = message
             };
-            
+
             r.ApplyPropertyValue(TextElement.ForegroundProperty, brush);
             r.ApplyPropertyValue(TextElement.FontWeightProperty, fontWeight);
-            
+
             RtbConsole.ScrollToEnd();
          }));
       }
@@ -169,7 +169,7 @@ namespace Renfrew.Core {
          /// </summary>
          /// <param name="logEvent">The log message object.</param>
          protected override void Write(LogEventInfo logEvent) {
-            FontWeight weight = FontWeights.Regular;
+            var weight = FontWeights.Regular;
             Brush colour = Brushes.Black;
 
             if (logEvent.Level >= LogLevel.Error) {
@@ -183,8 +183,8 @@ namespace Renfrew.Core {
             }
 
             InfoConsole?.WriteText(
-               Layout.Render(logEvent), 
-               colour, 
+               Layout.Render(logEvent),
+               colour,
                weight
             );
          }

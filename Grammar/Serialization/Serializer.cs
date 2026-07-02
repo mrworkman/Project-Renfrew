@@ -75,7 +75,7 @@ namespace Renfrew.Grammar.Serialization {
          ChunkType chunkType,
          IReadOnlyList<T> idStrings
       )
-         where T: IIdString {
+         where T : IIdString {
          if (chunkType == ChunkType.Rules) {
             throw new ArgumentException(
                "Cannot use the Rules chunk type here."

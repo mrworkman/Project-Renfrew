@@ -47,9 +47,9 @@ namespace Renfrew.Core.Grammars.MousePlot {
          InitializeComponent();
       }
 
-      private void Window_Loaded(Object sender, RoutedEventArgs e) {
-         for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
+      private void Window_Loaded(object sender, RoutedEventArgs e) {
+         for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
 
                var label = new Label {
                   Style = Resources["ZoomDigitLabel"] as Style,
@@ -96,10 +96,12 @@ namespace Renfrew.Core.Grammars.MousePlot {
          }, null, 1, Timeout.Infinite);
       }
 
-      private String GetDigitValue(int i) {
-         if (i < 10)
-            return ((char)('0' + i)).ToString();
-         return ((char)('A' + i - 10)).ToString();
+      private string GetDigitValue(int i) {
+         if (i < 10) {
+            return ((char) ('0' + i)).ToString();
+         }
+
+         return ((char) ('A' + i - 10)).ToString();
       }
 
       public override void Close() {
@@ -115,7 +117,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
          _scaleMultiplier = multiplier;
       }
 
-      public void SetSource(Int32 x, Int32 y, Int32 width, Int32 height) {
+      public void SetSource(int x, int y, int width, int height) {
          SetSource(new Rectangle(x, y, width, height));
       }
 

@@ -16,7 +16,7 @@ namespace VKCodeGen {
       static void Main(string[] args) {
          Console.WriteLine("Generating file...");
 
-         var names = new List<string>(); 
+         var names = new List<string>();
          var outputFileContents = new StringBuilder();
 
          outputFileContents.Append("//\r\n");
@@ -29,14 +29,14 @@ namespace VKCodeGen {
 
          // Numeric Digits.
          for (int digit = '0'; digit <= '9'; digit++) {
-            var name = $"D{(char)digit}";
+            var name = $"D{(char) digit}";
             AddKeyPressClassDef(outputFileContents, name, value: digit);
             names.Add(name);
          }
 
          // English/Latin Letters.
          for (int letter = 'A'; letter <= 'Z'; letter++) {
-            var name = $"{(char)letter}";
+            var name = $"{(char) letter}";
             AddKeyPressClassDef(outputFileContents, name, value: letter);
             names.Add(name);
          }
@@ -53,7 +53,7 @@ namespace VKCodeGen {
                   continue;
                }
 
-               bool isExtended =
+               var isExtended =
                   name == "Shift" ||
                   name == "Control" ||
                   name == "Menu" ||
@@ -96,7 +96,7 @@ namespace VKCodeGen {
          var classdef =
             "    public ref class {0}Key sealed : KeyPress {{\r\n" +
             "        public: property WORD VirtualKeyCode {{ virtual WORD get() override {{ return {1,5}; }} }}\r\n" +
-            "    }};\r\n\r\n"; 
+            "    }};\r\n\r\n";
 
          builder.AppendFormat(classdef, name, value);
       }
@@ -110,12 +110,16 @@ namespace VKCodeGen {
          builder.AppendFormat(classdef, name, value);
       }
 
-      static String Pascalize(string source) {
+      static string Pascalize(string source) {
          switch (source) {
-            case "LWIN": return "LWin";
-            case "RWIN": return "RWin";
-            case "LBUTTON": return "LButton";
-            case "RBUTTON": return "RButton";
+            case "LWIN":
+               return "LWin";
+            case "RWIN":
+               return "RWin";
+            case "LBUTTON":
+               return "LButton";
+            case "RBUTTON":
+               return "RButton";
          }
 
          var parts = source
@@ -123,13 +127,13 @@ namespace VKCodeGen {
             .Select(e => e.ToLower())
             .Select(e => {
                var chars = e.ToCharArray();
-                
+
                chars[0] = char.ToUpper(chars[0]);
 
                return new string(chars);
-             });
+            });
 
-         return String.Join("", parts);
+         return string.Join("", parts);
       }
    }
 }
