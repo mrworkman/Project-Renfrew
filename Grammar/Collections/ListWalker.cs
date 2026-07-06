@@ -33,7 +33,7 @@ namespace Renfrew.Grammar.Collections {
         public bool IsAtEnd { get; private set; }
 
         /// <summary>
-        ///    Moves the walker to an absolute position. Used by the solver to
+        ///    Moves the walker to an absolute position. Used by the parser to
         ///    restore a saved position when a match branch fails and it needs
         ///    to backtrack.
         /// </summary>

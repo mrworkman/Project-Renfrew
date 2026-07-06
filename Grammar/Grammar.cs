@@ -27,7 +27,7 @@ using Renfrew.Grammar.Exceptions;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
-using Renfrew.Grammar.Solving;
+using Renfrew.Grammar.Parsing;
 using Renfrew.NatSpeakInterop;
 
 namespace Renfrew.Grammar {
@@ -218,8 +218,8 @@ namespace Renfrew.Grammar {
 
         /// <summary>
         ///    Looks up a rule by its numeric id, or returns <c>null</c> if no
-        ///    such rule exists. Used by the <see cref="Solver" /> to resolve the
-        ///    start rule and any referenced sub-rules.
+        ///    such rule exists. Used by the <see cref="Parser" /> to
+        ///    resolve the start rule and any referenced sub-rules.
         /// </summary>
         internal IRule GetRule(uint id) {
             return _allRules.ContainsKey(id) ? _allRules.Get(id) : null;
@@ -248,12 +248,12 @@ namespace Renfrew.Grammar {
                 );
             }
 
-            var result = Solver.Solve(
+            var result = Parser.Parse(
                this,
                new ListWalker<SpokenWord>(spokenWords)
             );
 
-            if (result is not SolveResult.Success success) {
+            if (result is not ParseResult.Success success) {
                 throw new InvalidSequenceInCallbackException(
                    "No active rule path matched the spoken words: " +
                    string.Join(", ", spokenWords)

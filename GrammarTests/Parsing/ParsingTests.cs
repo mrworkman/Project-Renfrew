@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-using GrammarTests.PathSolving.Yaml;
+using GrammarTests.Parsing.Yaml;
 using GrammarTests.Util;
 
 using Moq;
@@ -11,12 +11,12 @@ using Renfrew.Grammar;
 using Renfrew.Grammar.Collections;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.Interfaces;
-using Renfrew.Grammar.Solving;
+using Renfrew.Grammar.Parsing;
 using Renfrew.NatSpeakInterop;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace GrammarTests.PathSolving {
+namespace GrammarTests.Parsing {
     public class TestCase {
         public TestGrammar TestGrammar { get; set; }
         public int TestCaseIndex { get; set; }
@@ -61,7 +61,7 @@ namespace GrammarTests.PathSolving {
     }
 
     [TestFixture]
-    public class PathSolvingTests {
+    public class ParsingTests {
         private static readonly List<TestCase> TestCases = LoadTestCases();
 
         private static IEnumerable<TestCaseData> TestGrammarCases() {
@@ -88,9 +88,9 @@ namespace GrammarTests.PathSolving {
                .Build();
 
             var directory = Path.Combine(
-               Path.GetDirectoryName(typeof(PathSolvingTests).Assembly.Location)
+               Path.GetDirectoryName(typeof(ParsingTests).Assembly.Location)
                ?? string.Empty,
-               "PathSolving",
+               "Parsing",
                "config"
             );
 
@@ -169,15 +169,15 @@ namespace GrammarTests.PathSolving {
 
         [Test]
         [TestCaseSource(nameof(TestGrammarCases))]
-        public void PathSolvingTest(TestCase testCase) {
+        public void ParsingTest(TestCase testCase) {
             var phrase = new ListWalker<SpokenWord>(testCase.TestCaseWords);
 
-            var result = Solver.Solve(testCase.TestGrammar, phrase);
+            var result = Parser.Parse(testCase.TestGrammar, phrase);
 
             if (testCase.ExpectedSuccess) {
-                Assert.IsInstanceOf<SolveResult.Success>(result);
+                Assert.IsInstanceOf<ParseResult.Success>(result);
             } else {
-                Assert.IsInstanceOf<SolveResult.Failure>(result);
+                Assert.IsInstanceOf<ParseResult.Failure>(result);
             }
         }
     }

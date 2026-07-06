@@ -26,7 +26,7 @@ using Renfrew.Grammar.FluentApi.Interfaces;
 namespace GrammarTests.Util {
     /// <summary>
     ///    Parses a Dragon/SRGS-style grammar rule string into the fluent
-    ///    <see cref="IRule" /> structure consumed by the solver.
+    ///    <see cref="IRule" /> structure consumed by the parser.
     /// </summary>
     /// <remarks>
     ///    Notation:

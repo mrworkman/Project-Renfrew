@@ -18,25 +18,25 @@
 using System;
 
 namespace Renfrew.Grammar.Exceptions {
-    public class SolveException : Exception {
-        public SolveException(string message) : base(message) { }
+    public class ParseException : Exception {
+        public ParseException(string message) : base(message) { }
 
-        public SolveException(string message, Exception innerException) : base(
+        public ParseException(string message, Exception innerException) : base(
            message,
            innerException
         ) { }
     }
 
-    public class UnrecognizedMemberType : SolveException {
+    public class UnrecognizedMemberType : ParseException {
         public UnrecognizedMemberType(Type memberType) : base(
            $"Unrecognized member type: {memberType.Name}"
         ) { }
     }
 
-    public class LeftRecursiveRuleException : SolveException {
+    public class LeftRecursiveRuleException : ParseException {
         public LeftRecursiveRuleException(uint ruleId) : base(
            $"Rule {ruleId} is left-recursive: it references itself without " +
-           "consuming any input, so the phrase cannot be solved."
+           "consuming any input, so the phrase cannot be parsed."
         ) { }
     }
 }

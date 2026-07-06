@@ -22,40 +22,43 @@ using Renfrew.Grammar.Exceptions;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
 
-namespace Renfrew.Grammar.Solving {
+namespace Renfrew.Grammar.Parsing {
     /// <summary>
-    ///    Matches a phrase (the words recognized in a single speech event)
+    ///    Parses a phrase (the words recognized in a single speech event)
     ///    against the rules of a <see cref="Grammar" />.
     /// </summary>
     /// <remarks>
-    ///    The solver is a backtracking, recursive-descent matcher written in
+    ///    The parser is a backtracking, recursive-descent matcher written in
     ///    continuation-passing style: each construct is handed a
     ///    <see cref="Continuation" /> representing "the rest of the parse" and
-    ///    tries its options <em>together with</em> that remainder, restoring the
-    ///    phrase position whenever a branch fails. This lets variable-length
-    ///    constructs (optionals, repeats, alternatives) give back words across a
-    ///    sub-sequence boundary until the surrounding rule can complete.
+    ///    tries its options <em>together with</em> that remainder, restoring
+    ///    the phrase position whenever a branch fails. This lets variable-
+    ///    length constructs (optionals, repeats, alternatives) give back words
+    ///    across a sub-sequence boundary until the surrounding rule can
+    ///    complete.
+    ///    <br />
     ///    <para>
-    ///    Backtracking is driven off <see cref="Checkpoint" />s (the walker's
-    ///    absolute position plus the length of the action trace), never a running
-    ///    match count, so a failed branch always leaves both the phrase and the
-    ///    collected actions exactly where they were.
+    ///        Backtracking is driven off <see cref="Checkpoint" />s (the
+    ///        walker's absolute position plus the length of the action trace),
+    ///        never a running match count, so a failed branch always leaves
+    ///        both the phrase and the collected actions exactly where they
+    ///        were.
     ///    </para>
     /// </remarks>
-    internal class Solver {
+    internal class Parser {
         /// <summary>
-        ///    "The rest of the parse." Invoked once a construct has consumed its
-        ///    own words; returns whether the remainder matches from the current
-        ///    phrase position.
+        ///    "The rest of the parse." Invoked once a construct has consumed
+        ///    its own words; returns whether the remainder matches from the
+        ///    current phrase position.
         /// </summary>
-        private delegate SolveResult Continuation();
+        private delegate ParseResult Continuation();
 
         private readonly Grammar _grammar;
         private readonly ListWalker<SpokenWord> _phrase;
 
         // Actions encountered on the path currently being explored, paired with
         // the rule activation that owns each one. Truncated on backtrack, so once
-        // the trunk solve succeeds it holds exactly the matching path's actions
+        // the trunk parse succeeds it holds exactly the matching path's actions
         // in order.
         private readonly List<TracedAction> _trace = new();
 
@@ -63,19 +66,19 @@ namespace Renfrew.Grammar.Solving {
         // and have not yet consumed past. Re-entering one is left-recursion.
         private readonly HashSet<(uint RuleId, int Index)> _activeDescents = new();
 
-        private Solver(ListWalker<SpokenWord> phrase, Grammar grammar) {
+        private Parser(ListWalker<SpokenWord> phrase, Grammar grammar) {
             _phrase = phrase;
             _grammar = grammar;
         }
 
         /// <summary>
-        ///    Solves the given phrase against the grammar. The rule to start
+        ///    Parses the given phrase against the grammar. The rule to start
         ///    from is taken from the first spoken word's rule id; the whole
-        ///    phrase must be consumed for the solve to succeed. On success the
+        ///    phrase must be consumed for the parse to succeed. On success the
         ///    result carries the actions to invoke, each with the words consumed
         ///    by its owning rule.
         /// </summary>
-        public static SolveResult Solve(
+        public static ParseResult Parse(
            Grammar grammar,
            ListWalker<SpokenWord> phrase
         ) {
@@ -88,25 +91,25 @@ namespace Renfrew.Grammar.Solving {
             }
 
             if (phrase.Count == 0) {
-                return SolveResult.Failed();
+                return ParseResult.Failed();
             }
 
             var startRule = grammar.GetRule(phrase.Current.RuleId);
 
             if (startRule == null) {
-                return SolveResult.Failed();
+                return ParseResult.Failed();
             }
 
-            var solver = new Solver(phrase, grammar);
+            var parser = new Parser(phrase, grammar);
             var result =
-               solver.MatchRule(startRule, solver.IsPhraseFullyConsumed);
+               parser.MatchRule(startRule, parser.IsPhraseFullyConsumed);
 
-            return result is SolveResult.Success
-               ? SolveResult.Succeeded(solver.BuildMatchedActions())
+            return result is ParseResult.Success
+               ? ParseResult.Succeeded(parser.BuildMatchedActions())
                : result;
         }
 
-        private SolveResult MatchRule(IRule rule, Continuation continuation) {
+        private ParseResult MatchRule(IRule rule, Continuation continuation) {
             var entryIndex = _phrase.CurrentIndex;
             var descent = (rule.Id, entryIndex);
 
@@ -143,7 +146,7 @@ namespace Renfrew.Grammar.Solving {
         ///    spoken word so words are attributed to the correct rule, and its
         ///    span scopes the words handed to any action found here.
         /// </param>
-        private SolveResult MatchSequence(
+        private ParseResult MatchSequence(
            IReadOnlyList<ISequenceMember> members,
            int index,
            RuleActivation activation,
@@ -178,13 +181,13 @@ namespace Renfrew.Grammar.Solving {
             }
         }
 
-        private SolveResult MatchWord(
+        private ParseResult MatchWord(
            Word word,
            RuleActivation activation,
            Continuation continuation
         ) {
             if (_phrase.IsAtEnd) {
-                return SolveResult.Failed();
+                return ParseResult.Failed();
             }
 
             var spoken = _phrase.Current;
@@ -192,20 +195,20 @@ namespace Renfrew.Grammar.Solving {
             if (word.Id != spoken.WordId
                 || word.String != spoken.Word
                 || spoken.RuleId != activation.RuleId) {
-                return SolveResult.Failed();
+                return ParseResult.Failed();
             }
 
             return Advance(continuation);
         }
 
-        private SolveResult MatchRuleName(
+        private ParseResult MatchRuleName(
            RuleName ruleName,
            Continuation continuation
         ) {
             var rule = _grammar.GetRule(ruleName.Id);
 
             if (rule == null) {
-                return SolveResult.Failed();
+                return ParseResult.Failed();
             }
 
             // Descend into the referenced rule; its words carry its own rule id,
@@ -213,7 +216,7 @@ namespace Renfrew.Grammar.Solving {
             return MatchRule(rule, continuation);
         }
 
-        private SolveResult MatchAlternatives(
+        private ParseResult MatchAlternatives(
            Alternatives alternatives,
            RuleActivation activation,
            Continuation continuation
@@ -228,17 +231,17 @@ namespace Renfrew.Grammar.Solving {
                    continuation
                 );
 
-                if (result is SolveResult.Success) {
+                if (result is ParseResult.Success) {
                     return result;
                 }
 
                 Restore(checkpoint);
             }
 
-            return SolveResult.Failed();
+            return ParseResult.Failed();
         }
 
-        private SolveResult MatchOptional(
+        private ParseResult MatchOptional(
            Optional optional,
            RuleActivation activation,
            Continuation continuation
@@ -253,7 +256,7 @@ namespace Renfrew.Grammar.Solving {
                continuation
             );
 
-            if (withSection is SolveResult.Success) {
+            if (withSection is ParseResult.Success) {
                 return withSection;
             }
 
@@ -262,7 +265,7 @@ namespace Renfrew.Grammar.Solving {
             return continuation();
         }
 
-        private SolveResult MatchRepeated(
+        private ParseResult MatchRepeated(
            Repeated repeated,
            RuleActivation activation,
            Continuation continuation
@@ -281,7 +284,7 @@ namespace Renfrew.Grammar.Solving {
         ///    Greedy: consumes another pass when it can, but gives passes back
         ///    when doing so lets the remainder complete.
         /// </summary>
-        private SolveResult MatchRepetitions(
+        private ParseResult MatchRepetitions(
            Repeated repeated,
            RuleActivation activation,
            Continuation continuation
@@ -298,7 +301,7 @@ namespace Renfrew.Grammar.Solving {
                   : MatchRepetitions(repeated, activation, continuation)
             );
 
-            if (withAnother is SolveResult.Success) {
+            if (withAnother is ParseResult.Success) {
                 return withAnother;
             }
 
@@ -310,25 +313,25 @@ namespace Renfrew.Grammar.Solving {
         ///    Consumes the current word and runs <paramref name="continuation" />,
         ///    rewinding if it fails so a sibling branch can try the same word.
         /// </summary>
-        private SolveResult Advance(Continuation continuation) {
+        private ParseResult Advance(Continuation continuation) {
             var checkpoint = Save();
 
             _phrase.MoveForward();
 
             var result = continuation();
 
-            if (result is SolveResult.Failure) {
+            if (result is ParseResult.Failure) {
                 Restore(checkpoint);
             }
 
             return result;
         }
 
-        private SolveResult IsPhraseFullyConsumed() {
-            // The trunk solve only succeeds when every spoken word was matched.
+        private ParseResult IsPhraseFullyConsumed() {
+            // The trunk parse only succeeds when every spoken word was matched.
             return _phrase.IsAtEnd
-               ? SolveResult.Succeeded()
-               : SolveResult.Failed();
+               ? ParseResult.Succeeded()
+               : ParseResult.Failed();
         }
 
         private IReadOnlyList<MatchedAction> BuildMatchedActions() {
@@ -375,7 +378,7 @@ namespace Renfrew.Grammar.Solving {
         }
 
         /// <summary>
-        ///    A single activation of a named rule while solving. Tracks the span
+        ///    A single activation of a named rule while parsing. Tracks the span
         ///    of phrase words the rule consumed so actions it owns can be handed
         ///    the right words.
         /// </summary>

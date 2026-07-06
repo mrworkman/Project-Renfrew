@@ -17,29 +17,29 @@
 
 using System.Collections.Generic;
 
-namespace Renfrew.Grammar.Solving {
-    internal class SolveResult {
-        private SolveResult() { }
+namespace Renfrew.Grammar.Parsing {
+    internal class ParseResult {
+        private ParseResult() { }
 
         /// <summary>
         ///    A bare success used internally to signal that a matching path was
-        ///    found. The actions are attached once, by the top-level solve.
+        ///    found. The actions are attached once, by the top-level parse.
         /// </summary>
-        public static SolveResult Succeeded() {
+        public static ParseResult Succeeded() {
             return new Success(new List<MatchedAction>());
         }
 
-        public static SolveResult Succeeded(IReadOnlyList<MatchedAction> actions) {
+        public static ParseResult Succeeded(IReadOnlyList<MatchedAction> actions) {
             return new Success(actions);
         }
 
-        public static SolveResult Failed() {
+        public static ParseResult Failed() {
             return new Failure();
         }
 
-        public class Failure : SolveResult { }
+        public class Failure : ParseResult { }
 
-        public class Success : SolveResult {
+        public class Success : ParseResult {
             internal Success(IReadOnlyList<MatchedAction> actions) {
                 Actions = actions;
             }

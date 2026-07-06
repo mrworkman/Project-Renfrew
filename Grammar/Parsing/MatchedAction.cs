@@ -17,10 +17,10 @@
 
 using System.Collections.Generic;
 
-namespace Renfrew.Grammar.Solving {
+namespace Renfrew.Grammar.Parsing {
     /// <summary>
     ///    An action found on a matching path, paired with the words its owning
-    ///    rule consumed. Produced by the <see cref="Solver" /> and invoked by
+    ///    rule consumed. Produced by the <see cref="Parser" /> and invoked by
     ///    <see cref="Grammar.InvokeRule" />.
     /// </summary>
     internal class MatchedAction {

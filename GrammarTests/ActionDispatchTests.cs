@@ -360,9 +360,9 @@ namespace GrammarTests {
         }
 
         [Test]
-        public void SolvingALeftRecursiveRuleThrowsInsteadOfOverflowing() {
+        public void ParsingALeftRecursiveRuleThrowsInsteadOfOverflowing() {
             // A rule that references itself before consuming any word would
-            // recurse forever; the solver detects this and throws.
+            // recurse forever; the parser detects this and throws.
             _grammar.AddRule("loop", r => r.WithRule("loop"));
             _grammar.ActivateRule("loop");
 

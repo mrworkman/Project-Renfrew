@@ -1,4 +1,4 @@
-﻿namespace GrammarTests.PathSolving.Yaml {
+﻿namespace GrammarTests.Parsing.Yaml {
     public class TestRuleSpec {
         public string Name { get; set; }
         public string Rule { get; set; }
