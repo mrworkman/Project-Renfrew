@@ -30,6 +30,18 @@ indent_size = 2
 trim_trailing_whitespace = false
 
 ##########################################
+# C / C++ source (incl. C++/CLI)
+#
+# Whitespace basics (crlf, final newline, trim trailing, spaces) come from the
+# [*] section. clang-format is NOT used here: it mangles C++/CLI tracking
+# handles (`^`). Format these in Visual Studio (Format Document, Ctrl+K Ctrl+D),
+# which understands C++/CLI. Only VS-honored whitespace keys are set below.
+##########################################
+[*.{c,cc,cxx,cpp,h,hh,hxx,hpp,inl}]
+charset = utf-8-bom
+indent_size = 4
+
+##########################################
 # C# source
 ##########################################
 [*.cs]
