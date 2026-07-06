@@ -20,7 +20,7 @@
 #include "SpokenWord.h"
 
 namespace Renfrew::NatSpeakInterop {
-   public interface class IGrammar {
-      void InvokeRule(List<SpokenWord^>^ spokenWords);
-   };
+    public interface class IGrammar {
+        void InvokeRule(List<SpokenWord^>^ spokenWords);
+    };
 }

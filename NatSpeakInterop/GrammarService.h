@@ -23,55 +23,55 @@
 #include "GrammarExecutive.h"
 
 namespace Renfrew::NatSpeakInterop {
-   private ref class GrammarService : public IGrammarService {
-      ISrCentral^ _isrCentral;
-      IDgnSrEngineControl^ _idgnSrEngineControl;
-      IGrammarSerializer^ _grammarSerializer;
+    private ref class GrammarService : public IGrammarService {
+        ISrCentral^ _isrCentral;
+        IDgnSrEngineControl^ _idgnSrEngineControl;
+        IGrammarSerializer^ _grammarSerializer;
 
-      Dictionary<IGrammar^, GrammarExecutive^>^ _grammars;
-      HashSet<String^>^ _activeRules;
+        Dictionary<IGrammar^, GrammarExecutive^>^ _grammars;
+        HashSet<String^>^ _activeRules;
 
-      GrammarExecutive^ AddGrammarToList(IGrammar^ grammar);
-      GrammarExecutive^ RemoveGrammarFromList(IGrammar^ grammar);
-      GrammarExecutive^ GetGrammarExecutive(IGrammar^ grammar);
+        GrammarExecutive^ AddGrammarToList(IGrammar^ grammar);
+        GrammarExecutive^ RemoveGrammarFromList(IGrammar^ grammar);
+        GrammarExecutive^ GetGrammarExecutive(IGrammar^ grammar);
 
-      public:
-         const DWORD MaxPathEntries = 1024;
-         const DWORD MaxWordSize = 256;
+        public:
+            const DWORD MaxPathEntries = 1024;
+            const DWORD MaxWordSize = 256;
 
-         GrammarService(
-            ISrCentral^ isrCentral,
-            IDgnSrEngineControl^ idgnSrEngineControl
-         );
-         ~GrammarService();
+            GrammarService(
+                ISrCentral^ isrCentral,
+                IDgnSrEngineControl^ idgnSrEngineControl
+            );
+            ~GrammarService();
 
-         virtual void ActivateRule(
-            IGrammar^ grammar,
-            HWND hWnd,
-            String^ ruleName
-         );
-         virtual void ActivateRule(
-            IGrammar^ grammar,
-            IntPtr hWnd,
-            String^ ruleName
-         );
-         virtual void ActivateRules(IGrammar^ grammar);
-         virtual void DeactivateRule(IGrammar^ grammar, String^ ruleName);
+            virtual void ActivateRule(
+                IGrammar^ grammar,
+                HWND hWnd,
+                String^ ruleName
+            );
+            virtual void ActivateRule(
+                IGrammar^ grammar,
+                IntPtr hWnd,
+                String^ ruleName
+            );
+            virtual void ActivateRules(IGrammar^ grammar);
+            virtual void DeactivateRule(IGrammar^ grammar, String^ ruleName);
 
-         virtual void SetExclusiveGrammar(IGrammar^ grammar, bool exclusive);
+            virtual void SetExclusiveGrammar(IGrammar^ grammar, bool exclusive);
 
-         virtual property IGrammarSerializer^ GrammarSerializer {
-            void set(IGrammarSerializer^ grammarSerializer);
-         }
+            virtual property IGrammarSerializer^ GrammarSerializer {
+                void set(IGrammarSerializer^ grammarSerializer);
+            }
 
-         virtual void LoadGrammar(IGrammar^ grammar);
-         virtual void UnloadGrammar(IGrammar^ grammar);
+            virtual void LoadGrammar(IGrammar^ grammar);
+            virtual void UnloadGrammar(IGrammar^ grammar);
 
-         void PausedProcessor(UInt64 cookie);
-         void PhraseFinishedCallback(
-            UInt32 flags,
-            Object^ grammarObj,
-            ISrResBasic^ isrResBasic
-         );
-   };
+            void PausedProcessor(UInt64 cookie);
+            void PhraseFinishedCallback(
+                UInt32 flags,
+                Object^ grammarObj,
+                ISrResBasic^ isrResBasic
+            );
+    };
 }

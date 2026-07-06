@@ -32,84 +32,84 @@
 #define  SRERR_GRAMMARERROR   0x80040416
 
 namespace Renfrew::NatSpeakInterop {
-   public ref class NatSpeakService : INatSpeak {
-      ::IServiceProvider *_piServiceProvider;
+    public ref class NatSpeakService : INatSpeak {
+        ::IServiceProvider* _piServiceProvider;
 
-      ISrCentral ^_isrCentral = nullptr;
-      IDgnSpeechServices  ^_idgnSpeechServices  = nullptr;
-      IDgnSrEngineControl ^_idgnSrEngineControl = nullptr;
-      IDgnSSvcOutputEvent ^_idgnSSvcOutputEvent = nullptr;
-      IDgnSSvcInterpreter ^_idgnSSvcInterpreter = nullptr;
-      IDgnSSvcTracking    ^_idgnSSvcTracking    = nullptr;
+        ISrCentral^ _isrCentral = nullptr;
+        IDgnSpeechServices^ _idgnSpeechServices = nullptr;
+        IDgnSrEngineControl^ _idgnSrEngineControl = nullptr;
+        IDgnSSvcOutputEvent^ _idgnSSvcOutputEvent = nullptr;
+        IDgnSSvcInterpreter^ _idgnSSvcInterpreter = nullptr;
+        IDgnSSvcTracking^ _idgnSSvcTracking = nullptr;
 
-      GrammarService ^_grammarService = nullptr;
+        GrammarService^ _grammarService = nullptr;
 
-      DWORD _key;
-      DWORD _playbackCode;
+        DWORD _key;
+        DWORD _playbackCode;
 
-      void CreateGrammarService();
-      void ReleaseGrammarService();
+        void CreateGrammarService();
+        void ReleaseGrammarService();
 
-      void InitializeIsrCentral(::IServiceProvider *pServiceProvider);
-      void InitializeSpeechServicesInterfaces();
-      void InitializeSrEngineControlInterface();
-      void RegisterEngineSink();
-      void RegisterPlaybackSink();
+        void InitializeIsrCentral(::IServiceProvider* pServiceProvider);
+        void InitializeSpeechServicesInterfaces();
+        void InitializeSrEngineControlInterface();
+        void RegisterEngineSink();
+        void RegisterPlaybackSink();
 
-   public:
-      NatSpeakService();
-      ~NatSpeakService();
+        public:
+            NatSpeakService();
+            ~NatSpeakService();
 
-      void Connect(IntPtr serviceProviderPtr);
-      void Connect(::IServiceProvider *pServiceProvider);
-      void Disconnect();
+            void Connect(IntPtr serviceProviderPtr);
+            void Connect(::IServiceProvider* pServiceProvider);
+            void Disconnect();
 
-      IntPtr CreateSiteObject();
-      void ReleaseSiteObject(IntPtr sitePtr);
+            IntPtr CreateSiteObject();
+            void ReleaseSiteObject(IntPtr sitePtr);
 
-      /// <summary>
-      /// Gets the the profile name of the current Dragon user.
-      /// </summary>
-      /// <returns>The dragon profile name, if available. null otherwise.</returns>
-      String ^GetCurrentUserProfileName();
+            /// <summary>
+            /// Gets the the profile name of the current Dragon user.
+            /// </summary>
+            /// <returns>The dragon profile name, if available. null otherwise.</returns>
+            String^ GetCurrentUserProfileName();
 
-      /// <summary>
-      /// Gets the version of Dragon.
-      /// </summary>
-      /// <returns>The dragon version.</returns>
-      DragonVersion ^GetDragonVersion();
+            /// <summary>
+            /// Gets the version of Dragon.
+            /// </summary>
+            /// <returns>The dragon version.</returns>
+            DragonVersion^ GetDragonVersion();
 
-      /// <summary>
-      /// Attempts to check if Dragon is "alive" by trying to access one of its interfaces.
-      /// </summary>
-      /// <returns><b>true</b>: Dragon is running. <b>false</b>: Dragon is not running.</returns>
-      bool IsDragonAlive();
+            /// <summary>
+            /// Attempts to check if Dragon is "alive" by trying to access one of its interfaces.
+            /// </summary>
+            /// <returns><b>true</b>: Dragon is running. <b>false</b>: Dragon is not running.</returns>
+            bool IsDragonAlive();
 
-      /// <summary>
-      /// Gets the the file system path to the specified Dragon user's profile directory.
-      /// </summary>
-      /// <param name="userProfile">The name of the user profile to look up.</param>
-      /// <returns>The dragon profile path, if available. null otherwise.</returns>
-      String ^GetUserDirectory(String ^userProfile);
+            /// <summary>
+            /// Gets the the file system path to the specified Dragon user's profile directory.
+            /// </summary>
+            /// <param name="userProfile">The name of the user profile to look up.</param>
+            /// <returns>The dragon profile path, if available. null otherwise.</returns>
+            String^ GetUserDirectory(String^ userProfile);
 
-      /// <summary>
-      /// Sets NatSpeak's microphone state to "sleeping".
-      /// </summary>
-      virtual void MicSleep() sealed;
+            /// <summary>
+            /// Sets NatSpeak's microphone state to "sleeping".
+            /// </summary>
+            virtual void MicSleep() sealed;
 
-      /// <summary>
-      /// Sets NatSpeak's microphone state to "sleeping".
-      /// </summary>
-      virtual void MicOn() sealed;
+            /// <summary>
+            /// Sets NatSpeak's microphone state to "sleeping".
+            /// </summary>
+            virtual void MicOn() sealed;
 
-      property IGrammarService ^GrammarService {
-         IGrammarService ^get();
-      }
+            property IGrammarService^ GrammarService {
+                IGrammarService^ get();
+            }
 
-      property ISrCentral ^SrCentral {
-         ISrCentral ^get();
-      };
+            property ISrCentral^ SrCentral {
+                ISrCentral^ get();
+            };
 
-      virtual void PlayString(String ^str) sealed;
-   };
+            virtual void PlayString(String^ str) sealed;
+    };
 }

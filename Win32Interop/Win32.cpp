@@ -24,43 +24,50 @@
 using namespace System;
 using namespace Renfrew::Win32::Interop;
 
-void Win32::BringWindowToTop(WindowHandle ^handle) {
-   if (handle == nullptr)
-      throw gcnew ArgumentNullException();
+void Win32::BringWindowToTop(WindowHandle^ handle) {
+    if (handle == nullptr) {
+        throw gcnew ArgumentNullException();
+    }
 
-   if (::BringWindowToTop(handle->Hwnd) == TRUE)
-      return;
+    if (::BringWindowToTop(handle->Hwnd) == TRUE) {
+        return;
+    }
 
-   throw gcnew Win32InteropException(GetLastError());
+    throw gcnew Win32InteropException(GetLastError());
 }
 
-void Win32::SetActiveWindow(WindowHandle ^handle) {
-   if (handle == nullptr)
-      throw gcnew ArgumentNullException();
+void Win32::SetActiveWindow(WindowHandle^ handle) {
+    if (handle == nullptr) {
+        throw gcnew ArgumentNullException();
+    }
 
-   if (::SetActiveWindow(handle->Hwnd) != nullptr)
-      return;
+    if (::SetActiveWindow(handle->Hwnd) != nullptr) {
+        return;
+    }
 
-   throw gcnew Win32InteropException(GetLastError());
+    throw gcnew Win32InteropException(GetLastError());
 }
 
-void Win32::SetForegroundWindow(WindowHandle ^handle) {
-   if (handle == nullptr)
-      throw gcnew ArgumentNullException();
+void Win32::SetForegroundWindow(WindowHandle^ handle) {
+    if (handle == nullptr) {
+        throw gcnew ArgumentNullException();
+    }
 
-   if (::SetForegroundWindow(handle->Hwnd) == TRUE)
-      return;
+    if (::SetForegroundWindow(handle->Hwnd) == TRUE) {
+        return;
+    }
 
-   throw gcnew Win32InteropException(GetLastError());
+    throw gcnew Win32InteropException(GetLastError());
 }
 
-WindowHandle ^Win32::WindowFromPoint(int x, int y) {
-   POINT p = { x, y };
+WindowHandle^ Win32::WindowFromPoint(int x, int y) {
+    POINT p = {x, y};
 
-   HWND hWnd = ::WindowFromPoint(p);
+    HWND hWnd = ::WindowFromPoint(p);
 
-   if (hWnd == nullptr)
-      return nullptr;
+    if (hWnd == nullptr) {
+        return nullptr;
+    }
 
-   return gcnew WindowHandle(hWnd);
+    return gcnew WindowHandle(hWnd);
 }

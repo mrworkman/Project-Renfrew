@@ -17,7 +17,7 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>NatSpeakInterop</ProjectName>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -33,19 +33,19 @@
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>true</CLRSupport>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform"/>
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Label="UserMacros"/>
+  <PropertyGroup/>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -81,78 +81,78 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="GrammarService.cpp" />
-    <ClCompile Include="NatSpeakService.cpp" />
-    <ClCompile Include="SrGramNotifySink.cpp" />
-    <ClCompile Include="SrNotifySink.cpp" />
-    <ClCompile Include="SSvcActionNotifySink.cpp" />
-    <ClCompile Include="SSvcAppTrackingNotifySink.cpp" />
+    <ClCompile Include="AssemblyInfo.cpp"/>
+    <ClCompile Include="GrammarService.cpp"/>
+    <ClCompile Include="NatSpeakService.cpp"/>
+    <ClCompile Include="SrGramNotifySink.cpp"/>
+    <ClCompile Include="SrNotifySink.cpp"/>
+    <ClCompile Include="SSvcActionNotifySink.cpp"/>
+    <ClCompile Include="SSvcAppTrackingNotifySink.cpp"/>
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ComHelper.h" />
-    <ClInclude Include="dgnerr.h" />
-    <ClInclude Include="DragonVersion.h" />
-    <ClInclude Include="GrammarAlreadyLoadedException.h" />
-    <ClInclude Include="GrammarException.h" />
-    <ClInclude Include="GrammarExecutive.h" />
-    <ClInclude Include="GrammarNotLoadedException.h" />
-    <ClInclude Include="GrammarService.h" />
-    <ClInclude Include="IDgnAppSupport.h" />
-    <ClInclude Include="IDgnDictate.h" />
-    <ClInclude Include="IDgnGetSinkFlags.h" />
-    <ClInclude Include="IDgnSpeechServices.h" />
-    <ClInclude Include="IDgnSrEngineControl.h" />
-    <ClInclude Include="IDgnSrEngineNotifySink.h" />
-    <ClInclude Include="IDgnSrGramCommon.h" />
-    <ClInclude Include="IDgnSrSpeaker.h" />
-    <ClInclude Include="IDgnSSvcActionNotifySink.h" />
-    <ClInclude Include="IDgnSSvcAppTrackingNotifySink.h" />
-    <ClInclude Include="IDgnSSvcInterpreter.h" />
-    <ClInclude Include="IDgnSSvcOutputEvent.h" />
-    <ClInclude Include="IDgnSSvcTracking.h" />
-    <ClInclude Include="IGrammar.h" />
-    <ClInclude Include="IGrammarSerializer.h" />
-    <ClInclude Include="IGrammarService.h" />
-    <ClInclude Include="INatSpeak.h" />
-    <ClInclude Include="InvalidStateException.h" />
-    <ClInclude Include="ISpchServices.h" />
-    <ClInclude Include="SpokenWord.h" />
-    <ClInclude Include="ISrCentral.h" />
-    <ClInclude Include="ISrGramCommon.h" />
-    <ClInclude Include="ISrGramNotifySink.h" />
-    <ClInclude Include="ISrNotifySink.h" />
-    <ClInclude Include="ISrResBasic.h" />
-    <ClInclude Include="ISrResGraph.h" />
-    <ClInclude Include="ISrSpeaker.h" />
+    <ClInclude Include="ComHelper.h"/>
+    <ClInclude Include="dgnerr.h"/>
+    <ClInclude Include="DragonVersion.h"/>
+    <ClInclude Include="GrammarAlreadyLoadedException.h"/>
+    <ClInclude Include="GrammarException.h"/>
+    <ClInclude Include="GrammarExecutive.h"/>
+    <ClInclude Include="GrammarNotLoadedException.h"/>
+    <ClInclude Include="GrammarService.h"/>
+    <ClInclude Include="IDgnAppSupport.h"/>
+    <ClInclude Include="IDgnDictate.h"/>
+    <ClInclude Include="IDgnGetSinkFlags.h"/>
+    <ClInclude Include="IDgnSpeechServices.h"/>
+    <ClInclude Include="IDgnSrEngineControl.h"/>
+    <ClInclude Include="IDgnSrEngineNotifySink.h"/>
+    <ClInclude Include="IDgnSrGramCommon.h"/>
+    <ClInclude Include="IDgnSrSpeaker.h"/>
+    <ClInclude Include="IDgnSSvcActionNotifySink.h"/>
+    <ClInclude Include="IDgnSSvcAppTrackingNotifySink.h"/>
+    <ClInclude Include="IDgnSSvcInterpreter.h"/>
+    <ClInclude Include="IDgnSSvcOutputEvent.h"/>
+    <ClInclude Include="IDgnSSvcTracking.h"/>
+    <ClInclude Include="IGrammar.h"/>
+    <ClInclude Include="IGrammarSerializer.h"/>
+    <ClInclude Include="IGrammarService.h"/>
+    <ClInclude Include="INatSpeak.h"/>
+    <ClInclude Include="InvalidStateException.h"/>
+    <ClInclude Include="ISpchServices.h"/>
+    <ClInclude Include="SpokenWord.h"/>
+    <ClInclude Include="ISrCentral.h"/>
+    <ClInclude Include="ISrGramCommon.h"/>
+    <ClInclude Include="ISrGramNotifySink.h"/>
+    <ClInclude Include="ISrNotifySink.h"/>
+    <ClInclude Include="ISrResBasic.h"/>
+    <ClInclude Include="ISrResGraph.h"/>
+    <ClInclude Include="ISrSpeaker.h"/>
     <ClInclude Include="NatSpeakService.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="sinfo.h" />
-    <ClInclude Include="SinkFlags.h" />
-    <ClInclude Include="SrErrorCodes.h" />
-    <ClInclude Include="SrGramNotifySink.h" />
-    <ClInclude Include="SrNotifySink.h" />
-    <ClInclude Include="SSvcActionNotifySink.h" />
-    <ClInclude Include="SSvcAppTrackingNotifySink.h" />
-    <ClInclude Include="Stdafx.h" />
+    <ClInclude Include="resource.h"/>
+    <ClInclude Include="sinfo.h"/>
+    <ClInclude Include="SinkFlags.h"/>
+    <ClInclude Include="SrErrorCodes.h"/>
+    <ClInclude Include="SrGramNotifySink.h"/>
+    <ClInclude Include="SrNotifySink.h"/>
+    <ClInclude Include="SSvcActionNotifySink.h"/>
+    <ClInclude Include="SSvcAppTrackingNotifySink.h"/>
+    <ClInclude Include="Stdafx.h"/>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="NatSpeakInterop.rc" />
+    <ResourceCompile Include="NatSpeakInterop.rc"/>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <Reference Include="System"/>
+    <Reference Include="System.Core"/>
   </ItemGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>

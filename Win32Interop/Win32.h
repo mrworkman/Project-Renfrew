@@ -18,12 +18,12 @@
 #pragma once
 
 namespace Renfrew::Win32::Interop {
-   public ref class Win32 abstract {
-   public:
-      static void BringWindowToTop(WindowHandle^ handle);
-      static void SetActiveWindow(WindowHandle^ handle);
-      static void SetForegroundWindow(WindowHandle^ handle);
+    public ref class Win32 abstract {
+        public:
+            static void BringWindowToTop(WindowHandle^ handle);
+            static void SetActiveWindow(WindowHandle^ handle);
+            static void SetForegroundWindow(WindowHandle^ handle);
 
-      static WindowHandle^ WindowFromPoint(int x, int y);
-   };
+            static WindowHandle^ WindowFromPoint(int x, int y);
+    };
 }

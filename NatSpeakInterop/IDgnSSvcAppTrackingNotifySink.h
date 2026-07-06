@@ -20,13 +20,12 @@
 #define IDgnSSvcAppTrackingNotifySinkGUID "dd109207-6205-11cf-ae61-0000e8a28647"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(IDgnSSvcAppTrackingNotifySinkGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class
-      DECLSPEC_UUID(IDgnSSvcAppTrackingNotifySinkGUID) IDgnSSvcAppTrackingNotifySink {
-
-      void AppLoaded(DWORD, const wchar_t*, const wchar_t*);
-      void AppTerminated(DWORD, const wchar_t*, const wchar_t*);
-   };
+    [ComImport, Guid(IDgnSSvcAppTrackingNotifySinkGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(IDgnSSvcAppTrackingNotifySinkGUID)
+        IDgnSSvcAppTrackingNotifySink {
+        void AppLoaded(DWORD, const wchar_t*, const wchar_t*);
+        void AppTerminated(DWORD, const wchar_t*, const wchar_t*);
+    };
 }

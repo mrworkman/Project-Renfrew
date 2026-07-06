@@ -18,48 +18,49 @@
 #pragma once
 
 namespace Renfrew::NatSpeakInterop {
-   private ref class GrammarExecutive {
-      IGrammar ^_grammar;
-      ISrGramCommon ^_isrGramCommon;
+    private ref class GrammarExecutive {
+        IGrammar^ _grammar;
+        ISrGramCommon^ _isrGramCommon;
 
-      bool _isLoaded = false;
+        bool _isLoaded = false;
 
-   public:
-      GrammarExecutive(IGrammar ^grammar) {
-         if (grammar == nullptr)
-            throw gcnew ArgumentNullException("grammar");
+        public:
+            GrammarExecutive(IGrammar^ grammar) {
+                if (grammar == nullptr) {
+                    throw gcnew ArgumentNullException("grammar");
+                }
 
-         _grammar = grammar;
-      }
+                _grammar = grammar;
+            }
 
-      property IGrammar ^Grammar {
-         IGrammar ^get() {
-            return _grammar;
-         };
-      };
+            property IGrammar^ Grammar {
+                IGrammar^ get() {
+                    return _grammar;
+                };
+            };
 
-      property ISrGramCommon ^GramCommonInterface {
-         ISrGramCommon ^get() {
-            return _isrGramCommon;
-         }
+            property ISrGramCommon^ GramCommonInterface {
+                ISrGramCommon^ get() {
+                    return _isrGramCommon;
+                }
 
-         void set(ISrGramCommon ^isrGramCommon) {
-            _isrGramCommon = isrGramCommon;
-         }
-      };
+                void set(ISrGramCommon^ isrGramCommon) {
+                    _isrGramCommon = isrGramCommon;
+                }
+            };
 
-      property bool IsLoaded {
-         bool get() {
-            return _isLoaded;
-         }
+            property bool IsLoaded {
+                bool get() {
+                    return _isLoaded;
+                }
 
-         void set(bool isLoaded) {
-            _isLoaded = isLoaded;
-         }
-      };
+                void set(bool isLoaded) {
+                    _isLoaded = isLoaded;
+                }
+            };
 
-      int GetHashCode() override {
-         return _grammar->GetHashCode();
-      }
-   };
+            int GetHashCode() override {
+                return _grammar->GetHashCode();
+            }
+    };
 }

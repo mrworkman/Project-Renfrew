@@ -22,16 +22,17 @@ using namespace System;
 using namespace Renfrew::Win32::Interop;
 
 WindowHandle::WindowHandle(HWND hWnd) {
-   if (hWnd == nullptr)
-      throw gcnew ArgumentNullException();
+    if (hWnd == nullptr) {
+        throw gcnew ArgumentNullException();
+    }
 
-   _hWnd = hWnd;
+    _hWnd = hWnd;
 }
 
 HWND WindowHandle::Hwnd::get() {
-   return _hWnd;
+    return _hWnd;
 }
 
 IntPtr WindowHandle::HwndPtr::get() {
-   return IntPtr(Hwnd);
+    return IntPtr(Hwnd);
 }

@@ -18,19 +18,19 @@
 #pragma once
 
 namespace Renfrew::Utility {
-   public ref class MagnifierException : System::Exception {
-      System::String ^_internalErrorMessage;
-      int _errorCode;
+    public ref class MagnifierException : System::Exception {
+        System::String^ _internalErrorMessage;
+        int _errorCode;
 
-   public:
-      MagnifierException(System::String ^message, int errorCode);
+        public:
+            MagnifierException(System::String^ message, int errorCode);
 
-      property int ErrorCode {
-         int get();
-      }
+            property int ErrorCode {
+                int get();
+            }
 
-      property System::String ^InternalErrorMessage {
-         System::String ^get();
-      }
-   };
+            property System::String^ InternalErrorMessage {
+                System::String^ get();
+            }
+    };
 }

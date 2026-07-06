@@ -20,34 +20,32 @@
 using namespace System;
 
 namespace Renfrew::Utility {
+    public ref class Magnifier : public HwndHost {
+        HWND _parentHwnd;
+        HWND _magnifierHwnd;
+        HINSTANCE _hInstance;
 
-   public ref class Magnifier : public HwndHost {
-      HWND _parentHwnd;
-      HWND _magnifierHwnd;
-      HINSTANCE _hInstance;
+        protected:
+            // From HwndHost
+            virtual HandleRef BuildWindowCore(HandleRef handleRef) override;
+            virtual void DestroyWindowCore(HandleRef handleRef) override;
 
-   protected:
-      // From HwndHost
-      virtual HandleRef BuildWindowCore(HandleRef handleRef) override;
-      virtual void DestroyWindowCore(HandleRef handleRef) override;
+        public:
+            Magnifier();
 
-   public:
-      Magnifier();
+            // From HwndHost
+            property IKeyboardInputSite^ KeyboardInputSite {
+                virtual IKeyboardInputSite^ get() {
+                    throw gcnew NotImplementedException();
+                };
 
-      // From HwndHost
-      property IKeyboardInputSite^ KeyboardInputSite {
-         virtual IKeyboardInputSite^ get() {
-            throw gcnew NotImplementedException();
-         };
+                virtual void set(IKeyboardInputSite^ keyboard_input_site) {
+                    throw gcnew NotImplementedException();
+                };
+            }
 
-         virtual void set(IKeyboardInputSite^ keyboard_input_site) {
-            throw gcnew NotImplementedException();
-         };
-      }
-
-      void Initialize(double scaleMultiplier);
-      void SetMagnification(Int32 multiplier);
-      void Update(Int32 x, Int32 y, Int32 width, Int32 height);
-   };
-
+            void Initialize(double scaleMultiplier);
+            void SetMagnification(Int32 multiplier);
+            void Update(Int32 x, Int32 y, Int32 width, Int32 height);
+    };
 }

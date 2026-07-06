@@ -22,29 +22,44 @@
 #include "ISrResBasic.h"
 
 namespace Renfrew::NatSpeakInterop::Sinks {
-   public ref class SrGramNotifySink :
-      public Dragon::ComInterfaces::ISrGramNotifySink,
-      public Dragon::ComInterfaces::IDgnGetSinkFlags {
+    public ref class SrGramNotifySink :
+        public Dragon::ComInterfaces::ISrGramNotifySink,
+        public Dragon::ComInterfaces::IDgnGetSinkFlags {
+        Object^ _callbackParam;
+        Action<UInt32, Object^, Dragon::ComInterfaces::ISrResBasic^>^
+        _phraseFinishCallback;
 
-      Object ^_callbackParam;
-      Action<UInt32, Object^, Dragon::ComInterfaces::ISrResBasic^> ^_phraseFinishCallback;
+        public:
+            SrGramNotifySink(
+                Action<UInt32, Object^,
+                       Dragon::ComInterfaces::ISrResBasic^>^
+                phraseFinishCallback,
+                Object^ callbackParam
+            );
 
-   public:
-      SrGramNotifySink(Action<UInt32, Object^,
-                       Dragon::ComInterfaces::ISrResBasic^> ^phraseFinishCallback,
-                       Object ^callbackParam);
+            // IDgnGetSinkFlags Methods
+            void virtual SinkFlagsGet(DWORD* pdwFlags);
 
-      // IDgnGetSinkFlags Methods
-      void virtual SinkFlagsGet(DWORD *pdwFlags);
-
-      // ISrGramNotifySink Methods
-      void virtual BookMark(DWORD);
-      void virtual Paused();
-      void virtual PhraseFinish(DWORD flags, QWORD, QWORD, PSRPHRASEW pSrPhrase, LPUNKNOWN pIUnknown);
-      void virtual PhraseHypothesis(DWORD, QWORD, QWORD, PSRPHRASEW, LPUNKNOWN);
-      void virtual PhraseStart(QWORD);
-      void virtual ReEvaluate(LPUNKNOWN);
-      void virtual Training(DWORD);
-      void virtual UnArchive(LPUNKNOWN);
-   };
+            // ISrGramNotifySink Methods
+            void virtual BookMark(DWORD);
+            void virtual Paused();
+            void virtual PhraseFinish(
+                DWORD flags,
+                QWORD,
+                QWORD,
+                PSRPHRASEW pSrPhrase,
+                LPUNKNOWN pIUnknown
+            );
+            void virtual PhraseHypothesis(
+                DWORD,
+                QWORD,
+                QWORD,
+                PSRPHRASEW,
+                LPUNKNOWN
+            );
+            void virtual PhraseStart(QWORD);
+            void virtual ReEvaluate(LPUNKNOWN);
+            void virtual Training(DWORD);
+            void virtual UnArchive(LPUNKNOWN);
+    };
 }

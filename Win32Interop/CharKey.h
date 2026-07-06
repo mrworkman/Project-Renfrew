@@ -22,15 +22,15 @@
 using namespace System;
 
 namespace Renfrew::Win32::Interop {
-   public ref class CharKey sealed : UnicodeKeyPress {
-      WORD _scanCode;
-      CharKey(WORD scanCode);
+    public ref class CharKey sealed : UnicodeKeyPress {
+        WORD _scanCode;
+        CharKey(WORD scanCode);
 
-   public:
-      property WORD ScanCode {
-         WORD get() override;
-      }
+        public:
+            property WORD ScanCode {
+                WORD get() override;
+            }
 
-      static UnicodeKeyPress^ KeyPress(Char c);
-   };
+            static UnicodeKeyPress^ KeyPress(Char c);
+    };
 }

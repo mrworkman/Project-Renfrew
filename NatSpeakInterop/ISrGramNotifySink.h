@@ -20,19 +20,17 @@
 #define ISrGramNotifySinkGUID "f106bfa0-c743-11cd-80e5-00aa003e4b50"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(ISrGramNotifySinkGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class
-      DECLSPEC_UUID(ISrGramNotifySinkGUID) ISrGramNotifySink {
-
-      void BookMark(DWORD);
-      void Paused();
-      void PhraseFinish(DWORD, QWORD, QWORD, PSRPHRASEW, LPUNKNOWN);
-      void PhraseHypothesis(DWORD, QWORD, QWORD, PSRPHRASEW, LPUNKNOWN);
-      void PhraseStart(QWORD);
-      void ReEvaluate(LPUNKNOWN);
-      void Training(DWORD);
-      void UnArchive(LPUNKNOWN);
-   };
+    [ComImport, Guid(ISrGramNotifySinkGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(ISrGramNotifySinkGUID) ISrGramNotifySink {
+        void BookMark(DWORD);
+        void Paused();
+        void PhraseFinish(DWORD, QWORD, QWORD, PSRPHRASEW, LPUNKNOWN);
+        void PhraseHypothesis(DWORD, QWORD, QWORD, PSRPHRASEW, LPUNKNOWN);
+        void PhraseStart(QWORD);
+        void ReEvaluate(LPUNKNOWN);
+        void Training(DWORD);
+        void UnArchive(LPUNKNOWN);
+    };
 }

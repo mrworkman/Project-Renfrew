@@ -20,17 +20,15 @@
 #define ISrResGraphGUID "090cd9aa-da1a-11cd-b3ca-00aa0047ba4f"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(ISrResGraphGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class
-      DECLSPEC_UUID(ISrResGraphGUID) ISrResGraph {
-
-      void BestPathPhoneme(DWORD, DWORD *, DWORD, DWORD *);
-      void BestPathWord(DWORD, DWORD *, DWORD, DWORD *);
-      void GetPhonemeNode(DWORD, PSRRESPHONEMENODE, PWCHAR, PWCHAR);
-      void GetWordNode(DWORD, PSRRESWORDNODE, PSRWORDW, DWORD, DWORD *);
-      void PathScorePhoneme(DWORD *, DWORD, LONG *);
-      void PathScoreWord(DWORD *, DWORD, LONG *);
-   };
+    [ComImport, Guid(ISrResGraphGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(ISrResGraphGUID) ISrResGraph {
+        void BestPathPhoneme(DWORD, DWORD*, DWORD, DWORD*);
+        void BestPathWord(DWORD, DWORD*, DWORD, DWORD*);
+        void GetPhonemeNode(DWORD, PSRRESPHONEMENODE, PWCHAR, PWCHAR);
+        void GetWordNode(DWORD, PSRRESWORDNODE, PSRWORDW, DWORD, DWORD*);
+        void PathScorePhoneme(DWORD*, DWORD, LONG*);
+        void PathScoreWord(DWORD*, DWORD, LONG*);
+    };
 }

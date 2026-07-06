@@ -24,18 +24,18 @@ using namespace System::Collections::Generic;
 using namespace System::Text;
 
 namespace Renfrew::Win32::Interop {
-   public ref class KeyChord sealed : IEquatable<KeyChord^> {
-      KeyChord(IEnumerable<KeyPress^>^ keys);
+    public ref class KeyChord sealed : IEquatable<KeyChord^> {
+        KeyChord(IEnumerable<KeyPress^>^ keys);
 
-   internal:
-      property List<KeyPress^>^ _keys;
+        internal:
+            property List<KeyPress^>^ _keys;
 
-   public:
-      static KeyChord^ Keys(... array<KeyPress^>^ keys);
-      static KeyChord^ Keys(IEnumerable<KeyPress^>^ keys);
+        public:
+            static KeyChord^ Keys(... array<KeyPress^>^ keys);
+            static KeyChord^ Keys(IEnumerable<KeyPress^>^ keys);
 
-      virtual bool Equals(KeyChord^ other);
+            virtual bool Equals(KeyChord^ other);
 
-      String^ ToString() override;
-   };
+            String^ ToString() override;
+    };
 }

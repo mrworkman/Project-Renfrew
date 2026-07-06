@@ -18,14 +18,14 @@
 #pragma once
 
 namespace Renfrew::Win32::Interop {
-   public ref class Win32InteropException : System::Exception {
-      int _errorCode;
+    public ref class Win32InteropException : System::Exception {
+        int _errorCode;
 
-   public:
-      Win32InteropException(int errorCode);
+        public:
+            Win32InteropException(int errorCode);
 
-      property int ErrorCode {
-         int get();
-      }
-   };
+            property int ErrorCode {
+                int get();
+            }
+    };
 }

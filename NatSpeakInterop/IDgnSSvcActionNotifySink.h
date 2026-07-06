@@ -20,16 +20,14 @@
 #define IDgnSSvcActionNotifySinkGUID "dd108202-6205-11cf-ae61-0000e8a28647"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(IDgnSSvcActionNotifySinkGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class 
-      DECLSPEC_UUID(IDgnSSvcActionNotifySinkGUID) IDgnSSvcActionNotifySink {
-
-      void PlaybackDone(DWORD);
-      void PlaybackAborted(DWORD, HRESULT);
-      void ExecutionDone(DWORD);
-      void ExecutionStatus(DWORD, DWORD);
-      void ExecutionAborted(DWORD, HRESULT, DWORD);
-   };
+    [ComImport, Guid(IDgnSSvcActionNotifySinkGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(IDgnSSvcActionNotifySinkGUID) IDgnSSvcActionNotifySink {
+        void PlaybackDone(DWORD);
+        void PlaybackAborted(DWORD, HRESULT);
+        void ExecutionDone(DWORD);
+        void ExecutionStatus(DWORD, DWORD);
+        void ExecutionAborted(DWORD, HRESULT, DWORD);
+    };
 }

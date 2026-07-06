@@ -21,46 +21,48 @@
 using namespace Renfrew::Win32::Interop;
 
 DWORD KeyPress::KeyFlags::get() {
-   return 0;
+    return 0;
 }
 
 WORD KeyPress::ScanCode::get() {
-   return 0;
+    return 0;
 }
 
 WORD KeyPress::VirtualKeyCode::get() {
-   return 0;
+    return 0;
 }
 
 void KeyPress::KeyDown(LPINPUT input) {
-   if (input == nullptr) {
-      throw gcnew ArgumentNullException("input");
-   }
-   input->type = INPUT_KEYBOARD;
-   input->ki.wVk = VirtualKeyCode;
-   input->ki.wScan = ScanCode;
-   input->ki.dwFlags = KeyFlags;
+    if (input == nullptr) {
+        throw gcnew ArgumentNullException("input");
+    }
+    input->type = INPUT_KEYBOARD;
+    input->ki.wVk = VirtualKeyCode;
+    input->ki.wScan = ScanCode;
+    input->ki.dwFlags = KeyFlags;
 }
 
 void KeyPress::KeyUp(LPINPUT input) {
-   if (input == nullptr) {
-      throw gcnew ArgumentNullException("input");
-   }
-   input->type = INPUT_KEYBOARD;
-   input->ki.wVk = VirtualKeyCode;
-   input->ki.wScan = ScanCode;
-   input->ki.dwFlags = KEYEVENTF_KEYUP | KeyFlags;
+    if (input == nullptr) {
+        throw gcnew ArgumentNullException("input");
+    }
+    input->type = INPUT_KEYBOARD;
+    input->ki.wVk = VirtualKeyCode;
+    input->ki.wScan = ScanCode;
+    input->ki.dwFlags = KEYEVENTF_KEYUP | KeyFlags;
 }
 
 bool KeyPress::Equals(KeyPress^ other) {
-   return VirtualKeyCode == other->VirtualKeyCode &&
-          ScanCode == other->ScanCode &&
-          KeyFlags == other->KeyFlags;
+    return VirtualKeyCode == other->VirtualKeyCode &&
+        ScanCode == other->ScanCode &&
+        KeyFlags == other->KeyFlags;
 }
 
 String^ KeyPress::ToString() {
-   return String::Format(
-      "{{ VirtualKeyCode={0}, ScanCode={1}, KeyFlags={2} }}",
-      VirtualKeyCode, ScanCode, KeyFlags
-   );
+    return String::Format(
+        "{{ VirtualKeyCode={0}, ScanCode={1}, KeyFlags={2} }}",
+        VirtualKeyCode,
+        ScanCode,
+        KeyFlags
+    );
 }

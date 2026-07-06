@@ -18,46 +18,46 @@
 #pragma once
 
 namespace Renfrew::NatSpeakInterop {
-   public ref struct DragonVersion {
+    public ref struct DragonVersion {
+        private:
+            UInt16 _major;
+            UInt16 _minor;
+            UInt16 _patch;
 
-   private:
-      UInt16 _major;
-      UInt16 _minor;
-      UInt16 _patch;
+        public:
+            DragonVersion(UInt16 major, UInt16 minor, UInt16 patch) {
+                _major = major;
+                _minor = minor;
+                _patch = patch;
+            }
 
-   public:
-      DragonVersion(UInt16 major, UInt16 minor, UInt16 patch) {
-         _major = major;
-         _minor = minor;
-         _patch = patch;
-      }
+            UInt64 GetVersionAsUInt64() {
+                return (UInt64(_major) << 48) | (UInt64(_minor) << 32) | (
+                    UInt64(_patch) << 16);
+            }
 
-      UInt64 GetVersionAsUInt64() {
-         return (UInt64(_major) << 48) | (UInt64(_minor) << 32) | (UInt64(_patch) << 16);
-      }
+            static bool operator ==(DragonVersion^ lhs, DragonVersion^ rhs) {
+                return lhs->GetVersionAsUInt64() == rhs->GetVersionAsUInt64();
+            }
 
-      static bool operator ==(DragonVersion ^lhs, DragonVersion ^rhs) {
-         return lhs->GetVersionAsUInt64() == rhs->GetVersionAsUInt64();
-      }
+            static bool operator <(DragonVersion^ lhs, DragonVersion^ rhs) {
+                return lhs->GetVersionAsUInt64() < rhs->GetVersionAsUInt64();
+            }
 
-      static bool operator <(DragonVersion ^lhs, DragonVersion ^rhs) {
-         return lhs->GetVersionAsUInt64() < rhs->GetVersionAsUInt64();
-      }
+            static bool operator <=(DragonVersion^ lhs, DragonVersion^ rhs) {
+                return lhs->GetVersionAsUInt64() <= rhs->GetVersionAsUInt64();
+            }
 
-      static bool operator <=(DragonVersion ^lhs, DragonVersion ^rhs) {
-         return lhs->GetVersionAsUInt64() <= rhs->GetVersionAsUInt64();
-      }
+            static bool operator >(DragonVersion^ lhs, DragonVersion^ rhs) {
+                return lhs->GetVersionAsUInt64() >= rhs->GetVersionAsUInt64();;
+            }
 
-      static bool operator >(DragonVersion ^lhs, DragonVersion ^rhs) {
-         return lhs->GetVersionAsUInt64() >= rhs->GetVersionAsUInt64();;
-      }
+            static bool operator >=(DragonVersion^ lhs, DragonVersion^ rhs) {
+                return lhs->GetVersionAsUInt64() >= rhs->GetVersionAsUInt64();
+            }
 
-      static bool operator >=(DragonVersion ^lhs, DragonVersion ^rhs) {
-         return lhs->GetVersionAsUInt64() >= rhs->GetVersionAsUInt64();
-      }
-
-      String ^ToString() override {
-         return String::Format("{0}.{1}.{2}", _major, _minor, _patch);
-      }
-   };
+            String^ ToString() override {
+                return String::Format("{0}.{1}.{2}", _major, _minor, _patch);
+            }
+    };
 }

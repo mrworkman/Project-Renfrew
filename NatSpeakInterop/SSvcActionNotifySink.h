@@ -20,15 +20,14 @@
 #include "IDgnSSvcActionNotifySink.h"
 
 namespace Renfrew::NatSpeakInterop::Sinks {
-   public ref class SSvcActionNotifySink :
-      public Dragon::ComInterfaces::IDgnSSvcActionNotifySink {
-
-   public:
-      SSvcActionNotifySink();
-      void virtual PlaybackDone(DWORD);
-      void virtual PlaybackAborted(DWORD, HRESULT);
-      void virtual ExecutionDone(DWORD);
-      void virtual ExecutionStatus(DWORD, DWORD);
-      void virtual ExecutionAborted(DWORD, HRESULT, DWORD);
-   };
+    public ref class SSvcActionNotifySink :
+        public Dragon::ComInterfaces::IDgnSSvcActionNotifySink {
+        public:
+            SSvcActionNotifySink();
+            void virtual PlaybackDone(DWORD);
+            void virtual PlaybackAborted(DWORD, HRESULT);
+            void virtual ExecutionDone(DWORD);
+            void virtual ExecutionStatus(DWORD, DWORD);
+            void virtual ExecutionAborted(DWORD, HRESULT, DWORD);
+    };
 }

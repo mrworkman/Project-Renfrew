@@ -20,14 +20,20 @@
 
 using namespace Renfrew::NatSpeakInterop::Sinks;
 
-SSvcAppTrackingNotifySink::SSvcAppTrackingNotifySink() {
+SSvcAppTrackingNotifySink::SSvcAppTrackingNotifySink() {}
 
+void SSvcAppTrackingNotifySink::AppLoaded(
+    DWORD a,
+    const wchar_t* b,
+    const wchar_t* c
+) {
+    Debug::WriteLine(__FUNCTION__);
 }
 
-void SSvcAppTrackingNotifySink::AppLoaded(DWORD a, const wchar_t* b, const wchar_t* c) {
-   Debug::WriteLine(__FUNCTION__);
-}
-
-void SSvcAppTrackingNotifySink::AppTerminated(DWORD a, const wchar_t* b, const wchar_t* c) {
-   Debug::WriteLine(__FUNCTION__);
+void SSvcAppTrackingNotifySink::AppTerminated(
+    DWORD a,
+    const wchar_t* b,
+    const wchar_t* c
+) {
+    Debug::WriteLine(__FUNCTION__);
 }

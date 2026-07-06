@@ -23,52 +23,56 @@ using namespace System::Diagnostics;
 using namespace Renfrew::Win32::Interop;
 
 void Keyboard::PlayKeys(IEnumerable<KeyChord^>^ chords) {
-   for each (auto chord in chords) {
-      PlayChord(chord);
-   }
+    for each (auto chord in chords) {
+        PlayChord(chord);
+    }
 }
 
 void Keyboard::PlayKeys(... array<KeyChord^>^ chords) {
-   return PlayKeys(safe_cast<IEnumerable<KeyChord^>^>(chords));
+    return PlayKeys(safe_cast<IEnumerable<KeyChord^>^>(chords));
 }
 
 void Keyboard::PlayChord(KeyChord^ chord) {
-   auto keys = chord->_keys;
-   auto num_inputs = chord->_keys->Count * 2;
+    auto keys = chord->_keys;
+    auto num_inputs = chord->_keys->Count * 2;
 
-   if (num_inputs == 0) {
-      return;
-   }
+    if (num_inputs == 0) {
+        return;
+    }
 
-   auto inputs = new INPUT[num_inputs];
+    auto inputs = new INPUT[num_inputs];
 
-   ZeroMemory(
-      inputs, 
-      sizeof(INPUT) * num_inputs
-   );
+    ZeroMemory(
+        inputs,
+        sizeof(INPUT) * num_inputs
+    );
 
-   for (int i = 0, j = 0; i < num_inputs/2; i++, j++) {
-      auto key = keys[j];
+    for (int i = 0, j = 0; i < num_inputs / 2; i++, j++) {
+        auto key = keys[j];
 
-      Debug::WriteLine("({0}:{1}) Key: {2} DOWN", i, j, key);
+        Debug::WriteLine("({0}:{1}) Key: {2} DOWN", i, j, key);
 
-      key->KeyDown(&inputs[i]);
-   }
+        key->KeyDown(&inputs[i]);
+    }
 
-   for (int i = num_inputs/2, j = (keys->Count - 1); i < num_inputs; i++, j--) {
-      auto key = keys[j];
+    for (
+        int i = num_inputs / 2, j = (keys->Count - 1);
+        i < num_inputs;
+        i++, j--
+    ) {
+        auto key = keys[j];
 
-      Debug::WriteLine("({0}:{1}) Key: {2} UP", i, j, key);
+        Debug::WriteLine("({0}:{1}) Key: {2} UP", i, j, key);
 
-      key->KeyUp(&inputs[i]);
-   }
+        key->KeyUp(&inputs[i]);
+    }
 
-   UINT uSent = SendInput(num_inputs, inputs, sizeof(INPUT));
-   
-   if (uSent != num_inputs) {
-      Debug::WriteLine("SendInput failed.");
-      delete inputs;
-   }
+    UINT uSent = SendInput(num_inputs, inputs, sizeof(INPUT));
 
-   delete inputs;
+    if (uSent != num_inputs) {
+        Debug::WriteLine("SendInput failed.");
+        delete inputs;
+    }
+
+    delete inputs;
 }

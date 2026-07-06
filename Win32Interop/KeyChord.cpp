@@ -21,39 +21,39 @@
 using namespace Renfrew::Win32::Interop;
 
 KeyChord::KeyChord(IEnumerable<KeyPress^>^ keys) {
-   _keys = gcnew List<KeyPress^>(keys);
+    _keys = gcnew List<KeyPress^>(keys);
 }
 
 KeyChord^ KeyChord::Keys(... array<KeyPress^>^ keys) {
-   return gcnew KeyChord(keys);
+    return gcnew KeyChord(keys);
 }
 
 KeyChord^ KeyChord::Keys(IEnumerable<KeyPress^>^ keys) {
-   return gcnew KeyChord(keys);
+    return gcnew KeyChord(keys);
 }
 
 bool KeyChord::Equals(KeyChord^ other) {
-   if (_keys->Count != other->_keys->Count) {
-      return false;
-   }
+    if (_keys->Count != other->_keys->Count) {
+        return false;
+    }
 
-   for (int i = 0; i < _keys->Count; i++) {
-      if (!_keys[i]->Equals(other->_keys[i])) {
-         return false;
-      }
-   }
+    for (int i = 0; i < _keys->Count; i++) {
+        if (!_keys[i]->Equals(other->_keys[i])) {
+            return false;
+        }
+    }
 
-   return true;
+    return true;
 }
 
 String^ KeyChord::ToString() {
-   auto builder = gcnew StringBuilder();
+    auto builder = gcnew StringBuilder();
 
-   builder->Append("[\r\n");
-   for each (auto key in _keys) {
-      builder->AppendFormat("  {0},\r\n", key);
-   }
-   builder->Append("]");
+    builder->Append("[\r\n");
+    for each (auto key in _keys) {
+        builder->AppendFormat("  {0},\r\n", key);
+    }
+    builder->Append("]");
 
-   return builder->ToString();
+    return builder->ToString();
 }

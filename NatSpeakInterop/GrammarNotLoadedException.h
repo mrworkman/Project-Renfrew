@@ -18,9 +18,9 @@
 #pragma once
 
 namespace Renfrew::NatSpeakInterop::Exceptions {
-
-   public ref class GrammarNotLoadedException : Exception {
-      public: GrammarNotLoadedException(String ^message) :
-         Exception(message) { }
-   };
+    public ref class GrammarNotLoadedException : Exception {
+        public:
+            GrammarNotLoadedException(String^ message) :
+                Exception(message) {}
+    };
 }

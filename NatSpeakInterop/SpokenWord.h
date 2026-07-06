@@ -18,21 +18,23 @@
 #pragma once
 
 public ref class SpokenWord {
-   public:
-      SpokenWord(String^ word, const DWORD wordId, const DWORD ruleId) {
-         Word = word;
-         WordId = wordId;
-         RuleId = ruleId;
-      }
+    public:
+        SpokenWord(String^ word, const DWORD wordId, const DWORD ruleId) {
+            Word = word;
+            WordId = wordId;
+            RuleId = ruleId;
+        }
 
-      property String^ Word;
-      property DWORD WordId;
-      property DWORD RuleId;
+        property String^ Word;
+        property DWORD WordId;
+        property DWORD RuleId;
 
-      virtual String^ ToString() override {
-         return String::Format(
-            "{{ Word = {0}, Word ID: {1}, Rule ID: {2} }}",
-            Word, WordId, RuleId
-         );
-      }
+        virtual String^ ToString() override {
+            return String::Format(
+                "{{ Word = {0}, Word ID: {1}, Rule ID: {2} }}",
+                Word,
+                WordId,
+                RuleId
+            );
+        }
 };

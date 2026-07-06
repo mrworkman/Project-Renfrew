@@ -20,12 +20,10 @@
 #define IDgnSpeechServicesGUID "dd108200-6205-11cf-ae61-0000e8a28647"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(IDgnSpeechServicesGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class
-      DECLSPEC_UUID(IDgnSpeechServicesGUID) IDgnSpeechServices {
-   
-      void Dummy();
-   };
+    [ComImport, Guid(IDgnSpeechServicesGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(IDgnSpeechServicesGUID) IDgnSpeechServices {
+        void Dummy();
+    };
 }

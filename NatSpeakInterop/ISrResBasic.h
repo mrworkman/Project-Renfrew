@@ -20,15 +20,13 @@
 #define ISrResBasicGUID "090cd9a5-da1a-11cd-b3ca-00aa0047ba4f"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(ISrResBasicGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class
-      DECLSPEC_UUID(ISrResBasicGUID) ISrResBasic {
-
-      void PhraseGet(DWORD, PSRPHRASEW, DWORD, DWORD *);
-      void Identify(GUID *);
-      void TimeGet(PQWORD, PQWORD);
-      void FlagsGet(DWORD, DWORD *);
-   };
+    [ComImport, Guid(ISrResBasicGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(ISrResBasicGUID) ISrResBasic {
+        void PhraseGet(DWORD, PSRPHRASEW, DWORD, DWORD*);
+        void Identify(GUID*);
+        void TimeGet(PQWORD, PQWORD);
+        void FlagsGet(DWORD, DWORD*);
+    };
 }

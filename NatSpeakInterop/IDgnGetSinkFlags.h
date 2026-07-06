@@ -20,12 +20,10 @@
 #define IDgnGetSinkFlagsGUID "dd108010-6205-11cf-ae61-0000e8a28647"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(IDgnGetSinkFlagsGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class 
-      DECLSPEC_UUID(IDgnGetSinkFlagsGUID) IDgnGetSinkFlags {
-
-      void SinkFlagsGet(DWORD*);
-   };
+    [ComImport, Guid(IDgnGetSinkFlagsGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(IDgnGetSinkFlagsGUID) IDgnGetSinkFlags {
+        void SinkFlagsGet(DWORD*);
+    };
 }

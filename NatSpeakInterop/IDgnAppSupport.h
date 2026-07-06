@@ -23,15 +23,13 @@
 #define IDgnAppSupportGUID "dd109300-6205-11cf-ae61-0000e8a28647"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(IDgnAppSupportGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class
-      DECLSPEC_UUID(IDgnAppSupportGUID) IDgnAppSupport {
-
-      void Register(::IServiceProvider*);
-      void AddProcess(DWORD, const PWCHAR, const PWCHAR, DWORD);
-      void EndProcess(DWORD);
-      void UnRegister();
-   };
+    [ComImport, Guid(IDgnAppSupportGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(IDgnAppSupportGUID) IDgnAppSupport {
+        void Register(::IServiceProvider*);
+        void AddProcess(DWORD, const PWCHAR, const PWCHAR, DWORD);
+        void EndProcess(DWORD);
+        void UnRegister();
+    };
 }

@@ -18,7 +18,7 @@
 #pragma once
 
 namespace Renfrew::NatSpeakInterop {
-   public interface class IGrammarSerializer {
-      array<byte> ^Serialize(IGrammar ^grammar);
-   };
+    public interface class IGrammarSerializer {
+        array<byte>^ Serialize(IGrammar^ grammar);
+    };
 }

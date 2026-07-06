@@ -20,10 +20,8 @@
 #define ISpchServicesGUID "dd100002-6205-11cf-ae61-0000e8a28647"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(ISpchServicesGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class
-      DECLSPEC_UUID(ISpchServicesGUID) ISpchServices {};
-
+    [ComImport, Guid(ISpchServicesGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(ISpchServicesGUID) ISpchServices {};
 }

@@ -18,10 +18,10 @@
 #pragma once
 
 namespace Renfrew::NatSpeakInterop {
-   public interface class INatSpeak {
-      void MicOn();
-      void MicSleep();
+    public interface class INatSpeak {
+        void MicOn();
+        void MicSleep();
 
-      void PlayString(String^ str);
-   };
+        void PlayString(String^ str);
+    };
 }
