@@ -157,6 +157,10 @@ namespace Renfrew.Grammar.FluentApi {
             return Id == other?.Id && String == other.String;
         }
 
+        internal void AddAction(GrammarAction action) {
+            Sequence.AddMember(action);
+        }
+
         private void AdoptWordsFromRule(Rule r) {
             foreach (var kvp in r._words) {
                 if (!_words.ContainsKey(kvp.Key)) {

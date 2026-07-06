@@ -26,24 +26,24 @@ namespace Renfrew.Grammar.Collections {
             _list = list;
         }
 
+        public T this[int index] => _list[index];
         public T Current => _list[CurrentIndex];
+        public int Count => _list.Count;
         public int CurrentIndex { get; private set; }
         public bool IsAtEnd { get; private set; }
 
-        public void MoveBack(int steps = 1) {
-            if (steps <= 0) {
-                throw new ArgumentOutOfRangeException(
-                   nameof(steps),
-                   "Negative numbers not allowed."
-                );
+        /// <summary>
+        ///    Moves the walker to an absolute position. Used by the solver to
+        ///    restore a saved position when a match branch fails and it needs
+        ///    to backtrack.
+        /// </summary>
+        public void MoveTo(int index) {
+            if (index < 0 || index > _list.Count) {
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
 
-            if (CurrentIndex - steps < 0) {
-                throw new IndexOutOfRangeException();
-            }
-
-            CurrentIndex -= steps;
-            IsAtEnd = false;
+            CurrentIndex = index;
+            IsAtEnd = index >= _list.Count;
         }
 
         public void MoveForward(int steps = 1) {

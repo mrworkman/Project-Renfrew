@@ -73,6 +73,12 @@ namespace Renfrew.Grammar.FluentApi.ExpressionParts {
 
                         break;
                     }
+                    case GrammarAction: {
+                        // Actions are behavioral, not structural: two sequences
+                        // that differ only in their (non-serializable) action
+                        // delegates are still considered equal.
+                        break;
+                    }
                     default: {
                         if (!left.Equals(right)) {
                             return false;

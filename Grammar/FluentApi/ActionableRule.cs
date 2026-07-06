@@ -38,14 +38,12 @@ namespace Renfrew.Grammar.FluentApi {
         public IReadOnlyList<Word> Words => _rule.Words;
 
         public IRule Do(Action action) {
-            // FIXME: Support actions.
-            //_rule.AddElementToContainer( new GrammarAction(action) );
+            _rule.AddAction(new GrammarAction(action));
             return _rule;
         }
 
         public IRule Do(Action<IEnumerable<string>> action) {
-            // FIXME: Support actions.
-            //_rule.AddElementToContainer( new GrammarAction(action) );
+            _rule.AddAction(new GrammarAction(action));
             return _rule;
         }
 

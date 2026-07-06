@@ -15,192 +15,390 @@
 // along with this program. If not, see<http://www.gnu.org/licenses/>.
 //
 
+using System;
 using System.Collections.Generic;
 using Renfrew.Grammar.Collections;
 using Renfrew.Grammar.Exceptions;
-using Renfrew.Grammar.FluentApi.ExpressionParts;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
+using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace Renfrew.Grammar.Solving {
+    /// <summary>
+    ///    Matches a phrase (the words recognized in a single speech event)
+    ///    against the rules of a <see cref="Grammar" />.
+    /// </summary>
+    /// <remarks>
+    ///    The solver is a backtracking, recursive-descent matcher written in
+    ///    continuation-passing style: each construct is handed a
+    ///    <see cref="Continuation" /> representing "the rest of the parse" and
+    ///    tries its options <em>together with</em> that remainder, restoring the
+    ///    phrase position whenever a branch fails. This lets variable-length
+    ///    constructs (optionals, repeats, alternatives) give back words across a
+    ///    sub-sequence boundary until the surrounding rule can complete.
+    ///    <para>
+    ///    Backtracking is driven off <see cref="Checkpoint" />s (the walker's
+    ///    absolute position plus the length of the action trace), never a running
+    ///    match count, so a failed branch always leaves both the phrase and the
+    ///    collected actions exactly where they were.
+    ///    </para>
+    /// </remarks>
     internal class Solver {
+        /// <summary>
+        ///    "The rest of the parse." Invoked once a construct has consumed its
+        ///    own words; returns whether the remainder matches from the current
+        ///    phrase position.
+        /// </summary>
+        private delegate SolveResult Continuation();
+
         private readonly Grammar _grammar;
-
-        private readonly bool _isTrunkSequence;
-        private readonly List<ISequenceMember> _members;
         private readonly ListWalker<SpokenWord> _phrase;
-        private int _numberOfMatches;
 
-        private Solver(
-           // Why does this take a Sequence? It already accepts the grammar, and
-           //  it should be looking in the grammar for matching rule(s).
-           Sequence sequence,
-           bool isTrunkSequence,
-           ListWalker<SpokenWord> phrase,
-           Grammar grammar
-        ) {
-            _members = new List<ISequenceMember>(sequence.Members);
+        // Actions encountered on the path currently being explored, paired with
+        // the rule activation that owns each one. Truncated on backtrack, so once
+        // the trunk solve succeeds it holds exactly the matching path's actions
+        // in order.
+        private readonly List<TracedAction> _trace = new();
+
+        // (ruleId, phraseIndex) pairs for rules we are currently descending into
+        // and have not yet consumed past. Re-entering one is left-recursion.
+        private readonly HashSet<(uint RuleId, int Index)> _activeDescents = new();
+
+        private Solver(ListWalker<SpokenWord> phrase, Grammar grammar) {
             _phrase = phrase;
             _grammar = grammar;
-            _isTrunkSequence = isTrunkSequence;
         }
 
-        // TODO: Make sure the rule ID is checked to make sure we're looking at
-        //  the right one.
-        public SolveResult VisitMember(int memberIndex) {
-            if (memberIndex >= _members.Count) {
-                if (_phrase.IsAtEnd) {
-                    return SolveResult.Succeeded(_numberOfMatches);
-                }
-
-                return _isTrunkSequence ?
-                   SolveResult.Failed() :
-                   SolveResult.Succeeded(_numberOfMatches);
+        /// <summary>
+        ///    Solves the given phrase against the grammar. The rule to start
+        ///    from is taken from the first spoken word's rule id; the whole
+        ///    phrase must be consumed for the solve to succeed. On success the
+        ///    result carries the actions to invoke, each with the words consumed
+        ///    by its owning rule.
+        /// </summary>
+        public static SolveResult Solve(
+           Grammar grammar,
+           ListWalker<SpokenWord> phrase
+        ) {
+            if (grammar == null) {
+                throw new ArgumentNullException(nameof(grammar));
             }
 
-            if (_phrase.IsAtEnd && _members[memberIndex] is not Optional) {
+            if (phrase == null) {
+                throw new ArgumentNullException(nameof(phrase));
+            }
+
+            if (phrase.Count == 0) {
                 return SolveResult.Failed();
             }
 
-            switch (_members[memberIndex]) {
-                case Alternatives alternatives: {
-                    return VisitAlternatives(alternatives, memberIndex + 1);
-                }
-                case Optional optional: {
-                    return VisitOptional(optional, memberIndex + 1);
-                }
-                case Repeated repeated: {
-                    return VisitRepeated(repeated, memberIndex + 1);
-                }
-                case Word word: {
-                    if (word.Id == _phrase.Current.WordId
-                        && word.String == _phrase.Current.Word) {
-                        _numberOfMatches++;
-                    } else {
-                        return SolveResult.Failed();
-                    }
+            var startRule = grammar.GetRule(phrase.Current.RuleId);
 
-                    break;
-                }
-                default: {
-                    throw new UnrecognizedMemberType(
-                       _members[memberIndex].GetType()
-                    );
-                }
+            if (startRule == null) {
+                return SolveResult.Failed();
             }
 
-            _phrase.MoveForward();
+            var solver = new Solver(phrase, grammar);
+            var result =
+               solver.MatchRule(startRule, solver.IsPhraseFullyConsumed);
 
-            var result = VisitMember(memberIndex + 1);
-
-            if (result is SolveResult.Failure) {
-                _phrase.MoveBack();
-            }
-
-            return result;
+            return result is SolveResult.Success
+               ? SolveResult.Succeeded(solver.BuildMatchedActions())
+               : result;
         }
 
-        public SolveResult VisitAlternatives(
-           Alternatives alternatives,
-           int memberIndex
+        private SolveResult MatchRule(IRule rule, Continuation continuation) {
+            var entryIndex = _phrase.CurrentIndex;
+            var descent = (rule.Id, entryIndex);
+
+            // Re-entering the same rule at the same position means the grammar
+            // is (mutually) left-recursive: it would descend forever without
+            // consuming a word. The entry is released the moment the rule's own
+            // members are consumed (below), so legitimate sibling references,
+            // repeats, and right-recursion — which advance the phrase — do not
+            // trip this.
+            if (!_activeDescents.Add(descent)) {
+                throw new LeftRecursiveRuleException(rule.Id);
+            }
+
+            var activation = new RuleActivation(rule.Id, entryIndex);
+
+            // The rule's span ends when its own members are exhausted (before the
+            // parent continuation runs). On the winning path this is set last,
+            // right before the continuation that ultimately succeeds.
+            return MatchSequence(rule.Sequence.Members, 0, activation, () => {
+                _activeDescents.Remove(descent);
+                activation.EndIndex = _phrase.CurrentIndex;
+                return continuation();
+            });
+        }
+
+        /// <summary>
+        ///    Matches <paramref name="members" /> from <paramref name="index" />
+        ///    onward, then hands off to <paramref name="continuation" />.
+        /// </summary>
+        /// <param name="activation">
+        ///    The activation of the (named) rule that owns these members. Inline
+        ///    constructs keep the same activation; only a <see cref="RuleName" />
+        ///    reference starts a new one. Its rule id is checked against each
+        ///    spoken word so words are attributed to the correct rule, and its
+        ///    span scopes the words handed to any action found here.
+        /// </param>
+        private SolveResult MatchSequence(
+           IReadOnlyList<ISequenceMember> members,
+           int index,
+           RuleActivation activation,
+           Continuation continuation
         ) {
-            foreach (var alternativeSequence in alternatives.Sequences) {
-                // Visit the alternative sequence.
-                var leftResult = VisitSequence(
-                   alternativeSequence,
-                   false,
-                   _phrase,
-                   _grammar
+            if (index >= members.Count) {
+                return continuation();
+            }
+
+            // The continuation for whatever follows this member in the sequence.
+            Continuation next =
+               () => MatchSequence(members, index + 1, activation, continuation);
+
+            switch (members[index]) {
+                case Word word:
+                    return MatchWord(word, activation, next);
+                case RuleName ruleName:
+                    return MatchRuleName(ruleName, next);
+                case Alternatives alternatives:
+                    return MatchAlternatives(alternatives, activation, next);
+                case Optional optional:
+                    return MatchOptional(optional, activation, next);
+                case Repeated repeated:
+                    return MatchRepeated(repeated, activation, next);
+                case GrammarAction action:
+                    // Zero-width: record it and carry on. Reverted on backtrack
+                    // via the enclosing construct's checkpoint.
+                    _trace.Add(new TracedAction(action, activation));
+                    return next();
+                default:
+                    throw new UnrecognizedMemberType(members[index].GetType());
+            }
+        }
+
+        private SolveResult MatchWord(
+           Word word,
+           RuleActivation activation,
+           Continuation continuation
+        ) {
+            if (_phrase.IsAtEnd) {
+                return SolveResult.Failed();
+            }
+
+            var spoken = _phrase.Current;
+
+            if (word.Id != spoken.WordId
+                || word.String != spoken.Word
+                || spoken.RuleId != activation.RuleId) {
+                return SolveResult.Failed();
+            }
+
+            return Advance(continuation);
+        }
+
+        private SolveResult MatchRuleName(
+           RuleName ruleName,
+           Continuation continuation
+        ) {
+            var rule = _grammar.GetRule(ruleName.Id);
+
+            if (rule == null) {
+                return SolveResult.Failed();
+            }
+
+            // Descend into the referenced rule; its words carry its own rule id,
+            // and once it is consumed the parent's continuation takes over.
+            return MatchRule(rule, continuation);
+        }
+
+        private SolveResult MatchAlternatives(
+           Alternatives alternatives,
+           RuleActivation activation,
+           Continuation continuation
+        ) {
+            var checkpoint = Save();
+
+            foreach (var sequence in alternatives.Sequences) {
+                var result = MatchSequence(
+                   sequence.Members,
+                   0,
+                   activation,
+                   continuation
                 );
 
-                // Visit the next member of the current sequence.
-                var rightResult = VisitMember(memberIndex);
-
-
-                if (leftResult is SolveResult.Success leftSuccess) {
-                    if (rightResult is SolveResult.Success) {
-                        return rightResult;
-                    }
-
-                    _phrase.MoveBack(leftSuccess.NumberOfMatches);
+                if (result is SolveResult.Success) {
+                    return result;
                 }
+
+                Restore(checkpoint);
             }
 
             return SolveResult.Failed();
         }
 
-        public SolveResult VisitOptional(Optional optional, int memberIndex) {
-            // Visit the optional sequence.
-            var leftResult = VisitSequence(
-               optional.Sequence,
-               false,
-               _phrase,
-               _grammar
+        private SolveResult MatchOptional(
+           Optional optional,
+           RuleActivation activation,
+           Continuation continuation
+        ) {
+            var checkpoint = Save();
+
+            // Prefer taking the optional section...
+            var withSection = MatchSequence(
+               optional.Sequence.Members,
+               0,
+               activation,
+               continuation
             );
 
-            // Visit the next member of the current sequence.
-            var rightResult = VisitMember(memberIndex);
-
-            if (rightResult is SolveResult.Success) {
-                return rightResult;
+            if (withSection is SolveResult.Success) {
+                return withSection;
             }
 
-            //    ┌──── The optional sequence matched, but the remainder of the
-            //    │      parent sequence did not. Try again, assuming the optional
-            //    │      child sequence was the one that did not match.
-            //    │
-            //    ╽
-            // 0--O--1--2
-            //    |
-            //    └─ 1--2
-
-
-            if (leftResult is SolveResult.Success leftSuccess) {
-                _phrase.MoveBack(leftSuccess.NumberOfMatches);
-
-                rightResult = VisitMember(memberIndex);
-
-                if (rightResult is SolveResult.Failure) {
-                    return SolveResult.Failed();
-                }
-            } else {
-                return SolveResult.Failed();
-            }
-
-            // Neither branch succeeded.
-            return rightResult;
+            // ...otherwise skip it entirely and let the remainder try to match.
+            Restore(checkpoint);
+            return continuation();
         }
 
-        public SolveResult VisitRepeated(Repeated repeated, int memberIndex) {
-            while (true) {
-                // Visit the repeated sequence.
-                var leftResult = VisitSequence(
-                   repeated.Sequence,
-                   false,
-                   _phrase,
-                   _grammar
-                );
-
-                if (leftResult is SolveResult.Failure) {
-                    return SolveResult.Failed();
-                }
-
-                // Visit the next member of the current sequence.
-                var rightResult = VisitMember(memberIndex);
-
-                if (rightResult is SolveResult.Success) {
-                    return rightResult;
-                }
-            }
-        }
-
-        public static SolveResult VisitSequence(
-           Sequence sequence,
-           bool isTrunkSequence,
-           ListWalker<SpokenWord> phrase,
-           Grammar grammar
+        private SolveResult MatchRepeated(
+           Repeated repeated,
+           RuleActivation activation,
+           Continuation continuation
         ) {
-            return new Solver(sequence, isTrunkSequence, phrase, grammar)
-               .VisitMember(0);
+            // One-or-more: one mandatory pass, then zero-or-more.
+            return MatchSequence(
+               repeated.Sequence.Members,
+               0,
+               activation,
+               () => MatchRepetitions(repeated, activation, continuation)
+            );
+        }
+
+        /// <summary>
+        ///    Zero-or-more of the repeated section (the tail of a one-or-more).
+        ///    Greedy: consumes another pass when it can, but gives passes back
+        ///    when doing so lets the remainder complete.
+        /// </summary>
+        private SolveResult MatchRepetitions(
+           Repeated repeated,
+           RuleActivation activation,
+           Continuation continuation
+        ) {
+            var checkpoint = Save();
+
+            var withAnother = MatchSequence(
+               repeated.Sequence.Members,
+               0,
+               activation,
+               () => _phrase.CurrentIndex == checkpoint.PhraseIndex
+                  // A pass that consumes nothing would loop forever; stop here.
+                  ? continuation()
+                  : MatchRepetitions(repeated, activation, continuation)
+            );
+
+            if (withAnother is SolveResult.Success) {
+                return withAnother;
+            }
+
+            Restore(checkpoint);
+            return continuation();
+        }
+
+        /// <summary>
+        ///    Consumes the current word and runs <paramref name="continuation" />,
+        ///    rewinding if it fails so a sibling branch can try the same word.
+        /// </summary>
+        private SolveResult Advance(Continuation continuation) {
+            var checkpoint = Save();
+
+            _phrase.MoveForward();
+
+            var result = continuation();
+
+            if (result is SolveResult.Failure) {
+                Restore(checkpoint);
+            }
+
+            return result;
+        }
+
+        private SolveResult IsPhraseFullyConsumed() {
+            // The trunk solve only succeeds when every spoken word was matched.
+            return _phrase.IsAtEnd
+               ? SolveResult.Succeeded()
+               : SolveResult.Failed();
+        }
+
+        private IReadOnlyList<MatchedAction> BuildMatchedActions() {
+            var actions = new List<MatchedAction>(_trace.Count);
+
+            foreach (var traced in _trace) {
+                var words = new List<string>();
+
+                for (var i = traced.Owner.StartIndex;
+                     i < traced.Owner.EndIndex;
+                     i++) {
+                    words.Add(_phrase[i].Word);
+                }
+
+                actions.Add(new MatchedAction(traced.Action, words));
+            }
+
+            return actions;
+        }
+
+        private Checkpoint Save() {
+            return new Checkpoint(_phrase.CurrentIndex, _trace.Count);
+        }
+
+        private void Restore(Checkpoint checkpoint) {
+            _phrase.MoveTo(checkpoint.PhraseIndex);
+
+            if (_trace.Count > checkpoint.TraceLength) {
+                _trace.RemoveRange(
+                   checkpoint.TraceLength,
+                   _trace.Count - checkpoint.TraceLength
+                );
+            }
+        }
+
+        private readonly struct Checkpoint {
+            public Checkpoint(int phraseIndex, int traceLength) {
+                PhraseIndex = phraseIndex;
+                TraceLength = traceLength;
+            }
+
+            public int PhraseIndex { get; }
+            public int TraceLength { get; }
+        }
+
+        /// <summary>
+        ///    A single activation of a named rule while solving. Tracks the span
+        ///    of phrase words the rule consumed so actions it owns can be handed
+        ///    the right words.
+        /// </summary>
+        private sealed class RuleActivation {
+            public RuleActivation(uint ruleId, int startIndex) {
+                RuleId = ruleId;
+                StartIndex = startIndex;
+                EndIndex = startIndex;
+            }
+
+            public uint RuleId { get; }
+            public int StartIndex { get; }
+            public int EndIndex { get; set; }
+        }
+
+        private readonly struct TracedAction {
+            public TracedAction(GrammarAction action, RuleActivation owner) {
+                Action = action;
+                Owner = owner;
+            }
+
+            public GrammarAction Action { get; }
+            public RuleActivation Owner { get; }
         }
     }
 }

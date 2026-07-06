@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using Renfrew.Grammar;
@@ -115,6 +116,29 @@ namespace GrammarTests.Serialization {
             );
 
             Assert.AreEqual(expectedSymbols, convertedRule.Symbols);
+        }
+
+        [Test]
+        public void ShouldConvert_ActionMembersEmitNoSymbols() {
+            // A Do(...) action lives in the sequence but produces no Dragon
+            // symbols, so a rule that carries one must serialize identically to
+            // the same rule without it — including not gaining an extra Sequence
+            // wrapper around an otherwise single-member nested sequence.
+            var withoutAction = _converter.ConvertRule(
+               new Rule("-", new IdGenerator())
+                  .Say("hello")
+                  .OptionallySay("jello")
+            );
+
+            var withAction = _converter.ConvertRule(
+               new Rule("-", new IdGenerator())
+                  .Say("hello")
+                  .Optionally(
+                     o => o.Say("jello").Do(() => Debug.WriteLine("noop"))
+                  )
+            );
+
+            Assert.AreEqual(withoutAction.Symbols, withAction.Symbols);
         }
 
 

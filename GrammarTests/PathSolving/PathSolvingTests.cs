@@ -172,14 +172,7 @@ namespace GrammarTests.PathSolving {
         public void PathSolvingTest(TestCase testCase) {
             var phrase = new ListWalker<SpokenWord>(testCase.TestCaseWords);
 
-            var result = Solver.VisitSequence(
-               null,
-               isTrunkSequence: true,
-               phrase: phrase,
-               grammar: testCase.TestGrammar
-            );
-
-            // var result = solver.Solve(phrase: phrase);
+            var result = Solver.Solve(testCase.TestGrammar, phrase);
 
             if (testCase.ExpectedSuccess) {
                 Assert.IsInstanceOf<SolveResult.Success>(result);

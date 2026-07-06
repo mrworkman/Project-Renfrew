@@ -27,6 +27,7 @@ using Renfrew.Grammar.Exceptions;
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
+using Renfrew.Grammar.Solving;
 using Renfrew.NatSpeakInterop;
 
 namespace Renfrew.Grammar {
@@ -215,7 +216,23 @@ namespace Renfrew.Grammar {
             _allRules.Remove(name);
         }
 
+        /// <summary>
+        ///    Looks up a rule by its numeric id, or returns <c>null</c> if no
+        ///    such rule exists. Used by the <see cref="Solver" /> to resolve the
+        ///    start rule and any referenced sub-rules.
+        /// </summary>
+        internal IRule GetRule(uint id) {
+            return _allRules.ContainsKey(id) ? _allRules.Get(id) : null;
+        }
+
         public void InvokeRule(List<SpokenWord> spokenWords) {
+            if (spokenWords == null || spokenWords.Count == 0) {
+                throw new ArgumentException(
+                   "A speech event must contain at least one spoken word.",
+                   nameof(spokenWords)
+                );
+            }
+
             Logger.Debug("InvokeRule: {0}", string.Join(", ", spokenWords));
 
             if (!_activeRules.Any()) {
@@ -223,11 +240,29 @@ namespace Renfrew.Grammar {
             }
 
             var startRuleId = spokenWords.First().RuleId;
-            var startRule = _allRules.Get(startRuleId);
 
-            Debug.Assert(_activeRules.Contains(startRule));
+            if (!_activeRules.ContainsKey(startRuleId)) {
+                throw new InvalidSequenceInCallbackException(
+                   $"Speech event started in rule {startRuleId}, " +
+                   "which is not active."
+                );
+            }
 
-            //ResolveSequence(startRule.Sequence, spokenWords, 0);
+            var result = Solver.Solve(
+               this,
+               new ListWalker<SpokenWord>(spokenWords)
+            );
+
+            if (result is not SolveResult.Success success) {
+                throw new InvalidSequenceInCallbackException(
+                   "No active rule path matched the spoken words: " +
+                   string.Join(", ", spokenWords)
+                );
+            }
+
+            foreach (var matched in success.Actions) {
+                matched.Action.InvokeAction(matched.Words);
+            }
         }
 
         /// <summary>

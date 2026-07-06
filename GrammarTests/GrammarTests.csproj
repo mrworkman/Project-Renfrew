@@ -72,6 +72,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="ActionDispatchTests.cs" />
     <Compile Include="GrammarTests.cs" />
     <Compile Include="MousePlotTests.cs" />
     <Compile Include="NestedRuleTests.cs" />

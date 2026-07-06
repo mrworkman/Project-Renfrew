@@ -79,8 +79,10 @@ namespace Renfrew.Grammar.Serialization {
         ) {
             // Optimizing will avoid wrapping symbols in a start/end sequence
             // operation if there is only one member in the Sequence. Dragon
-            // supports either way though. TODO: Ignore ACTION members.
-            if (optimize && sequence.Members.Count == 1) {
+            // supports either way though. Action members emit no symbols, so
+            // they are excluded from the count.
+            if (optimize
+                && sequence.Members.Count(m => m is not GrammarAction) == 1) {
                 return ConvertSequence(sequence, symbols: null);
             }
 
@@ -116,6 +118,11 @@ namespace Renfrew.Grammar.Serialization {
                     }
                     case Word word: {
                         symbols.Add(ConvertWord(word));
+                        break;
+                    }
+                    case GrammarAction: {
+                        // Actions are runtime-only and carry no symbols Dragon
+                        // can recognize; skip them.
                         break;
                     }
                 }

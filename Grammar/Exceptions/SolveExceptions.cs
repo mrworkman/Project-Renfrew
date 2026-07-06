@@ -32,4 +32,11 @@ namespace Renfrew.Grammar.Exceptions {
            $"Unrecognized member type: {memberType.Name}"
         ) { }
     }
+
+    public class LeftRecursiveRuleException : SolveException {
+        public LeftRecursiveRuleException(uint ruleId) : base(
+           $"Rule {ruleId} is left-recursive: it references itself without " +
+           "consuming any input, so the phrase cannot be solved."
+        ) { }
+    }
 }

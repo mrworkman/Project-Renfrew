@@ -15,12 +15,22 @@
 // along with this program. If not, see<http://www.gnu.org/licenses/>.
 //
 
+using System.Collections.Generic;
+
 namespace Renfrew.Grammar.Solving {
     internal class SolveResult {
         private SolveResult() { }
 
-        public static SolveResult Succeeded(int numberOfMatches) {
-            return new Success(numberOfMatches);
+        /// <summary>
+        ///    A bare success used internally to signal that a matching path was
+        ///    found. The actions are attached once, by the top-level solve.
+        /// </summary>
+        public static SolveResult Succeeded() {
+            return new Success(new List<MatchedAction>());
+        }
+
+        public static SolveResult Succeeded(IReadOnlyList<MatchedAction> actions) {
+            return new Success(actions);
         }
 
         public static SolveResult Failed() {
@@ -30,11 +40,15 @@ namespace Renfrew.Grammar.Solving {
         public class Failure : SolveResult { }
 
         public class Success : SolveResult {
-            internal Success(int numberOfMatches) {
-                NumberOfMatches = numberOfMatches;
+            internal Success(IReadOnlyList<MatchedAction> actions) {
+                Actions = actions;
             }
 
-            public int NumberOfMatches { get; }
+            /// <summary>
+            ///    The actions found along the matching path, in the order they
+            ///    should be invoked.
+            /// </summary>
+            public IReadOnlyList<MatchedAction> Actions { get; }
         }
     }
 }

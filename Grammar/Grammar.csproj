@@ -54,6 +54,7 @@
     <Compile Include="Exceptions\SolveExceptions.cs" />
     <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Alternatives.cs" />
     <Compile Include="Collections\ListWalker.cs" />
+    <Compile Include="Solving\MatchedAction.cs" />
     <Compile Include="Solving\Solver.cs" />
     <Compile Include="Solving\SolveResult.cs" />
     <Compile Include="Types\IIdString.cs" />

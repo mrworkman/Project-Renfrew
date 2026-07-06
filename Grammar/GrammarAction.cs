@@ -17,9 +17,16 @@
 
 using System;
 using System.Collections.Generic;
+using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 
 namespace Renfrew.Grammar {
-    public class GrammarAction {
+    /// <summary>
+    ///    A <see cref="Do(System.Action)" />-registered action. It lives in a
+    ///    rule's sequence as a zero-width member: it matches no spoken words, but
+    ///    when the solver reaches it on a matching path it is collected and later
+    ///    invoked with the words its owning rule consumed.
+    /// </summary>
+    public class GrammarAction : ISequenceMember {
         private Action _action;
         private Action<IEnumerable<string>> _actionWithWords;
 

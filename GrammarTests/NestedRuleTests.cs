@@ -15,19 +15,23 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-using System;
+using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
 using Renfrew.Grammar;
 using Renfrew.Grammar.Exceptions;
+using Renfrew.Grammar.FluentApi;
+using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.NatSpeakInterop;
 
 namespace GrammarTests {
     [TestFixture]
     public class NestedRuleTests {
         private class TestGrammar : Grammar {
-            public TestGrammar()
+            public TestGrammar(IIdGenerator idGenerator)
                : base(
+                  new RuleFactory(),
+                  idGenerator,
                   new Mock<IGrammarService>().Object,
                   new Mock<INatSpeak>().Object
                ) { }
@@ -36,11 +40,25 @@ namespace GrammarTests {
             public override void Initialize() { }
         }
 
+        private IdGenerator _idGenerator;
         private TestGrammar _grammar;
 
         [SetUp]
         public void SetUp() {
-            _grammar = new TestGrammar();
+            _idGenerator = new IdGenerator();
+            _grammar = new TestGrammar(_idGenerator);
+        }
+
+        // The word/rule ids are assigned as the rules are built; asking the same
+        // generator afterward returns those ids, so we can compose the spoken
+        // words Dragon would have produced. A word matched via a <rule> reference
+        // carries that referenced rule's id.
+        private SpokenWord Spoken(string word, string ruleName) {
+            return new SpokenWord(
+               word,
+               _idGenerator.GetWordId(word),
+               _idGenerator.GetRuleId(ruleName)
+            );
         }
 
         [Test]
@@ -58,8 +76,14 @@ namespace GrammarTests {
             );
 
             _grammar.ActivateRule("outer");
-            //_grammar.InvokeRule(new [] { "Something", "Good" });
-            throw new NotImplementedException();
+
+            Assert.That(
+               () => _grammar.InvokeRule(new List<SpokenWord> {
+                   Spoken("Something", "outer"),
+                   Spoken("Good", "inner")
+               }),
+               Throws.Nothing
+            );
         }
 
         [Test]
@@ -67,21 +91,23 @@ namespace GrammarTests {
             Assert.That(
                () => {
                    _grammar.AddRule(
-                   "outer",
-                   e => e
-                      .Say("Something")
-                      .WithRule("inner")
-                );
+                       "outer",
+                       e => e
+                          .Say("Something")
+                          .WithRule("inner")
+                    );
                    _grammar.AddRule(
-                   "inner",
-                   e => e
-                      .Say("Good")
-                );
+                       "inner",
+                       e => e
+                          .Say("Good")
+                    );
 
                    _grammar.ActivateRule("outer");
 
-                   //_grammar.InvokeRule(new[] { "Something", "Strange" });
-                   throw new NotImplementedException();
+                   _grammar.InvokeRule(new List<SpokenWord> {
+                      Spoken("Something", "outer"),
+                      Spoken("Strange", "inner")
+                   });
                },
                Throws.InstanceOf<InvalidSequenceInCallbackException>()
             );
@@ -92,21 +118,25 @@ namespace GrammarTests {
             Assert.That(
                () => {
                    _grammar.AddRule(
-                   "outer",
-                   e => e
-                      .Say("Something")
-                      .WithRule("inner")
-                );
+                       "outer",
+                       e => e
+                          .Say("Something")
+                          .WithRule("inner")
+                    );
                    _grammar.AddRule(
-                   "inner",
-                   e => e
-                      .Say("Good")
-                );
+                       "inner",
+                       e => e
+                          .Say("Good")
+                    );
 
                    _grammar.ActivateRule("outer");
 
-                   //_grammar.InvokeRule(new[] { "Something", "Good", "To", "Eat" });
-                   throw new NotImplementedException();
+                   _grammar.InvokeRule(new List<SpokenWord> {
+                      Spoken("Something", "outer"),
+                      Spoken("Good", "inner"),
+                      Spoken("To", "outer"),
+                      Spoken("Eat", "outer")
+                   });
                },
                Throws.InstanceOf<InvalidSequenceInCallbackException>()
             );
@@ -117,21 +147,22 @@ namespace GrammarTests {
             Assert.That(
                () => {
                    _grammar.AddRule(
-                   "outer",
-                   e => e
-                      .Say("Something")
-                      .WithRule("inner")
-                );
+                       "outer",
+                       e => e
+                          .Say("Something")
+                          .WithRule("inner")
+                    );
                    _grammar.AddRule(
-                   "inner",
-                   e => e
-                      .Say("Good")
-                );
+                       "inner",
+                       e => e
+                          .Say("Good")
+                    );
 
                    _grammar.ActivateRule("outer");
 
-                   //_grammar.InvokeRule(new[] { "Something" });
-                   throw new NotImplementedException();
+                   _grammar.InvokeRule(new List<SpokenWord> {
+                      Spoken("Something", "outer")
+                   });
                },
                Throws.InstanceOf<InvalidSequenceInCallbackException>()
             );
@@ -156,8 +187,15 @@ namespace GrammarTests {
 
             _grammar.ActivateRule("outer");
 
-            //_grammar.InvokeRule(new[] { "Something", "Good", "To", "Eat" });
-            throw new NotImplementedException();
+            Assert.That(
+               () => _grammar.InvokeRule(new List<SpokenWord> {
+                   Spoken("Something", "outer"),
+                   Spoken("Good", "inner"),
+                   Spoken("To", "outer"),
+                   Spoken("Eat", "outer")
+               }),
+               Throws.Nothing
+            );
         }
 
         [Test]
@@ -179,8 +217,15 @@ namespace GrammarTests {
 
             _grammar.ActivateRule("outer");
 
-            //_grammar.InvokeRule(new[] { "Something", "Good", "To", "Eat" });
-            throw new NotImplementedException();
+            Assert.That(
+               () => _grammar.InvokeRule(new List<SpokenWord> {
+                   Spoken("Something", "outer"),
+                   Spoken("Good", "inner"),
+                   Spoken("To", "outer"),
+                   Spoken("Eat", "outer")
+               }),
+               Throws.Nothing
+            );
         }
 
         [Test]
@@ -202,8 +247,14 @@ namespace GrammarTests {
 
             _grammar.ActivateRule("outer");
 
-            //_grammar.InvokeRule(new[] { "Something", "To", "Eat" });
-            throw new NotImplementedException();
+            Assert.That(
+               () => _grammar.InvokeRule(new List<SpokenWord> {
+                   Spoken("Something", "outer"),
+                   Spoken("To", "outer"),
+                   Spoken("Eat", "outer")
+               }),
+               Throws.Nothing
+            );
         }
 
         [Test]
@@ -229,12 +280,25 @@ namespace GrammarTests {
 
             _grammar.ActivateRule("outer");
 
-            //_grammar.InvokeRule(new[] { "Something", "Awesome", "To", "Eat" });
-            //_grammar.InvokeRule(
-            //   new[] { "Something", "Great", "Is", "Nice", "To", "Eat" }
-            //);
-            //_grammar.InvokeRule(new[] { "Something", "To", "Eat" });
-            throw new NotImplementedException();
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("Something", "outer"),
+               Spoken("Awesome", "inner"),
+               Spoken("To", "outer"),
+               Spoken("Eat", "outer")
+            });
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("Something", "outer"),
+               Spoken("Great", "inner"),
+               Spoken("Is", "inner"),
+               Spoken("Nice", "inner"),
+               Spoken("To", "outer"),
+               Spoken("Eat", "outer")
+            });
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("Something", "outer"),
+               Spoken("To", "outer"),
+               Spoken("Eat", "outer")
+            });
 
             Assert.That(f1, Is.EqualTo(2));
             Assert.That(f2, Is.EqualTo(3));
@@ -273,16 +337,29 @@ namespace GrammarTests {
 
             _grammar.ActivateRule("outer");
 
-            //_grammar.InvokeRule(
-            //   new[] { "Something", "Good", "Is", "Nice", "To", "Eat" }
-            //);
-            //_grammar.InvokeRule(
-            //   new[] {
-            //      "Something", "Good", "Is", "Sometimes", "Nice", "To", "Eat"
-            //   }
-            //);
-            //_grammar.InvokeRule(new[] { "Something", "Good", "To", "Eat" });
-            throw new NotImplementedException();
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("Something", "outer"),
+               Spoken("Good", "inner"),
+               Spoken("Is", "inner2"),
+               Spoken("Nice", "inner2"),
+               Spoken("To", "outer"),
+               Spoken("Eat", "outer")
+            });
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("Something", "outer"),
+               Spoken("Good", "inner"),
+               Spoken("Is", "inner2"),
+               Spoken("Sometimes", "inner2"),
+               Spoken("Nice", "inner2"),
+               Spoken("To", "outer"),
+               Spoken("Eat", "outer")
+            });
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("Something", "outer"),
+               Spoken("Good", "inner"),
+               Spoken("To", "outer"),
+               Spoken("Eat", "outer")
+            });
 
             Assert.That(f1, Is.EqualTo(3), "f1");
             Assert.That(f2, Is.EqualTo(3), "f2");
