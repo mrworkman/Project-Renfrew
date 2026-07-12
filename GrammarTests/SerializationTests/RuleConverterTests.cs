@@ -24,7 +24,7 @@ using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.Serialization;
 using Renfrew.Grammar.Serialization.HighLevelTypes;
 
-namespace GrammarTests.Serialization {
+namespace GrammarTests.SerializationTests {
     [TestFixture]
     internal class RuleConverterTests {
         private IdGenerator _generator;

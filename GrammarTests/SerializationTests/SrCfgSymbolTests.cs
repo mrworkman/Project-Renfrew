@@ -20,7 +20,7 @@ using Moq;
 using NUnit.Framework;
 using Renfrew.Grammar.Serialization.LowLevelTypes;
 
-namespace GrammarTests.Serialization {
+namespace GrammarTests.SerializationTests {
     [TestFixture]
     internal class SrCfgSymbolTests {
         [Test]

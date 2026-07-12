@@ -1,5 +1,5 @@
 ﻿// Project Renfrew
-// Copyright(C) 2025 Stephen Workman (workman.stephen@gmail.com)
+// Copyright(C) 2026 Stephen Workman (workman.stephen@gmail.com)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -57,13 +57,14 @@ namespace Renfrew.Grammar.Parsing {
         private readonly ListWalker<SpokenWord> _phrase;
 
         // Actions encountered on the path currently being explored, paired with
-        // the rule activation that owns each one. Truncated on backtrack, so once
-        // the trunk parse succeeds it holds exactly the matching path's actions
-        // in order.
+        // the rule activation that owns each one. Truncated on backtracking, so
+        // once the trunk parse succeeds, it holds exactly the matching path's
+        // actions in order.
         private readonly List<TracedAction> _trace = new();
 
-        // (ruleId, phraseIndex) pairs for rules we are currently descending into
-        // and have not yet consumed past. Re-entering one is left-recursion.
+        // (ruleId, phraseIndex) pairs for rules we are currently descending
+        // into and have not yet consumed past. Re-entering one is
+        // left-recursion.
         private readonly HashSet<(uint RuleId, int Index)> _activeDescents = new();
 
         private Parser(ListWalker<SpokenWord> phrase, Grammar grammar) {
@@ -75,8 +76,8 @@ namespace Renfrew.Grammar.Parsing {
         ///    Parses the given phrase against the grammar. The rule to start
         ///    from is taken from the first spoken word's rule id; the whole
         ///    phrase must be consumed for the parse to succeed. On success the
-        ///    result carries the actions to invoke, each with the words consumed
-        ///    by its owning rule.
+        ///    result carries the actions to invoke, each with the words
+        ///    consumed by its owning rule.
         /// </summary>
         public static ParseResult Parse(
            Grammar grammar,
@@ -125,9 +126,9 @@ namespace Renfrew.Grammar.Parsing {
 
             var activation = new RuleActivation(rule.Id, entryIndex);
 
-            // The rule's span ends when its own members are exhausted (before the
-            // parent continuation runs). On the winning path this is set last,
-            // right before the continuation that ultimately succeeds.
+            // The rule's span ends when its own members are exhausted (before
+            // the parent continuation runs). On the winning path this is set
+            // last, right before the continuation that ultimately succeeds.
             return MatchSequence(rule.Sequence.Members, 0, activation, () => {
                 _activeDescents.Remove(descent);
                 activation.EndIndex = _phrase.CurrentIndex;
@@ -136,15 +137,17 @@ namespace Renfrew.Grammar.Parsing {
         }
 
         /// <summary>
-        ///    Matches <paramref name="members" /> from <paramref name="index" />
-        ///    onward, then hands off to <paramref name="continuation" />.
+        ///    Matches <paramref name="members" /> from
+        ///    <paramref name="index" /> onward, then hands off to
+        ///    <paramref name="continuation" />.
         /// </summary>
         /// <param name="activation">
-        ///    The activation of the (named) rule that owns these members. Inline
-        ///    constructs keep the same activation; only a <see cref="RuleName" />
-        ///    reference starts a new one. Its rule id is checked against each
-        ///    spoken word so words are attributed to the correct rule, and its
-        ///    span scopes the words handed to any action found here.
+        ///    The activation of the (named) rule that owns these members.
+        ///    Inline constructs keep the same activation; only a
+        ///    <see cref="RuleName" /> reference starts a new one. Its rule id
+        ///    is checked against each spoken word so words are attributed to
+        ///    the correct rule, and its span scopes the words handed to any
+        ///    action found here.
         /// </param>
         private ParseResult MatchSequence(
            IReadOnlyList<ISequenceMember> members,
@@ -156,7 +159,8 @@ namespace Renfrew.Grammar.Parsing {
                 return continuation();
             }
 
-            // The continuation for whatever follows this member in the sequence.
+            // The continuation for whatever follows this member in the
+            // sequence.
             Continuation next =
                () => MatchSequence(members, index + 1, activation, continuation);
 
@@ -211,8 +215,8 @@ namespace Renfrew.Grammar.Parsing {
                 return ParseResult.Failed();
             }
 
-            // Descend into the referenced rule; its words carry its own rule id,
-            // and once it is consumed the parent's continuation takes over.
+            // Descend into the referenced rule; its words carry the rule id,
+            // and once it is consumed, the parent's continuation takes over.
             return MatchRule(rule, continuation);
         }
 
@@ -310,8 +314,9 @@ namespace Renfrew.Grammar.Parsing {
         }
 
         /// <summary>
-        ///    Consumes the current word and runs <paramref name="continuation" />,
-        ///    rewinding if it fails so a sibling branch can try the same word.
+        ///    Consumes the current word and runs
+        ///    <paramref name="continuation" />, rewinding if it fails so a
+        ///    sibling branch can try the same word.
         /// </summary>
         private ParseResult Advance(Continuation continuation) {
             var checkpoint = Save();
@@ -378,9 +383,9 @@ namespace Renfrew.Grammar.Parsing {
         }
 
         /// <summary>
-        ///    A single activation of a named rule while parsing. Tracks the span
-        ///    of phrase words the rule consumed so actions it owns can be handed
-        ///    the right words.
+        ///    A single activation of a named rule while parsing. Tracks the
+        ///    span of phrase words the rule consumed so actions it owns can be
+        ///    handed the right words.
         /// </summary>
         private sealed class RuleActivation {
             public RuleActivation(uint ruleId, int startIndex) {

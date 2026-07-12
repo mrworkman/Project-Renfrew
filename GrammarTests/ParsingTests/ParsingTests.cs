@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using GrammarTests.Parsing.Yaml;
 using GrammarTests.Util;
-
 using Moq;
 using NUnit.Framework;
 using Renfrew.Grammar;
@@ -16,7 +14,7 @@ using Renfrew.NatSpeakInterop;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace GrammarTests.Parsing {
+namespace GrammarTests.ParsingTests {
     public class TestCase {
         public TestGrammar TestGrammar { get; set; }
         public int TestCaseIndex { get; set; }
@@ -107,7 +105,7 @@ namespace GrammarTests.Parsing {
                    )
                    ?? Enumerable.Empty<TestGrammarSpec>();
 
-                // For each grammar spec, create a new grammar                
+                // For each grammar spec, create a new grammar
                 foreach (var grammarSpec in grammarSpecs) {
                     var grammarServiceMock =
                        new Mock<IGrammarService>(MockBehavior.Loose);

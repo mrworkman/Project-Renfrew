@@ -76,32 +76,32 @@
     <Compile Include="GrammarTests.cs" />
     <Compile Include="MousePlotTests.cs" />
     <Compile Include="NestedRuleTests.cs" />
-    <Compile Include="Parsing\ParsingTests.cs" />
-    <Compile Include="Parsing\Yaml\TestGrammarSpec.cs" />
-    <Compile Include="Parsing\Yaml\TestRuleSpec.cs" />
-    <Compile Include="Parsing\Yaml\TestRuleTests.cs" />
+    <Compile Include="ParsingTests\ParsingTests.cs" />
+    <Compile Include="ParsingTests\Yaml\TestGrammarSpec.cs" />
+    <Compile Include="ParsingTests\Yaml\TestRuleSpec.cs" />
+    <Compile Include="ParsingTests\Yaml\TestRuleTests.cs" />
     <Compile Include="RuleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuleInvocationTests.cs" />
-    <Compile Include="Serialization\CreateRulesChunkTests.cs" />
-    <Compile Include="Serialization\RuleConverterTests.cs" />
-    <Compile Include="Serialization\SerializerTests.cs" />
-    <Compile Include="Serialization\SrCfgSymbolTests.cs" />
+    <Compile Include="SerializationTests\CreateRulesChunkTests.cs" />
+    <Compile Include="SerializationTests\RuleConverterTests.cs" />
+    <Compile Include="SerializationTests\SerializerTests.cs" />
+    <Compile Include="SerializationTests\SrCfgSymbolTests.cs" />
     <Compile Include="Util\CustomAssert.cs" />
     <Compile Include="Util\RuleStringParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Parsing\config\alternatives.yaml">
+    <None Include="ParsingTests\config\alternatives.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Parsing\config\optionals.yaml">
+    <None Include="ParsingTests\config\optionals.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Parsing\config\repeats.yaml">
+    <None Include="ParsingTests\config\repeats.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Parsing\config\simple-sequences.yaml">
+    <None Include="ParsingTests\config\simple-sequences.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

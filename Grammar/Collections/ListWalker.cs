@@ -46,19 +46,12 @@ namespace Renfrew.Grammar.Collections {
             IsAtEnd = index >= _list.Count;
         }
 
-        public void MoveForward(int steps = 1) {
-            if (steps <= 0) {
-                throw new ArgumentOutOfRangeException(
-                   nameof(steps),
-                   "Negative numbers not allowed."
-                );
-            }
-
-            if (CurrentIndex + steps >= _list.Count) {
+        public void MoveForward() {
+            if (CurrentIndex + 1 >= _list.Count) {
                 CurrentIndex = _list.Count;
                 IsAtEnd = true;
             } else {
-                CurrentIndex += steps;
+                CurrentIndex += 1;
             }
         }
     }

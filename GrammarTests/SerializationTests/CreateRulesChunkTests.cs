@@ -25,7 +25,7 @@ using Renfrew.Grammar.Serialization;
 using Renfrew.Grammar.Serialization.HighLevelTypes;
 using Renfrew.Grammar.Serialization.LowLevelTypes;
 
-namespace GrammarTests.Serialization {
+namespace GrammarTests.SerializationTests {
     internal class CreateRulesChunkTests {
         private Serializer _serializer;
         private IIdGenerator _idGenerator;

@@ -27,7 +27,7 @@ using Renfrew.Grammar.Serialization.HighLevelTypes;
 using Renfrew.Grammar.Serialization.LowLevelTypes;
 using Renfrew.NatSpeakInterop;
 
-namespace GrammarTests.Serialization {
+namespace GrammarTests.SerializationTests {
     [TestFixture]
     internal class SerializerTests {
         [OneTimeSetUp]
