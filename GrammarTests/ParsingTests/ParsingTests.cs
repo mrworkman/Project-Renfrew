@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Castle.Core.Internal;
 using GrammarTests.Parsing.Yaml;
 using GrammarTests.Util;
 using Moq;
@@ -88,13 +90,19 @@ namespace GrammarTests.ParsingTests {
             var directory = Path.Combine(
                Path.GetDirectoryName(typeof(ParsingTests).Assembly.Location)
                ?? string.Empty,
-               "Parsing",
+               "ParsingTests",
                "config"
             );
 
             var testCases = new List<TestCase>();
 
             var files = Directory.EnumerateFiles(directory, "*.yaml");
+
+            if (files.IsNullOrEmpty()) {
+                TestContext.Error.WriteLine(
+                    "No configuration files were found!"
+                );
+            }
 
             foreach (var file in files) {
                 TestContext.WriteLine($"Loading test data from {file}...");
@@ -177,6 +185,11 @@ namespace GrammarTests.ParsingTests {
             } else {
                 Assert.IsInstanceOf<ParseResult.Failure>(result);
             }
+        }
+
+        [Test]
+        public void ThereShouldBeTestCases() {
+            Assert.IsTrue(TestCases.Count > 0, "No test cases were found!");
         }
     }
 }
