@@ -241,7 +241,8 @@ namespace Renfrew.Grammar {
 
             var startRuleId = spokenWords.First().RuleId;
 
-            if (!_activeRules.ContainsKey(startRuleId)) {
+            // TODO: Consider where we should actually look for rules (_allRules vs _activeRules)
+            if (!_allRules.ContainsKey(startRuleId)) {
                 throw new InvalidSequenceInCallbackException(
                    $"Speech event started in rule {startRuleId}, " +
                    "which is not active."

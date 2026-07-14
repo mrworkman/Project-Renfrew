@@ -32,6 +32,19 @@ namespace Renfrew.Grammar.FluentApi {
            StringComparer.CurrentCultureIgnoreCase
         );
 
+        /// <summary>
+        ///  Creates a rule without a tracked name. Use only when nesting rules.
+        /// </summary>
+        private Rule(IIdGenerator idGenerator) {
+            _idGenerator = idGenerator
+                ?? throw new ArgumentNullException(nameof(idGenerator));
+
+            // The grammar does not track nested rules, so no name or identifier
+            // is required.
+            String = "-";
+            Id = 0;
+        }
+
         internal Rule(string name, IIdGenerator idGenerator) {
             _idGenerator = idGenerator
                            ?? throw new ArgumentNullException(nameof(idGenerator));
@@ -172,7 +185,7 @@ namespace Renfrew.Grammar.FluentApi {
         private Sequence InvokeActionInNestedRule(
            Expression<Action<IRule>> action
         ) {
-            var nestedRule = new Rule("-", _idGenerator);
+            var nestedRule = new Rule(_idGenerator);
 
             action.Compile()(nestedRule);
             AdoptWordsFromRule(nestedRule);
