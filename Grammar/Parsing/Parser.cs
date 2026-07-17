@@ -56,10 +56,11 @@ namespace Renfrew.Grammar.Parsing {
         private readonly Grammar _grammar;
         private readonly ListWalker<SpokenWord> _phrase;
 
-        // Actions encountered on the path currently being explored, paired with
-        // the rule activation that owns each one. Truncated on backtracking, so
-        // once the trunk parse succeeds, it holds exactly the matching path's
-        // actions in order.
+        // Actions encountered on the path currently being explored, each paired
+        // with the span of phrase words scoped to it (the words matched in the
+        // action's own sequence since the previous action there). Truncated on
+        // backtracking, so once the trunk parse succeeds, it holds exactly the
+        // matching path's actions in order.
         private readonly List<TracedAction> _trace = new();
 
         // (ruleId, phraseIndex) pairs for rules we are currently descending
@@ -76,8 +77,8 @@ namespace Renfrew.Grammar.Parsing {
         ///    Parses the given phrase against the grammar. The rule to start
         ///    from is taken from the first spoken word's rule id; the whole
         ///    phrase must be consumed for the parse to succeed. On success the
-        ///    result carries the actions to invoke, each with the words
-        ///    consumed by its owning rule.
+        ///    result carries the actions to invoke, each with the words matched
+        ///    in its own sequence since the previous action there.
         /// </summary>
         public static ParseResult Parse(
            Grammar grammar,
@@ -124,16 +125,20 @@ namespace Renfrew.Grammar.Parsing {
                 throw new LeftRecursiveRuleException(rule.Id);
             }
 
-            var activation = new RuleActivation(rule.Id, entryIndex);
-
-            // The rule's span ends when its own members are exhausted (before
-            // the parent continuation runs). On the winning path this is set
-            // last, right before the continuation that ultimately succeeds.
-            return MatchSequence(rule.Sequence.Members, 0, activation, () => {
-                _activeDescents.Remove(descent);
-                activation.EndIndex = _phrase.CurrentIndex;
-                return continuation();
-            });
+            // A rule opens a fresh action scope starting at the word it is about
+            // to consume: actions among its members are scoped relative to
+            // entryIndex, independent of the enclosing rule's scope.
+            return MatchSequence(
+               rule.Sequence.Members,
+               0,
+               rule.Id,
+               entryIndex,
+               null,
+               () => {
+                   _activeDescents.Remove(descent);
+                   return continuation();
+               }
+            );
         }
 
         /// <summary>
@@ -141,45 +146,71 @@ namespace Renfrew.Grammar.Parsing {
         ///    <paramref name="index" /> onward, then hands off to
         ///    <paramref name="continuation" />.
         /// </summary>
-        /// <param name="activation">
-        ///    The activation of the (named) rule that owns these members.
-        ///    Inline constructs keep the same activation; only a
-        ///    <see cref="RuleName" /> reference starts a new one. Its rule id
-        ///    is checked against each spoken word so words are attributed to
-        ///    the correct rule, and its span scopes the words handed to any
-        ///    action found here.
+        /// <param name="ruleId">
+        ///    Id of the (named) rule that owns these members. Inline constructs
+        ///    keep the same id; only a <see cref="RuleName" /> reference starts
+        ///    a new one. It is checked against each spoken word so words are
+        ///    attributed to the correct rule.
+        /// </param>
+        /// <param name="scopeStart">
+        ///    Phrase index at which this sequence began matching. An action here
+        ///    that has no earlier sibling action is scoped from this point, so a
+        ///    nested construct's actions never bleed into an enclosing
+        ///    sequence's scope.
+        /// </param>
+        /// <param name="lastActionIndex">
+        ///    Phrase index of the previous action encountered in <em>this</em>
+        ///    sequence, or <c>null</c> if none. The next action is scoped from
+        ///    here, so sibling actions partition the words between them.
         /// </param>
         private ParseResult MatchSequence(
            IReadOnlyList<ISequenceMember> members,
            int index,
-           RuleActivation activation,
+           uint ruleId,
+           int scopeStart,
+           int? lastActionIndex,
            Continuation continuation
         ) {
             if (index >= members.Count) {
                 return continuation();
             }
 
-            // The continuation for whatever follows this member in the
-            // sequence.
+            // The continuation for whatever follows this member in the sequence.
+            // Non-action members leave the sibling-action cursor untouched.
             Continuation next =
-               () => MatchSequence(members, index + 1, activation, continuation);
+               () => MatchSequence(
+                  members, index + 1, ruleId, scopeStart, lastActionIndex,
+                  continuation
+               );
 
             switch (members[index]) {
                 case Word word:
-                    return MatchWord(word, activation, next);
+                    return MatchWord(word, ruleId, next);
                 case RuleName ruleName:
                     return MatchRuleName(ruleName, next);
                 case Alternatives alternatives:
-                    return MatchAlternatives(alternatives, activation, next);
+                    return MatchAlternatives(alternatives, ruleId, next);
                 case Optional optional:
-                    return MatchOptional(optional, activation, next);
+                    return MatchOptional(optional, ruleId, next);
                 case Repeated repeated:
-                    return MatchRepeated(repeated, activation, next);
+                    return MatchRepeated(repeated, ruleId, next);
                 case GrammarAction action:
-                    // Zero-width: record it and carry on. Reverted on backtrack
-                    // via the enclosing construct's checkpoint.
-                    _trace.Add(new TracedAction(action, activation));
-                    return next();
+                    // Zero-width: record it scoped to the words consumed in this
+                    // sequence since the previous action (or the sequence's
+                    // start), then carry on with the sibling cursor advanced to
+                    // here. Reverted on backtrack via the enclosing construct's
+                    // checkpoint.
+                    _trace.Add(new TracedAction(
+                       action, lastActionIndex ?? scopeStart, _phrase.CurrentIndex
+                    ));
+                    return MatchSequence(
+                       members,
+                       index + 1,
+                       ruleId,
+                       scopeStart,
+                       _phrase.CurrentIndex,
+                       continuation
+                    );
                 default:
                     throw new UnrecognizedMemberType(members[index].GetType());
             }
@@ -187,7 +218,7 @@ namespace Renfrew.Grammar.Parsing {
 
         private ParseResult MatchWord(
            Word word,
-           RuleActivation activation,
+           uint ruleId,
            Continuation continuation
         ) {
             if (_phrase.IsAtEnd) {
@@ -198,7 +229,7 @@ namespace Renfrew.Grammar.Parsing {
 
             if (word.Id != spoken.WordId
                 || word.String != spoken.Word
-                || spoken.RuleId != activation.RuleId) {
+                || spoken.RuleId != ruleId) {
                 return ParseResult.Failed();
             }
 
@@ -222,16 +253,20 @@ namespace Renfrew.Grammar.Parsing {
 
         private ParseResult MatchAlternatives(
            Alternatives alternatives,
-           RuleActivation activation,
+           uint ruleId,
            Continuation continuation
         ) {
             var checkpoint = Save();
 
             foreach (var sequence in alternatives.Sequences) {
+                // Each branch is its own action scope, opening where the
+                // alternatives began.
                 var result = MatchSequence(
                    sequence.Members,
                    0,
-                   activation,
+                   ruleId,
+                   checkpoint.PhraseIndex,
+                   null,
                    continuation
                 );
 
@@ -247,16 +282,18 @@ namespace Renfrew.Grammar.Parsing {
 
         private ParseResult MatchOptional(
            Optional optional,
-           RuleActivation activation,
+           uint ruleId,
            Continuation continuation
         ) {
             var checkpoint = Save();
 
-            // Prefer taking the optional section...
+            // Prefer taking the optional section (its own action scope)...
             var withSection = MatchSequence(
                optional.Sequence.Members,
                0,
-               activation,
+               ruleId,
+               checkpoint.PhraseIndex,
+               null,
                continuation
             );
 
@@ -271,15 +308,18 @@ namespace Renfrew.Grammar.Parsing {
 
         private ParseResult MatchRepeated(
            Repeated repeated,
-           RuleActivation activation,
+           uint ruleId,
            Continuation continuation
         ) {
-            // One-or-more: one mandatory pass, then zero-or-more.
+            // One-or-more: one mandatory pass, then zero-or-more. Each pass is
+            // its own action scope, opening at the current phrase position.
             return MatchSequence(
                repeated.Sequence.Members,
                0,
-               activation,
-               () => MatchRepetitions(repeated, activation, continuation)
+               ruleId,
+               _phrase.CurrentIndex,
+               null,
+               () => MatchRepetitions(repeated, ruleId, continuation)
             );
         }
 
@@ -290,7 +330,7 @@ namespace Renfrew.Grammar.Parsing {
         /// </summary>
         private ParseResult MatchRepetitions(
            Repeated repeated,
-           RuleActivation activation,
+           uint ruleId,
            Continuation continuation
         ) {
             var checkpoint = Save();
@@ -298,11 +338,13 @@ namespace Renfrew.Grammar.Parsing {
             var withAnother = MatchSequence(
                repeated.Sequence.Members,
                0,
-               activation,
+               ruleId,
+               checkpoint.PhraseIndex,
+               null,
                () => _phrase.CurrentIndex == checkpoint.PhraseIndex
                   // A pass that consumes nothing would loop forever; stop here.
                   ? continuation()
-                  : MatchRepetitions(repeated, activation, continuation)
+                  : MatchRepetitions(repeated, ruleId, continuation)
             );
 
             if (withAnother is ParseResult.Success) {
@@ -345,9 +387,7 @@ namespace Renfrew.Grammar.Parsing {
             foreach (var traced in _trace) {
                 var words = new List<string>();
 
-                for (var i = traced.Owner.StartIndex;
-                     i < traced.Owner.EndIndex;
-                     i++) {
+                for (var i = traced.StartIndex; i < traced.EndIndex; i++) {
                     words.Add(_phrase[i].Word);
                 }
 
@@ -383,30 +423,21 @@ namespace Renfrew.Grammar.Parsing {
         }
 
         /// <summary>
-        ///    A single activation of a named rule while parsing. Tracks the
-        ///    span of phrase words the rule consumed so actions it owns can be
-        ///    handed the right words.
+        ///    An action encountered while parsing, together with the half-open
+        ///    span of phrase words scoped to it: everything matched in the
+        ///    action's own sequence since the previous sibling action (or the
+        ///    sequence's start) up to the action's position.
         /// </summary>
-        private sealed class RuleActivation {
-            public RuleActivation(uint ruleId, int startIndex) {
-                RuleId = ruleId;
-                StartIndex = startIndex;
-                EndIndex = startIndex;
-            }
-
-            public uint RuleId { get; }
-            public int StartIndex { get; }
-            public int EndIndex { get; set; }
-        }
-
         private readonly struct TracedAction {
-            public TracedAction(GrammarAction action, RuleActivation owner) {
+            public TracedAction(GrammarAction action, int startIndex, int endIndex) {
                 Action = action;
-                Owner = owner;
+                StartIndex = startIndex;
+                EndIndex = endIndex;
             }
 
             public GrammarAction Action { get; }
-            public RuleActivation Owner { get; }
+            public int StartIndex { get; }
+            public int EndIndex { get; }
         }
     }
 }
