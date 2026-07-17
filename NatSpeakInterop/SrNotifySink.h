@@ -22,30 +22,29 @@
 #include "ISRNotifySink.h"
 
 namespace Renfrew::NatSpeakInterop::Sinks {
-   public ref class SrNotifySink :
-      public Dragon::ComInterfaces::IDgnGetSinkFlags,
-      public Dragon::ComInterfaces::IDgnSrEngineNotifySink,
-      public Dragon::ComInterfaces::ISrNotifySink {
+    public ref class SrNotifySink :
+        public Dragon::ComInterfaces::IDgnGetSinkFlags,
+        public Dragon::ComInterfaces::IDgnSrEngineNotifySink,
+        public Dragon::ComInterfaces::ISrNotifySink {
+        Action<UInt64>^ _pausedProcessingCallback;
 
-      Action<UInt64> ^_pausedProcessingCallback;
+        public:
+            SrNotifySink(Action<UInt64>^ pausedProcessingCallback);
+            void virtual SinkFlagsGet(DWORD* pdwFlags);
 
-   public:
-      SrNotifySink(Action<UInt64> ^pausedProcessingCallback);
-      void virtual SinkFlagsGet(DWORD *pdwFlags);
+            // IDgnSREngineNotifySink Methods
+            void virtual AttribChanged2(DWORD);
+            void virtual Paused(QWORD cookie);
+            void virtual MimicDone(DWORD, LPUNKNOWN);
+            void virtual ErrorHappened(LPUNKNOWN);
+            void virtual Progress(int, const WCHAR*);
 
-      // IDgnSREngineNotifySink Methods
-      void virtual AttribChanged2(DWORD);
-      void virtual Paused(QWORD cookie);
-      void virtual MimicDone(DWORD, LPUNKNOWN);
-      void virtual ErrorHappened(LPUNKNOWN);
-      void virtual Progress(int, const WCHAR *);
-
-      // ISRNotifySink Methods
-      void virtual AttribChanged(DWORD);
-      void virtual Interference(QWORD, QWORD, DWORD);
-      void virtual Sound(QWORD, QWORD);
-      void virtual UtteranceBegin(QWORD);
-      void virtual UtteranceEnd(QWORD, QWORD);
-      void virtual VUMeter(QWORD, WORD);
-   };
+            // ISRNotifySink Methods
+            void virtual AttribChanged(DWORD);
+            void virtual Interference(QWORD, QWORD, DWORD);
+            void virtual Sound(QWORD, QWORD);
+            void virtual UtteranceBegin(QWORD);
+            void virtual UtteranceEnd(QWORD, QWORD);
+            void virtual VUMeter(QWORD, WORD);
+    };
 }

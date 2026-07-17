@@ -52,114 +52,112 @@
 #define DGNSRAC_MUTE         1013
 
 typedef enum {
-   SRGRMFMT_CFG                 = 0x0000,
-   SRGRMFMT_LIMITEDDOMAIN       = 0x0001,
-   SRGRMFMT_DICTATION           = 0x0002,
-   SRGRMFMT_CFGNATIVE           = 0x8000,
-   SRGRMFMT_LIMITEDDOMAINNATIVE = 0x8001,
-   SRGRMFMT_DICTATIONNATIVE     = 0x8002,
-   SRGRMFMT_DRAGONNATIVE1       = 0x8101,
-   SRGRMFMT_DRAGONNATIVE2       = 0x8102,
-   SRGRMFMT_DRAGONNATIVE3       = 0x8103
+    SRGRMFMT_CFG                 = 0x0000,
+    SRGRMFMT_LIMITEDDOMAIN       = 0x0001,
+    SRGRMFMT_DICTATION           = 0x0002,
+    SRGRMFMT_CFGNATIVE           = 0x8000,
+    SRGRMFMT_LIMITEDDOMAINNATIVE = 0x8001,
+    SRGRMFMT_DICTATIONNATIVE     = 0x8002,
+    SRGRMFMT_DRAGONNATIVE1       = 0x8101,
+    SRGRMFMT_DRAGONNATIVE2       = 0x8102,
+    SRGRMFMT_DRAGONNATIVE3       = 0x8103
 } SRGRMFMT, *PSRGRMFMT;
 
 typedef enum {
-   CHARSET_TEXT,
-   CHARSET_IPAPHONETIC,
-   CHARSET_ENGINEPHONETIC
+    CHARSET_TEXT, CHARSET_IPAPHONETIC, CHARSET_ENGINEPHONETIC
 } VOICECHARSET;
 
 typedef enum _VOICEPARTOFSPEECH {
-   VPS_UNKNOWN,
-   VPS_NOUN,
-   VPS_VERB,
-   VPS_ADVERB,
-   VPS_ADJECTIVE,
-   VPS_PROPERNOUN,
-   VPS_PRONOUN,
-   VPS_CONJUNCTION,
-   VPS_CARDINAL,
-   VPS_ORDINAL,
-   VPS_DETERMINER,
-   VPS_QUANTIFIER,
-   VPS_PUNCTUATION,
-   VPS_CONTRACTION,
-   VPS_INTERJECTION,
-   VPS_ABBREVIATION,
-   VPS_PREPOSITION
+    VPS_UNKNOWN,
+    VPS_NOUN,
+    VPS_VERB,
+    VPS_ADVERB,
+    VPS_ADJECTIVE,
+    VPS_PROPERNOUN,
+    VPS_PRONOUN,
+    VPS_CONJUNCTION,
+    VPS_CARDINAL,
+    VPS_ORDINAL,
+    VPS_DETERMINER,
+    VPS_QUANTIFIER,
+    VPS_PUNCTUATION,
+    VPS_CONTRACTION,
+    VPS_INTERJECTION,
+    VPS_ABBREVIATION,
+    VPS_PREPOSITION
 } VOICEPARTOFSPEECH;
 
 typedef struct {
-   PVOID pData;
-   DWORD dwSize;
+    PVOID pData;
+    DWORD dwSize;
 } SDATA, *PSDATA;
 
 #pragma warning (disable: 4200)
 typedef struct {
-   DWORD dwSize;
-   DWORD dwWordNum;
-   WCHAR szWord[0];
+    DWORD dwSize;
+    DWORD dwWordNum;
+    WCHAR szWord[0];
 } SRWORDW, *PSRWORDW;
 
 typedef struct {
-   DWORD dwSize;
-   BYTE  abWords[0];
+    DWORD dwSize;
+    BYTE abWords[0];
 } SRPHRASEW, *PSRPHRASEW;
 #pragma warning (default: 4200)
 
 typedef struct {
-   LANGID LanguageID;
-   WCHAR  szDialect[LANG_LEN];
+    LANGID LanguageID;
+    WCHAR szDialect[LANG_LEN];
 } LANGUAGEW, FAR *PLANGUAGEW;
 
 typedef struct {
-   GUID      gEngineID;
-   WCHAR     szMfgName[SRMI_NAMELEN];
-   WCHAR     szProductName[SRMI_NAMELEN];
-   GUID      gModeID;
-   WCHAR     szModeName[SRMI_NAMELEN];
-   LANGUAGEW language;
-   DWORD     dwSequencing;
-   DWORD     dwMaxWordsVocab;
-   DWORD     dwMaxWordsState;
-   DWORD     dwGrammars;
-   DWORD     dwFeatures;
-   DWORD     dwInterfaces;
-   DWORD     dwEngineFeatures;
+    GUID gEngineID;
+    WCHAR szMfgName[SRMI_NAMELEN];
+    WCHAR szProductName[SRMI_NAMELEN];
+    GUID gModeID;
+    WCHAR szModeName[SRMI_NAMELEN];
+    LANGUAGEW language;
+    DWORD dwSequencing;
+    DWORD dwMaxWordsVocab;
+    DWORD dwMaxWordsState;
+    DWORD dwGrammars;
+    DWORD dwFeatures;
+    DWORD dwInterfaces;
+    DWORD dwEngineFeatures;
 } SRMODEINFOW, *PSRMODEINFOW;
 
 typedef struct {
-   DWORD dwNextPhonemeNode;
-   DWORD dwUpAlternatePhonemeNode;
-   DWORD dwDownAlternatePhonemeNode;
-   DWORD dwPreviousPhonemeNode;
-   DWORD dwWordNode;
-   QWORD qwStartTime;
-   QWORD qwEndTime;
-   DWORD dwPhonemeScore;
-   WORD  wVolume;
-   WORD  wPitch;
+    DWORD dwNextPhonemeNode;
+    DWORD dwUpAlternatePhonemeNode;
+    DWORD dwDownAlternatePhonemeNode;
+    DWORD dwPreviousPhonemeNode;
+    DWORD dwWordNode;
+    QWORD qwStartTime;
+    QWORD qwEndTime;
+    DWORD dwPhonemeScore;
+    WORD wVolume;
+    WORD wPitch;
 } SRRESPHONEMENODE, *PSRRESPHONEMENODE;
 
 typedef struct {
-   DWORD dwNextWordNode;
-   DWORD dwUpAlternateWordNode;
-   DWORD dwDownAlternateWordNode;
-   DWORD dwPreviousWordNode;
-   DWORD dwPhonemeNode;
-   QWORD qwStartTime;
-   QWORD qwEndTime;
-   DWORD dwWordScore;
-   WORD  wVolume;
-   WORD  wPitch;
-   VOICEPARTOFSPEECH
-           pos;
-   DWORD dwCFGParse;
-   DWORD dwCue;
+    DWORD dwNextWordNode;
+    DWORD dwUpAlternateWordNode;
+    DWORD dwDownAlternateWordNode;
+    DWORD dwPreviousWordNode;
+    DWORD dwPhonemeNode;
+    QWORD qwStartTime;
+    QWORD qwEndTime;
+    DWORD dwWordScore;
+    WORD wVolume;
+    WORD wPitch;
+    VOICEPARTOFSPEECH
+    pos;
+    DWORD dwCFGParse;
+    DWORD dwCue;
 } SRRESWORDNODE, *PSRRESWORDNODE;
 
 typedef struct {
-   DWORD    message;
-   DWORD    paramL;
-   DWORD    paramH;
+    DWORD message;
+    DWORD paramL;
+    DWORD paramH;
 } HOOK_EVENTMSG;

@@ -44,8 +44,14 @@
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="google-diff-match-patch, Version=1.3.100.0, Culture=neutral, PublicKeyToken=d91afa6da54ed784, processorArchitecture=MSIL">
+      <HintPath>..\packages\google-diff-match-patch.1.3.100\lib\netstandard2.0\google-diff-match-patch.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=4.7.145.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.7.145\lib\net45\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
@@ -53,6 +59,9 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Drawing" />
+    <Reference Include="YamlDotNet, Version=18.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+      <HintPath>..\packages\YamlDotNet.18.0.0\lib\net47\YamlDotNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -63,15 +72,38 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="ActionDispatchTests.cs" />
     <Compile Include="GrammarTests.cs" />
     <Compile Include="MousePlotTests.cs" />
     <Compile Include="NestedRuleTests.cs" />
+    <Compile Include="ParsingTests\ParsingTests.cs" />
+    <Compile Include="ParsingTests\Yaml\TestGrammarSpec.cs" />
+    <Compile Include="ParsingTests\Yaml\TestRuleSpec.cs" />
+    <Compile Include="ParsingTests\Yaml\TestRuleTests.cs" />
     <Compile Include="RuleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuleInvocationTests.cs" />
+    <Compile Include="SerializationTests\CreateRulesChunkTests.cs" />
+    <Compile Include="SerializationTests\RuleConverterTests.cs" />
+    <Compile Include="SerializationTests\SerializerTests.cs" />
+    <Compile Include="SerializationTests\SrCfgSymbolTests.cs" />
+    <Compile Include="Util\CustomAssert.cs" />
+    <Compile Include="Util\RuleStringParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="ParsingTests\config\alternatives.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ParsingTests\config\optionals.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ParsingTests\config\repeats.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ParsingTests\config\simple-sequences.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

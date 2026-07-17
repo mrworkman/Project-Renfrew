@@ -15,195 +15,357 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
+using System.Collections.Generic;
 using Moq;
-
 using NUnit.Framework;
-
 using Renfrew.Grammar;
 using Renfrew.Grammar.Exceptions;
+using Renfrew.Grammar.FluentApi;
+using Renfrew.Grammar.FluentApi.Interfaces;
 using Renfrew.NatSpeakInterop;
 
 namespace GrammarTests {
+    [TestFixture]
+    public class NestedRuleTests {
+        private class TestGrammar : Grammar {
+            public TestGrammar(IIdGenerator idGenerator)
+               : base(
+                  new RuleFactory(),
+                  idGenerator,
+                  new Mock<IGrammarService>().Object,
+                  new Mock<INatSpeak>().Object
+               ) { }
 
-   [TestFixture]
-   public class NestedRuleTests {
+            public override void Dispose() { }
+            public override void Initialize() { }
+        }
 
-      private class TestGrammar : Grammar {
-         public TestGrammar()
-            : base(new Mock<IGrammarService>().Object, new Mock<INatSpeak>().Object) {
-         }
-         public override void Dispose() { }
-         public override void Initialize() { }
-      }
+        private IdGenerator _idGenerator;
+        private TestGrammar _grammar;
 
-      private TestGrammar _grammar;
+        [SetUp]
+        public void SetUp() {
+            _idGenerator = new IdGenerator();
+            _grammar = new TestGrammar(_idGenerator);
+        }
 
-      [SetUp]
-      public void SetUp() {
-         _grammar = new TestGrammar();
-      }
-
-      [Test]
-      public void InvokingSimpleNestedRuleWithValidWordSequenceShouldSucceed() {
-         _grammar.AddRule("outer", e => e
-            .Say("Something").WithRule("inner")
-         );
-         _grammar.AddRule("inner", e => e
-            .Say("Good")
-         );
-
-         _grammar.ActivateRule("outer");
-         _grammar.InvokeRule(new [] { "Something", "Good" });
-      }
-
-      [Test]
-      public void InvokingSimpleNestedRuleWithInvalidWordSequenceShouldFail() {
-         Assert.That(() => {
-            _grammar.AddRule("outer", e => e
-               .Say("Something").WithRule("inner")
+        // The word/rule ids are assigned as the rules are built; asking the same
+        // generator afterward returns those ids, so we can compose the spoken
+        // words Dragon would have produced. A word matched via a <rule> reference
+        // carries that referenced rule's id.
+        private SpokenWord Spoken(string word, string ruleName) {
+            return new SpokenWord(
+               word,
+               _idGenerator.GetWordId(word),
+               _idGenerator.GetRuleId(ruleName)
             );
-            _grammar.AddRule("inner", e => e
-               .Say("Good")
+        }
+
+        [Test]
+        public void InvokingSimpleNestedRuleWithValidWordSequenceShouldSucceed() {
+            _grammar.AddRule(
+               "outer",
+               e => e
+                  .Say("Something")
+                  .WithRule("inner")
             );
-
-            _grammar.ActivateRule("outer");
-
-            _grammar.InvokeRule(new[] { "Something", "Strange" });
-         }, Throws.InstanceOf<InvalidSequenceInCallbackException>());
-      }
-
-      [Test]
-      public void InvokingSimpleNestedRuleWithTooManyWordsShouldFail() {
-         Assert.That(() => {
-            _grammar.AddRule("outer", e => e
-               .Say("Something").WithRule("inner")
-            );
-            _grammar.AddRule("inner", e => e
-               .Say("Good")
+            _grammar.AddRule(
+               "inner",
+               e => e
+                  .Say("Good")
             );
 
             _grammar.ActivateRule("outer");
 
-            _grammar.InvokeRule(new[] { "Something", "Good", "To", "Eat" });
-         }, Throws.InstanceOf<InvalidSequenceInCallbackException>());
-      }
-
-      [Test]
-      public void InvokingSimpleNestedRuleWithTooFewWordsShouldFail() {
-         Assert.That(() => {
-            _grammar.AddRule("outer", e => e
-               .Say("Something").WithRule("inner")
+            Assert.That(
+               () => _grammar.InvokeRule(new List<SpokenWord> {
+                   Spoken("Something", "outer"),
+                   Spoken("Good", "inner")
+               }),
+               Throws.Nothing
             );
-            _grammar.AddRule("inner", e => e
-               .Say("Good")
+        }
+
+        [Test]
+        public void InvokingSimpleNestedRuleWithInvalidWordSequenceShouldFail() {
+            Assert.That(
+               () => {
+                   _grammar.AddRule(
+                       "outer",
+                       e => e
+                          .Say("Something")
+                          .WithRule("inner")
+                    );
+                   _grammar.AddRule(
+                       "inner",
+                       e => e
+                          .Say("Good")
+                    );
+
+                   _grammar.ActivateRule("outer");
+
+                   _grammar.InvokeRule(new List<SpokenWord> {
+                      Spoken("Something", "outer"),
+                      Spoken("Strange", "inner")
+                   });
+               },
+               Throws.InstanceOf<InvalidSequenceInCallbackException>()
+            );
+        }
+
+        [Test]
+        public void InvokingSimpleNestedRuleWithTooManyWordsShouldFail() {
+            Assert.That(
+               () => {
+                   _grammar.AddRule(
+                       "outer",
+                       e => e
+                          .Say("Something")
+                          .WithRule("inner")
+                    );
+                   _grammar.AddRule(
+                       "inner",
+                       e => e
+                          .Say("Good")
+                    );
+
+                   _grammar.ActivateRule("outer");
+
+                   _grammar.InvokeRule(new List<SpokenWord> {
+                      Spoken("Something", "outer"),
+                      Spoken("Good", "inner"),
+                      Spoken("To", "outer"),
+                      Spoken("Eat", "outer")
+                   });
+               },
+               Throws.InstanceOf<InvalidSequenceInCallbackException>()
+            );
+        }
+
+        [Test]
+        public void InvokingSimpleNestedRuleWithTooFewWordsShouldFail() {
+            Assert.That(
+               () => {
+                   _grammar.AddRule(
+                       "outer",
+                       e => e
+                          .Say("Something")
+                          .WithRule("inner")
+                    );
+                   _grammar.AddRule(
+                       "inner",
+                       e => e
+                          .Say("Good")
+                    );
+
+                   _grammar.ActivateRule("outer");
+
+                   _grammar.InvokeRule(new List<SpokenWord> {
+                      Spoken("Something", "outer")
+                   });
+               },
+               Throws.InstanceOf<InvalidSequenceInCallbackException>()
+            );
+        }
+
+        [Test]
+        public void
+           InvokingSimpleNestedRuleWithContinuationWithValidWordSequenceShouldSucceed() {
+            _grammar.AddRule(
+               "outer",
+               e => e
+                  .Say("Something")
+                  .WithRule("inner")
+                  .Say("To")
+                  .Say("Eat")
+            );
+            _grammar.AddRule(
+               "inner",
+               e => e
+                  .Say("Good")
             );
 
             _grammar.ActivateRule("outer");
 
-            _grammar.InvokeRule(new[] { "Something" });
-         }, Throws.InstanceOf<InvalidSequenceInCallbackException>());
-      }
+            Assert.That(
+               () => _grammar.InvokeRule(new List<SpokenWord> {
+                   Spoken("Something", "outer"),
+                   Spoken("Good", "inner"),
+                   Spoken("To", "outer"),
+                   Spoken("Eat", "outer")
+               }),
+               Throws.Nothing
+            );
+        }
 
-      [Test]
-      public void InvokingSimpleNestedRuleWithContinuationWithValidWordSequenceShouldSucceed() {
-         _grammar.AddRule("outer", e => e
-            .Say("Something").WithRule("inner").Say("To").Say("Eat")
-         );
-         _grammar.AddRule("inner", e => e
-            .Say("Good")
-         );
+        [Test]
+        public void
+           InvokingSimpleRuleWithOptionalNestedRuleShouldSucceedWhenOptionalRuleElementsAreIncluded() {
+            _grammar.AddRule(
+               "outer",
+               e => e
+                  .Say("Something")
+                  .OptionallyWithRule("inner")
+                  .Say("To")
+                  .Say("Eat")
+            );
+            _grammar.AddRule(
+               "inner",
+               e => e
+                  .Say("Good")
+            );
 
-         _grammar.ActivateRule("outer");
+            _grammar.ActivateRule("outer");
 
-         _grammar.InvokeRule(new[] { "Something", "Good", "To", "Eat" });
-      }
+            Assert.That(
+               () => _grammar.InvokeRule(new List<SpokenWord> {
+                   Spoken("Something", "outer"),
+                   Spoken("Good", "inner"),
+                   Spoken("To", "outer"),
+                   Spoken("Eat", "outer")
+               }),
+               Throws.Nothing
+            );
+        }
 
-      [Test]
-      public void InvokingSimpleRuleWithOptionalNestedRuleShouldSucceedWhenOptionalRuleElementsAreIncluded() {
-         _grammar.AddRule("outer", e => e
-            .Say("Something").OptionallyWithRule("inner").Say("To").Say("Eat")
-         );
-         _grammar.AddRule("inner", e => e
-            .Say("Good")
-         );
+        [Test]
+        public void
+           InvokingSimpleRuleWithOptionalNestedRuleShouldSucceedWhenOptionalRuleElementsAreOmitted() {
+            _grammar.AddRule(
+               "outer",
+               e => e
+                  .Say("Something")
+                  .OptionallyWithRule("inner")
+                  .Say("To")
+                  .Say("Eat")
+            );
+            _grammar.AddRule(
+               "inner",
+               e => e
+                  .Say("Good")
+            );
 
-         _grammar.ActivateRule("outer");
+            _grammar.ActivateRule("outer");
 
-         _grammar.InvokeRule(new[] { "Something", "Good", "To", "Eat" });
-      }
+            Assert.That(
+               () => _grammar.InvokeRule(new List<SpokenWord> {
+                   Spoken("Something", "outer"),
+                   Spoken("To", "outer"),
+                   Spoken("Eat", "outer")
+               }),
+               Throws.Nothing
+            );
+        }
 
-      [Test]
-      public void InvokingSimpleRuleWithOptionalNestedRuleShouldSucceedWhenOptionalRuleElementsAreOmitted() {
-         _grammar.AddRule("outer", e => e
-            .Say("Something").OptionallyWithRule("inner").Say("To").Say("Eat")
-         );
-         _grammar.AddRule("inner", e => e
-            .Say("Good")
-         );
+        [Test]
+        public void InvokingSimpleRuleWithComplexNestedRuleShouldSucceed() {
+            int f1 = 0, f2 = 0;
 
-         _grammar.ActivateRule("outer");
+            _grammar.AddRule(
+               "outer",
+               e => e
+                  .Say("Something")
+                  .OptionallyWithRule("inner")
+                  .Say("To")
+                  .Say("Eat")
+                  .Do(() => f2++)
+            );
+            _grammar.AddRule(
+               "inner",
+               e => e
+                  .SayOneOf("Good", "Awesome", "Great")
+                  .Do(() => f1++)
+                  .Optionally(o => o.Say("Is").Say("Nice"))
+            );
 
-         _grammar.InvokeRule(new[] { "Something", "To", "Eat" });
-      }
+            _grammar.ActivateRule("outer");
 
-      [Test]
-      public void InvokingSimpleRuleWithComplexNestedRuleShouldSucceed() {
-         int f1 = 0, f2 = 0;
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("Something", "outer"),
+               Spoken("Awesome", "inner"),
+               Spoken("To", "outer"),
+               Spoken("Eat", "outer")
+            });
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("Something", "outer"),
+               Spoken("Great", "inner"),
+               Spoken("Is", "inner"),
+               Spoken("Nice", "inner"),
+               Spoken("To", "outer"),
+               Spoken("Eat", "outer")
+            });
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("Something", "outer"),
+               Spoken("To", "outer"),
+               Spoken("Eat", "outer")
+            });
 
-         _grammar.AddRule("outer", e => e
-            .Say("Something").OptionallyWithRule("inner").Say("To").Say("Eat")
-               .Do(() => f2++)
-         );
-         _grammar.AddRule("inner", e => e
-            .SayOneOf("Good", "Awesome", "Great")
-               .Do(() => f1++)
-            .Optionally(o => o.Say("Is").Say("Nice"))
-         );
+            Assert.That(f1, Is.EqualTo(2));
+            Assert.That(f2, Is.EqualTo(3));
+        }
 
-         _grammar.ActivateRule("outer");
+        [Test]
+        public void InvokingMultipleNestedRulesShouldSucceed() {
+            int f1 = 0, f2 = 0, f3 = 0, f4 = 0, f5 = 0;
 
-         _grammar.InvokeRule(new[] { "Something", "Awesome", "To", "Eat" });
-         _grammar.InvokeRule(new[] { "Something", "Great", "Is", "Nice", "To", "Eat" });
-         _grammar.InvokeRule(new[] { "Something", "To", "Eat" });
+            _grammar.AddRule(
+               "outer",
+               e => e
+                  .Say("Something")
+                  .WithRule("inner")
+                  .Say("To")
+                  .Say("Eat")
+                  .Do(() => f1++)
+            );
+            _grammar.AddRule(
+               "inner",
+               e => e
+                  .Say("Good")
+                  .OptionallyWithRule("inner2")
+                  .Do(() => f2++)
+            );
+            _grammar.AddRule(
+               "inner2",
+               e => e
+                  .Say("Is")
+                  .Do(() => f3++)
+                  .OptionallySay("Sometimes")
+                  .Do(() => f4++)
+                  .Say("Nice")
+                  .Do(() => f5++)
+            );
 
-         Assert.That(f1, Is.EqualTo(2));
-         Assert.That(f2, Is.EqualTo(3));
-      }
+            _grammar.ActivateRule("outer");
 
-      [Test]
-      public void InvokingMultipleNestedRulesShouldSucceed() {
-         int f1 = 0, f2 = 0, f3 = 0, f4 = 0, f5 = 0;
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("Something", "outer"),
+               Spoken("Good", "inner"),
+               Spoken("Is", "inner2"),
+               Spoken("Nice", "inner2"),
+               Spoken("To", "outer"),
+               Spoken("Eat", "outer")
+            });
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("Something", "outer"),
+               Spoken("Good", "inner"),
+               Spoken("Is", "inner2"),
+               Spoken("Sometimes", "inner2"),
+               Spoken("Nice", "inner2"),
+               Spoken("To", "outer"),
+               Spoken("Eat", "outer")
+            });
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("Something", "outer"),
+               Spoken("Good", "inner"),
+               Spoken("To", "outer"),
+               Spoken("Eat", "outer")
+            });
 
-         _grammar.AddRule("outer", e => e
-            .Say("Something").WithRule("inner").Say("To").Say("Eat")
-               .Do(() => f1++)
-         );
-         _grammar.AddRule("inner", e => e
-            .Say("Good").OptionallyWithRule("inner2")
-               .Do(() => f2++)
-         );
-         _grammar.AddRule("inner2", e => e
-            .Say("Is")
-               .Do(() => f3++)
-            .OptionallySay("Sometimes")
-               .Do(() => f4++)
-            .Say("Nice")
-               .Do(() => f5++)
-         );
-
-         _grammar.ActivateRule("outer");
-
-         _grammar.InvokeRule(new[] { "Something", "Good", "Is", "Nice", "To", "Eat" });
-         _grammar.InvokeRule(new[] { "Something", "Good", "Is", "Sometimes", "Nice", "To", "Eat" });
-         _grammar.InvokeRule(new[] { "Something", "Good", "To", "Eat" });
-
-         Assert.That(f1, Is.EqualTo(3), "f1");
-         Assert.That(f2, Is.EqualTo(3), "f2");
-         Assert.That(f3, Is.EqualTo(2), "f3");
-         Assert.That(f4, Is.EqualTo(2), "f4");
-         Assert.That(f5, Is.EqualTo(2), "f5");
-
-      }
-
-   }
+            Assert.That(f1, Is.EqualTo(3), "f1");
+            Assert.That(f2, Is.EqualTo(3), "f2");
+            Assert.That(f3, Is.EqualTo(2), "f3");
+            Assert.That(f4, Is.EqualTo(2), "f4");
+            Assert.That(f5, Is.EqualTo(2), "f5");
+        }
+    }
 }

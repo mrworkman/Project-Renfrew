@@ -20,20 +20,18 @@
 #define ISrSpeakerGUID "090CD9AE-DA1A-11CD-B3CA-00AA0047BA4F"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(ISrSpeakerGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class
-      DECLSPEC_UUID(ISrSpeakerGUID) ISrSpeaker {
-
-      void Delete(PCWSTR);
-      void Enum(PWSTR *, DWORD *);
-      void Merge(PCWSTR, PVOID, DWORD);
-      void New(PCWSTR);
-      void Query(PWSTR, DWORD, DWORD *);
-      void Read(PCWSTR, PVOID *, DWORD *);
-      void Revert(PCWSTR);
-      void Select(PCWSTR, BOOL);
-      void Write(PCWSTR, PVOID, DWORD);
-   };
+    [ComImport, Guid(ISrSpeakerGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(ISrSpeakerGUID) ISrSpeaker {
+        void Delete(PCWSTR);
+        void Enum(PWSTR*, DWORD*);
+        void Merge(PCWSTR, PVOID, DWORD);
+        void New(PCWSTR);
+        void Query(PWSTR, DWORD, DWORD*);
+        void Read(PCWSTR, PVOID*, DWORD*);
+        void Revert(PCWSTR);
+        void Select(PCWSTR, BOOL);
+        void Write(PCWSTR, PVOID, DWORD);
+    };
 }

@@ -20,14 +20,12 @@
 #define IDgnSrSpeakerGUID "DD10901C-6205-11CF-AE61-0000E8A28647"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(IDgnSrSpeakerGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class
-      DECLSPEC_UUID(IDgnSrSpeakerGUID) IDgnSrSpeaker {
-
-      void EnumBaseModels(WCHAR**, DWORD*);
-      void New(const WCHAR*, const WCHAR*);
-      void GetSpeakerDirectory(const WCHAR*, WCHAR*, DWORD, DWORD*);
-   };
+    [ComImport, Guid(IDgnSrSpeakerGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(IDgnSrSpeakerGUID) IDgnSrSpeaker {
+        void EnumBaseModels(WCHAR**, DWORD*);
+        void New(const WCHAR*, const WCHAR*);
+        void GetSpeakerDirectory(const WCHAR*, WCHAR*, DWORD, DWORD*);
+    };
 }

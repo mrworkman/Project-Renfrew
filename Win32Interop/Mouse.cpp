@@ -26,108 +26,117 @@ using namespace Renfrew::Win32::Interop;
 static int interval = 10;
 
 void Mouse::Animate(int startX, int startY, int endX, int endY) {
-   Animate(startX, startY, endX, endY, 10);
+    Animate(startX, startY, endX, endY, 10);
 }
 
 void Mouse::Animate(int startX, int startY, int endX, int endY, int stepSize) {
-   double x = startX;
-   double y = startY;
+    double x = startX;
+    double y = startY;
 
-   double rise = Math::Abs(endY - startY);
-   double run  = Math::Abs(endX - startX);
+    double rise = Math::Abs(endY - startY);
+    double run = Math::Abs(endX - startX);
 
-   double xi = 0.0;
-   double yi = 0.0;
+    double xi = 0.0;
+    double yi = 0.0;
 
-   if (rise == 0.0) {
-      xi = stepSize;
-   } else if (run == 0.0) {
-      yi = stepSize;
-   } else {
-      double theta = Math::Atan(rise / run);
+    if (rise == 0.0) {
+        xi = stepSize;
+    } else if (run == 0.0) {
+        yi = stepSize;
+    } else {
+        double theta = Math::Atan(rise / run);
 
-      xi = Math::Cos(theta) * stepSize;
-      yi = Math::Sin(theta) * stepSize;
-   }
+        xi = Math::Cos(theta) * stepSize;
+        yi = Math::Sin(theta) * stepSize;
+    }
 
-   // y screen coordinates are inverted
-   yi = -yi;
+    // y screen coordinates are inverted
+    yi = -yi;
 
-   while ((int)x != endX || (int)y != endY) {
+    while ((int) x != endX || (int) y != endY) {
+        if (endX >= startX) {
+            x += xi;
 
-      if (endX >= startX) {
-         x += xi;
+            if (x > endX) {
+                x = endX;
+            }
+        } else {
+            x -= xi;
 
-         if (x > endX)
-            x = endX;
-      } else {
-         x -= xi;
+            if (x < endX) {
+                x = endX;
+            }
+        }
 
-         if (x < endX)
-            x = endX;
-      }
+        if (endY <= startY) {
+            y += yi;
 
-      if (endY <= startY) {
-         y += yi;
+            if (y < endY) {
+                y = endY;
+            }
+        } else {
+            y -= yi;
 
-         if (y < endY)
-            y = endY;
-      } else {
-         y -= yi;
+            if (y > endY) {
+                y = endY;
+            }
+        }
 
-         if (y > endY)
-            y = endY;
-      }
+        SetCursorPos((int) x, (int) y);
 
-      SetCursorPos((int) x, (int) y);
-
-      Thread::Sleep(interval);
-   }
+        Thread::Sleep(interval);
+    }
 }
 
 void Mouse::Click(MouseButtons buttons) {
-   Down(buttons);
+    Down(buttons);
 
-   Thread::Sleep(1);
+    Thread::Sleep(1);
 
-   Up(buttons);
+    Up(buttons);
 }
 
 void Mouse::Down(MouseButtons buttons) {
-   DWORD flags = 0;
+    DWORD flags = 0;
 
-   if ((buttons & MouseButtons::Left) == MouseButtons::Left)
-      flags |= MOUSEEVENTF_LEFTDOWN;
-   if ((buttons & MouseButtons::Right) == MouseButtons::Right)
-      flags |= MOUSEEVENTF_RIGHTDOWN;
-   if ((buttons & MouseButtons::Middle) == MouseButtons::Middle)
-      flags |= MOUSEEVENTF_MIDDLEDOWN;
+    if ((buttons & MouseButtons::Left) == MouseButtons::Left) {
+        flags |= MOUSEEVENTF_LEFTDOWN;
+    }
+    if ((buttons & MouseButtons::Right) == MouseButtons::Right) {
+        flags |= MOUSEEVENTF_RIGHTDOWN;
+    }
+    if ((buttons & MouseButtons::Middle) == MouseButtons::Middle) {
+        flags |= MOUSEEVENTF_MIDDLEDOWN;
+    }
 
-   mouse_event(flags, 0, 0, 0, 0);
+    mouse_event(flags, 0, 0, 0, 0);
 }
 
 void Mouse::SetPosition(int x, int y) {
-   SetCursorPos(x, y);
+    SetCursorPos(x, y);
 }
 
 void Mouse::Up(MouseButtons buttons) {
-   DWORD flags = 0;
+    DWORD flags = 0;
 
-   if ((buttons & MouseButtons::Left) == MouseButtons::Left)
-      flags |= MOUSEEVENTF_LEFTUP;
-   if ((buttons & MouseButtons::Right) == MouseButtons::Right)
-      flags |= MOUSEEVENTF_RIGHTUP;
-   if ((buttons & MouseButtons::Middle) == MouseButtons::Middle)
-      flags |= MOUSEEVENTF_MIDDLEUP;
+    if ((buttons & MouseButtons::Left) == MouseButtons::Left) {
+        flags |= MOUSEEVENTF_LEFTUP;
+    }
+    if ((buttons & MouseButtons::Right) == MouseButtons::Right) {
+        flags |= MOUSEEVENTF_RIGHTUP;
+    }
+    if ((buttons & MouseButtons::Middle) == MouseButtons::Middle) {
+        flags |= MOUSEEVENTF_MIDDLEUP;
+    }
 
-   mouse_event(flags, 0, 0, 0, 0);
+    mouse_event(flags, 0, 0, 0, 0);
 }
 
 void Mouse::Scroll(MouseScrollDirection scrollDirection, DWORD scrollDelta) {
-   if (scrollDirection == MouseScrollDirection::Down) {
-      mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -scrollDelta, 0);
-   }
-   if (scrollDirection == MouseScrollDirection::Up) {
-      mouse_event(MOUSEEVENTF_WHEEL, 0, 0, scrollDelta, 0);
-   }
+    if (scrollDirection == MouseScrollDirection::Down) {
+        mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -scrollDelta, 0);
+    }
+    if (scrollDirection == MouseScrollDirection::Up) {
+        mouse_event(MOUSEEVENTF_WHEEL, 0, 0, scrollDelta, 0);
+    }
 }

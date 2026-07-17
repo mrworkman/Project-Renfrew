@@ -21,37 +21,38 @@
 using namespace System;
 using namespace Renfrew::Win32::Interop;
 
-String ^GetErrorMessage(int errorCode);
+String^ GetErrorMessage(int errorCode);
 
 Win32InteropException::Win32InteropException(int errorCode)
-   : Exception(GetErrorMessage(_errorCode)) {
-
-   _errorCode = 0;
+    : Exception(GetErrorMessage(_errorCode)) {
+    _errorCode = 0;
 }
 
 int Win32InteropException::ErrorCode::get() {
-   return _errorCode;
+    return _errorCode;
 }
 
-String ^GetErrorMessage(int errorCode) {
-   LPTSTR message = nullptr;
+String^ GetErrorMessage(int errorCode) {
+    LPTSTR message = nullptr;
 
-   auto result = FormatMessage(
-      FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-      nullptr,
-      errorCode,
-      MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-      (LPTSTR) &message,
-      0,
-      nullptr
-   );
+    auto result = FormatMessage(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
+        FORMAT_MESSAGE_IGNORE_INSERTS,
+        nullptr,
+        errorCode,
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+        (LPTSTR) &message,
+        0,
+        nullptr
+    );
 
-   if (result == 0 || message == nullptr)
-      return "An unknown error occurred.";
+    if (result == 0 || message == nullptr) {
+        return "An unknown error occurred.";
+    }
 
-   auto str = gcnew String(message);
+    auto str = gcnew String(message);
 
-   LocalFree(message);
+    LocalFree(message);
 
-   return str;
+    return str;
 }

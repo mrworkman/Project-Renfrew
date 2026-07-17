@@ -22,29 +22,29 @@ using System.Windows.Forms;
 using Renfrew.NatSpeakInterop;
 
 namespace Renfrew.Core.Grammars {
-   using Grammar;
+    using Grammar;
 
-   [GrammarExport("Test Grammar", "This is a test grammar.")]
-   public class TestGrammar : Grammar {
+    [GrammarExport("Test Grammar", "This is a test grammar.")]
+    public class TestGrammar : Grammar {
 
-      public TestGrammar(IGrammarService grammarService, INatSpeak natSpeak)
-         : base(grammarService, natSpeak) {
+        public TestGrammar(IGrammarService grammarService, INatSpeak natSpeak)
+           : base(grammarService, natSpeak) {
 
-      }
+        }
 
-      public override void Initialize() {
-         AddRule("test_rule", e =>
-            e.Say("hello").Say("jello").Do(() => MessageBox.Show("Hello!"))
-         );
+        public override void Initialize() {
+            AddRule("test_rule", e =>
+               e.Say("hello").Say("jello").Do(() => MessageBox.Show("Hello!"))
+            );
 
-         Load();
+            Load();
 
-         ActivateRule("test_rule");
-      }
+            ActivateRule("test_rule");
+        }
 
-      public override void Dispose() {
-         throw new NotImplementedException();
-      }
-   }
+        public override void Dispose() {
+            throw new NotImplementedException();
+        }
+    }
 
 }

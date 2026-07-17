@@ -1,0 +1,40 @@
+- name: repeats1
+  rules:
+    - rule: hello jerk+
+      name: repeats1_rule
+      export: false
+  tests:
+    good:
+      - hello:1@1,jerk:2@1
+      - hello:1@1,jerk:2@1,jerk:2@1
+      - hello:1@1,jerk:2@1,jerk:2@1,jerk:2@1,jerk:2@1
+    bad:
+      - hello:1@1
+      - hello:1@1,jerk:2@1,jerk:2@1,hello:1@1
+
+- name: repeats2
+  rules:
+    - rule: hello jerk+ face
+      name: repeats2_rule
+      export: false
+  tests:
+    good:
+      - hello:1@1,jerk:2@1,face:3@1
+      - hello:1@1,jerk:2@1,jerk:2@1,jerk:2@1,face:3@1
+    bad:
+      - hello:1@1,face:3@1
+      - hello:1@1,hello:1@1,face:3@1
+
+- name: repeats3
+  rules:
+    - rule: one (two three)+ two three four
+      name: repeats3_rule
+      export: false
+  tests:
+    good:
+      - one:1@1,two:2@1,three:3@1,two:2@1,three:3@1,four:4@1
+      - one:1@1,two:2@1,three:3@1,two:2@1,three:3@1,two:2@1,three:3@1,two:2@1,three:3@1,four:4@1
+    bad:
+      - one:1@1,two:2@1,three:3@1,four:4@1
+      - one:1@1,two:2@1,three:3@1
+      - two:2@1,three:3@1,four:4@1

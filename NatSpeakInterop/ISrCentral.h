@@ -20,19 +20,17 @@
 #define ISrCentralGUID "b9bd3860-44db-101b-90a8-00aa003e4b50"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(ISrCentralGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class 
-      DECLSPEC_UUID(ISrCentralGUID) ISrCentral {
-
-      void ModeGet(PSRMODEINFOW);
-      void GrammarLoad(SRGRMFMT, SDATA, IntPtr, IID, LPUNKNOWN *);
-      void Pause();
-      void PosnGet(PQWORD);
-      void Resume();
-      void ToFileTime(PQWORD, ::FILETIME *);
-      void Register(IntPtr, IID, DWORD*);
-      void UnRegister(DWORD);
-   };
+    [ComImport, Guid(ISrCentralGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(ISrCentralGUID) ISrCentral {
+        void ModeGet(PSRMODEINFOW);
+        void GrammarLoad(SRGRMFMT, SDATA, IntPtr, IID, LPUNKNOWN*);
+        void Pause();
+        void PosnGet(PQWORD);
+        void Resume();
+        void ToFileTime(PQWORD, ::FILETIME*);
+        void Register(IntPtr, IID, DWORD*);
+        void UnRegister(DWORD);
+    };
 }

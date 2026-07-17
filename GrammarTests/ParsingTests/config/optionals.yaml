@@ -1,0 +1,56 @@
+- name: optionals1
+  rules:
+    - rule: hello [cosmo] kramer
+      name: optionals1_rule
+      export: false
+  tests:
+    good:
+      - hello:1@1,cosmo:2@1,kramer:3@1
+      - hello:1@1,kramer:3@1
+    bad:
+      - hello:1@1
+
+- name: optionals2
+  rules:
+    - rule: i'm cosmo kramer [the ass man]
+      name: optionals2_rule
+      export: false
+  tests:
+    good:
+      - i'm:1@1,cosmo:2@1,kramer:3@1
+      - i'm:1@1,cosmo:2@1,kramer:3@1,the:4@1,ass:5@1,man:6@1
+    bad:
+      - i'm:1@1
+
+- name: optionals3
+  rules:
+    - rule: one two three [four five] four five
+      name: optionals4_rule
+      export: false
+  tests:
+    good:
+      - one:1@1,two:2@1,three:3@1,four:4@1,five:5@1
+      - one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,four:4@1,five:5@1
+    bad:
+      - one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,four:4@1,five:5@1,four:4@1,five:5@1
+      - one:1@1,two:2@1,three:3@1,four:4@1,five:5@1,four:6@1,five:7@1
+      - one:1@1,two:2@1,three:3@1,four:9@1,five:108@1,four:4@1,five:5@1
+
+- name: optionals4
+  rules:
+    - rule: "[one two three [four]] five"
+      name: optionals4_rule
+      export: false
+  tests:
+    good:
+      - five:5@1
+      - one:1@1,two:2@1,three:3@1,five:5@1
+      - one:1@1,two:2@1,three:3@1,four:4@1,five:5@1
+    bad:
+      - one:1@1,four:4@1
+      - one:1@1,four:4@1,five:5@1
+      - one:1@1,two:2@1,three:3@1
+      - one:1@1,two:2@1,three:3@1,four:4@1
+      - one:1@1,two:2@1,five:5@1
+      - one:1@1,two:2@1,four:4@1,four:4@1
+      - four:4@1,five:5@1

@@ -21,42 +21,43 @@
 using namespace System;
 using namespace Renfrew::Utility;
 
-String ^GetErrorMessage(int errorCode);
+String^ GetErrorMessage(int errorCode);
 
-MagnifierException::MagnifierException(String ^message, int errorCode)
-   : Exception(message) {
-
-   _errorCode = 0;
-   _internalErrorMessage = GetErrorMessage(_errorCode);
+MagnifierException::MagnifierException(String^ message, int errorCode)
+    : Exception(message) {
+    _errorCode = 0;
+    _internalErrorMessage = GetErrorMessage(_errorCode);
 }
 
 int MagnifierException::ErrorCode::get() {
-   return _errorCode;
+    return _errorCode;
 }
 
-String ^GetErrorMessage(int errorCode) {
-   LPTSTR message = nullptr;
+String^ GetErrorMessage(int errorCode) {
+    LPTSTR message = nullptr;
 
-   auto result = FormatMessage(
-      FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-      nullptr,
-      errorCode,
-      MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-      (LPTSTR)&message,
-      0,
-      nullptr
-   );
+    auto result = FormatMessage(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
+        FORMAT_MESSAGE_IGNORE_INSERTS,
+        nullptr,
+        errorCode,
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+        (LPTSTR) &message,
+        0,
+        nullptr
+    );
 
-   if (result == 0 || message == nullptr)
-      return "An unknown error occurred.";
+    if (result == 0 || message == nullptr) {
+        return "An unknown error occurred.";
+    }
 
-   auto str = gcnew String(message);
+    auto str = gcnew String(message);
 
-   LocalFree(message);
+    LocalFree(message);
 
-   return str;
+    return str;
 }
 
-String ^MagnifierException::InternalErrorMessage::get() {
-   return _internalErrorMessage;
+String^ MagnifierException::InternalErrorMessage::get() {
+    return _internalErrorMessage;
 }

@@ -20,10 +20,8 @@
 #define IDgnDictateGUID "dd100001-6205-11cf-ae61-0000e8a28647"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(IDgnDictateGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class
-      DECLSPEC_UUID(IDgnDictateGUID) IDgnDictate { };
-
+    [ComImport, Guid(IDgnDictateGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(IDgnDictateGUID) IDgnDictate {};
 }

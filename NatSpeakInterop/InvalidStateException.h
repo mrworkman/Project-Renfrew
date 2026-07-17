@@ -18,10 +18,9 @@
 #pragma once
 
 namespace Renfrew::NatSpeakInterop::Exceptions {
-   public ref class InvalidStateException : Exception {
-      public: InvalidStateException(String ^message) :
-         Exception(message) {
-
-      }
-   };
+    public ref class InvalidStateException : Exception {
+        public:
+            InvalidStateException(String^ message) :
+                Exception(message) {}
+    };
 }

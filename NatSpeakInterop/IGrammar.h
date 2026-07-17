@@ -12,21 +12,15 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.If not, see<http://www.gnu.org/licenses/>.
+// along with this program. If not, see<http://www.gnu.org/licenses/>.
 //
 
 #pragma once
 
+#include "SpokenWord.h"
+
 namespace Renfrew::NatSpeakInterop {
-   public interface class IGrammar {
-      property IReadOnlyDictionary<String^, UInt32> ^RuleIds {
-         IReadOnlyDictionary<String^, UInt32> ^get();
-      };
-
-      property IReadOnlyDictionary<String^, UInt32> ^WordIds {
-         IReadOnlyDictionary<String^, UInt32> ^get();
-      };
-
-      void InvokeRule(IEnumerable<String^> ^words);
-   };
+    public interface class IGrammar {
+        void InvokeRule(List<SpokenWord^>^ spokenWords);
+    };
 }

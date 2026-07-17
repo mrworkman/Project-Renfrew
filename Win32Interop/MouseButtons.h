@@ -18,8 +18,8 @@
 #pragma once
 
 namespace Renfrew::Win32::Interop {
-   [System::Flags]
-   public enum class MouseButtons : int {
-      Left, Right, Middle
-   };
+    [System::Flags]
+    public enum class MouseButtons : int {
+        Left, Right, Middle
+    };
 }

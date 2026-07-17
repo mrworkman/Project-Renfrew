@@ -18,13 +18,13 @@
 using System;
 
 namespace Renfrew.Grammar.Exceptions {
-   public class InvalidSequenceInCallbackException : Exception {
-      public InvalidSequenceInCallbackException()
-         : base() {
-      }
+    public class InvalidSequenceInCallbackException : Exception {
+        public InvalidSequenceInCallbackException()
+           : base() {
+        }
 
-      public InvalidSequenceInCallbackException(String message) 
-         : base(message) {
-      }
-   }
+        public InvalidSequenceInCallbackException(string message)
+           : base(message) {
+        }
+    }
 }

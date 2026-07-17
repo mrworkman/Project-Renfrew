@@ -18,14 +18,14 @@
 using System;
 
 namespace Renfrew.Grammar {
-   [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-   public class GrammarExportAttribute : Attribute {
-      public String Name { get; }
-      public String Description { get; }
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+    public class GrammarExportAttribute : Attribute {
+        public string Name { get; }
+        public string Description { get; }
 
-      public GrammarExportAttribute(String name, String description = "") {
-         Name = name;
-         Description = description;
-      }
-   }
+        public GrammarExportAttribute(string name, string description = "") {
+            Name = name;
+            Description = description;
+        }
+    }
 }

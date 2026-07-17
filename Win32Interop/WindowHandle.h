@@ -18,18 +18,18 @@
 #pragma once
 
 namespace Renfrew::Win32::Interop {
-   public ref class WindowHandle {
-      HWND _hWnd;
+    public ref class WindowHandle {
+        HWND _hWnd;
 
-   public:
-      WindowHandle(HWND hWnd);
+        public:
+            WindowHandle(HWND hWnd);
 
-      property HWND Hwnd {
-         HWND get();
-      }
+            property HWND Hwnd {
+                HWND get();
+            }
 
-      property System::IntPtr HwndPtr {
-         System::IntPtr get();
-      }
-   };
+            property System::IntPtr HwndPtr {
+                System::IntPtr get();
+            }
+    };
 }

@@ -21,92 +21,93 @@
 
 using namespace Renfrew::NatSpeakInterop::Sinks;
 
-SrNotifySink::SrNotifySink(Action<UInt64> ^pausedProcessingCallback) {
-   if (pausedProcessingCallback == nullptr)
-      throw gcnew ArgumentNullException("pausedProcessingCallback");
+SrNotifySink::SrNotifySink(Action<UInt64>^ pausedProcessingCallback) {
+    if (pausedProcessingCallback == nullptr) {
+        throw gcnew ArgumentNullException("pausedProcessingCallback");
+    }
 
-   _pausedProcessingCallback = pausedProcessingCallback;
+    _pausedProcessingCallback = pausedProcessingCallback;
 }
 
 void SrNotifySink::AttribChanged(DWORD) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 
-   // TODO: Can this callback be triggered?
-
+    // TODO: Can this callback be triggered?
 }
 
 void SrNotifySink::AttribChanged2(DWORD dwAttributes) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 
-   switch (dwAttributes) {
-      case DGNSRAC_MUTE:
-         Debug::WriteLine("Microphone muted.");
-         break;
-      case DGNSRAC_UNMUTE:
-         Debug::WriteLine("Microphone un-muted.");
-         break;
-      case DGNSRAC_MICSTATE:
-         Debug::WriteLine("Microphone state changed.");
-         break;
-      default:
-         Debug::WriteLine("Unhandled attribute(s): {0:x4}.", dwAttributes);
-         break;
-   }
-
+    switch (dwAttributes) {
+        case DGNSRAC_MUTE:
+            Debug::WriteLine("Microphone muted.");
+            break;
+        case DGNSRAC_UNMUTE:
+            Debug::WriteLine("Microphone un-muted.");
+            break;
+        case DGNSRAC_MICSTATE:
+            Debug::WriteLine("Microphone state changed.");
+            break;
+        default:
+            Debug::WriteLine("Unhandled attribute(s): {0:x4}.", dwAttributes);
+            break;
+    }
 }
 
 void SrNotifySink::ErrorHappened(LPUNKNOWN) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 }
 
 void SrNotifySink::Interference(QWORD, QWORD, DWORD) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 }
 
 void SrNotifySink::MimicDone(DWORD, LPUNKNOWN) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 }
 
 void SrNotifySink::Paused(QWORD cookie) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 
-   if (_pausedProcessingCallback != nullptr)
-      _pausedProcessingCallback(cookie);
+    if (_pausedProcessingCallback != nullptr) {
+        _pausedProcessingCallback(cookie);
+    }
 }
 
-void SrNotifySink::Progress(int, const WCHAR *) {
-   Debug::WriteLine(__FUNCTION__);
+void SrNotifySink::Progress(int, const WCHAR*) {
+    Debug::WriteLine(__FUNCTION__);
 }
 
-void SrNotifySink::SinkFlagsGet(DWORD *pdwFlags) {
-   Debug::WriteLine(__FUNCTION__);
+void SrNotifySink::SinkFlagsGet(DWORD* pdwFlags) {
+    Debug::WriteLine(__FUNCTION__);
 
-   if (pdwFlags == nullptr)
-      return;
+    if (pdwFlags == nullptr) {
+        return;
+    }
 
-   // These are the notifications handled by this sink
-   *pdwFlags = DGNSRSINKFLAG_SENDJITPAUSED |
-      DGNSRSINKFLAG_SENDATTRIB |
+    // These are the notifications handled by this sink
+    *pdwFlags = DGNSRSINKFLAG_SENDJITPAUSED |
+        DGNSRSINKFLAG_SENDATTRIB |
 #ifdef _DEBUG
-      DGNSRSINKFLAG_SENDBEGINUTT |
-      DGNSRSINKFLAG_SENDENDUTT |
+        DGNSRSINKFLAG_SENDBEGINUTT |
+        DGNSRSINKFLAG_SENDENDUTT |
 #endif
-      DGNSRSINKFLAG_SENDMIMICDONE |
-      DGNSRSINKFLAG_SENDERROR;
+        DGNSRSINKFLAG_SENDMIMICDONE |
+        DGNSRSINKFLAG_SENDERROR;
 }
 
 void SrNotifySink::Sound(QWORD, QWORD) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 }
 
 void SrNotifySink::UtteranceBegin(QWORD) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 }
 
 void SrNotifySink::UtteranceEnd(QWORD, QWORD) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 }
 
 void SrNotifySink::VUMeter(QWORD, WORD) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 }

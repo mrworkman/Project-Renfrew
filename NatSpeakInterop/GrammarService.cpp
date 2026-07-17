@@ -23,6 +23,7 @@
 #include "GrammarException.h"
 #include "GrammarNotLoadedException.h"
 #include "InvalidStateException.h"
+#include "SpokenWord.h"
 #include "SrErrorCodes.h"
 
 using namespace Renfrew::NatSpeakInterop;
@@ -33,299 +34,325 @@ using namespace Renfrew::NatSpeakInterop::Sinks;
 
 #include "GrammarService.h"
 
-GrammarService::GrammarService(ISrCentral ^isrCentral,
-   IDgnSrEngineControl ^idgnSrEngineControl) {
+GrammarService::GrammarService(
+    ISrCentral^ isrCentral,
+    IDgnSrEngineControl^ idgnSrEngineControl
+) {
+    if (isrCentral == nullptr) {
+        throw gcnew ArgumentNullException("isrCentral");
+    }
+    if (idgnSrEngineControl == nullptr) {
+        throw gcnew ArgumentNullException("iDgnSrEngineControl");
+    }
 
-   if (isrCentral == nullptr)
-      throw gcnew ArgumentNullException("isrCentral");
-   if (idgnSrEngineControl == nullptr)
-      throw gcnew ArgumentNullException("iDgnSrEngineControl");
+    _isrCentral = isrCentral;
+    _idgnSrEngineControl = idgnSrEngineControl;
 
-   _isrCentral = isrCentral;
-   _idgnSrEngineControl = idgnSrEngineControl;
-
-   _grammars = gcnew Dictionary<IGrammar^, GrammarExecutive^>();
-   _activeRules = gcnew HashSet<String^>();
+    _grammars = gcnew Dictionary<IGrammar^, GrammarExecutive^>();
+    _activeRules = gcnew HashSet<String^>();
 }
 
 GrammarService::~GrammarService() {
-   auto grammars = gcnew List<IGrammar^>(_grammars->Keys);
+    auto grammars = gcnew List<IGrammar^>(_grammars->Keys);
 
-   Debug::WriteLine("GrammarService: Releasing.");
+    Debug::WriteLine("GrammarService: Releasing.");
 
-   for each (auto g in grammars)
-      UnloadGrammar(g);
+    for each (auto g in grammars) {
+        UnloadGrammar(g);
+    }
 }
 
-void GrammarService::ActivateRule(IGrammar ^grammar, HWND hWnd, String ^ruleName) {
-   pin_ptr<const WCHAR> wstrRuleName = PtrToStringChars(ruleName);
+void GrammarService::ActivateRule(
+    IGrammar^ grammar,
+    HWND hWnd,
+    String^ ruleName
+) {
+    pin_ptr<const WCHAR> wstrRuleName = PtrToStringChars(ruleName);
 
-   if (_grammars->ContainsKey(grammar) == false)
-      throw gcnew GrammarNotLoadedException("FILL ME IN");
+    if (_grammars->ContainsKey(grammar) == false) {
+        throw gcnew GrammarNotLoadedException("FILL ME IN");
+    }
 
-   // Check if the handle points to an exsiting window
-   if (hWnd != nullptr && IsWindow(hWnd) == false)
-      return; // TODO: Throw exception?
+    // Check if the handle points to an exsiting window
+    if (hWnd != nullptr && IsWindow(hWnd) == false) {
+        return; // TODO: Throw exception?
+    }
 
-   auto ge = _grammars[grammar];
+    auto ge = _grammars[grammar];
 
-   // TODO: Check that the grammar actually has the matching rule name!
+    // TODO: Check that the grammar actually has the matching rule name!
 
-   try {
-      if (_activeRules->Contains(ruleName) == false) {
-         ge->GramCommonInterface->Activate(
-            hWnd, // TODO: Set to hWnd (where applicable)
-            false, wstrRuleName
-         );
-         _activeRules->Add(ruleName);
-      }
-   } catch (COMException ^e) {
-      if (e->HResult == SrErrorCodes::SRERR_INVALIDRULE)
-         throw gcnew GrammarException(String::Format("Invalid Rule: {0}!", ruleName), e);
-      if (e->HResult == SrErrorCodes::SRERR_GRAMMARTOOCOMPLEX)
-         throw gcnew GrammarException("Grammar too complex!", e);
-      if (e->HResult == SrErrorCodes::SRERR_RULEALREADYACTIVE)
-         throw gcnew GrammarException(String::Format("Rule Already Active: {0}!", ruleName), e);
-      throw gcnew GrammarException("Unexpected Grammar Error!", e);
-   }
+    try {
+        if (_activeRules->Contains(ruleName) == false) {
+            ge->GramCommonInterface->Activate(
+                hWnd,
+                // TODO: Set to hWnd (where applicable)
+                false,
+                wstrRuleName
+            );
+            _activeRules->Add(ruleName);
+        }
+    } catch (COMException^ e) {
+        if (e->HResult == SrErrorCodes::SRERR_INVALIDRULE) {
+            throw gcnew GrammarException(
+                String::Format("Invalid Rule: {0}!", ruleName),
+                e
+            );
+        }
+        if (e->HResult == SrErrorCodes::SRERR_GRAMMARTOOCOMPLEX) {
+            throw gcnew GrammarException("Grammar too complex!", e);
+        }
+        if (e->HResult == SrErrorCodes::SRERR_RULEALREADYACTIVE) {
+            throw gcnew GrammarException(
+                String::Format("Rule Already Active: {0}!", ruleName),
+                e
+            );
+        }
+        throw gcnew GrammarException("Unexpected Grammar Error!", e);
+    }
 }
 
-void GrammarService::ActivateRule(IGrammar ^grammar, IntPtr hWnd, String ^ruleName) {
-   ActivateRule(grammar, (HWND) hWnd.ToPointer(), ruleName);
+void GrammarService::ActivateRule(
+    IGrammar^ grammar,
+    IntPtr hWnd,
+    String^ ruleName
+) {
+    ActivateRule(grammar, static_cast<HWND>(hWnd.ToPointer()), ruleName);
 }
 
-void GrammarService::ActivateRules(IGrammar ^grammar) {
-   throw gcnew NotImplementedException();
+void GrammarService::ActivateRules(IGrammar^ grammar) {
+    throw gcnew NotImplementedException();
 }
 
-GrammarExecutive ^GrammarService::AddGrammarToList(IGrammar ^grammar) {
-   GrammarExecutive ^ge;
+GrammarExecutive^ GrammarService::AddGrammarToList(IGrammar^ grammar) {
+    if (_grammars->ContainsKey(grammar) == true) {
+        throw gcnew GrammarAlreadyLoadedException("FILL ME IN");
+    }
 
-   // Make sure the grammar's not already loaded
-   if (_grammars->ContainsKey(grammar) == true)
-      throw gcnew GrammarAlreadyLoadedException("FILL ME IN");
+    auto grammarExecutive = gcnew GrammarExecutive(grammar);
 
-   ge = gcnew GrammarExecutive(grammar);
+    _grammars->Add(grammar, grammarExecutive);
 
-   _grammars->Add(grammar, ge);
-
-   return ge;
+    return grammarExecutive;
 }
 
-void GrammarService::DeactivateRule(IGrammar ^grammar, String ^ruleName) {
-   pin_ptr<const WCHAR> wstrRuleName = PtrToStringChars(ruleName);
+void GrammarService::DeactivateRule(IGrammar^ grammar, String^ ruleName) {
+    pin_ptr<const WCHAR> wstrRuleName = PtrToStringChars(ruleName);
 
-   auto ge = GetGrammarExecutive(grammar);
+    auto ge = GetGrammarExecutive(grammar);
 
-   // TODO: Check that the grammar actually has the matching rule name!
+    // TODO: Check that the grammar actually has the matching rule name!
 
-   try {
-      if (_activeRules->Contains(ruleName) == true) {
-         ge->GramCommonInterface->Deactivate(
-            wstrRuleName
-         );
-         _activeRules->Remove(ruleName);
-      }
-   } catch (COMException ^e) {
-      if (e->HResult == SrErrorCodes::SRERR_RULENOTACTIVE)
-         throw gcnew GrammarException(String::Format("Rule Is Not Active: {0}!", ruleName), e);
-      throw gcnew GrammarException("Unexpected Grammar Error!", e);
-   }
+    try {
+        if (_activeRules->Contains(ruleName) == true) {
+            ge->GramCommonInterface->Deactivate(wstrRuleName);
+            _activeRules->Remove(ruleName);
+        }
+    } catch (COMException^ e) {
+        if (e->HResult == SrErrorCodes::SRERR_RULENOTACTIVE) {
+            throw gcnew GrammarException(
+                String::Format("Rule Is Not Active: {0}!", ruleName),
+                e
+            );
+        }
+        throw gcnew GrammarException("Unexpected Grammar Error!", e);
+    }
 }
 
-GrammarExecutive ^GrammarService::GetGrammarExecutive(IGrammar ^grammar) {
-   if (grammar == nullptr)
-      throw gcnew ArgumentNullException("grammar");
+GrammarExecutive^ GrammarService::GetGrammarExecutive(IGrammar^ grammar) {
+    if (grammar == nullptr) {
+        throw gcnew ArgumentNullException("grammar");
+    }
 
-   // Make sure the grammar's loaded
-   if (_grammars->ContainsKey(grammar) == false)
-      throw gcnew GrammarNotLoadedException("FILL ME IN");
+    // Make sure the grammar's loaded
+    if (_grammars->ContainsKey(grammar) == false) {
+        throw gcnew GrammarNotLoadedException("FILL ME IN");
+    }
 
-   return _grammars[grammar];
+    return _grammars[grammar];
 }
 
-void GrammarService::GrammarSerializer::set(IGrammarSerializer ^grammarSerializer) {
-   if (grammarSerializer == nullptr)
-      throw gcnew ArgumentNullException("grammarSerializer");
+void GrammarService::GrammarSerializer::set(
+    IGrammarSerializer^ grammarSerializer
+) {
+    if (grammarSerializer == nullptr) {
+        throw gcnew ArgumentNullException("grammarSerializer");
+    }
 
-   _grammarSerializer = grammarSerializer;
+    _grammarSerializer = grammarSerializer;
 }
 
-void GrammarService::LoadGrammar(IGrammar ^grammar) {
+void GrammarService::LoadGrammar(IGrammar^ grammar) {
+    LPUNKNOWN pUnknown;
+    array<byte>^ grammarBytes;
 
-   ISrGramNotifySink ^isrGramNotifySink;
-   IntPtr iSrGramNotifySinkPtr;
+    if (grammar == nullptr) {
+        throw gcnew ArgumentNullException("grammar");
+    }
 
-   LPUNKNOWN pUnknown;
-   array<byte> ^grammarBytes;
+    if (_grammarSerializer == nullptr) {
+        throw gcnew InvalidStateException("GrammarSerializer hasn't been set!");
+    }
 
-   if (grammar == nullptr)
-      throw gcnew ArgumentNullException("grammar");
+    auto grammarExecutive = AddGrammarToList(grammar);
 
-   if (_grammarSerializer == nullptr)
-      throw gcnew InvalidStateException("GrammarSerializer hasn't been set!");
+    grammarBytes = _grammarSerializer->Serialize(grammar);
 
-   auto ge = AddGrammarToList(grammar);
+    // Pinning any sub-element of a managed array pins the entire array
+    pin_ptr<byte> bytes = &grammarBytes[0];
 
-   grammarBytes = _grammarSerializer->Serialize(grammar);
+    SDATA data;
+    data.dwSize = grammarBytes->Length;
+    data.pData = bytes;
 
-   // Pinning any sub-element of a managed array pins the entire array
-   pin_ptr<byte> bytes = &grammarBytes[0];
+    ISrGramNotifySink^ isrGramNotifySink = gcnew SrGramNotifySink(
+        gcnew Action<UInt32, Object^, ISrResBasic^>(
+            this,
+            &GrammarService::PhraseFinishedCallback
+        ),
+        grammarExecutive
+    );
 
-   SDATA data;
-   data.dwSize = grammarBytes->Length;
-   data.pData = bytes;
+    IntPtr iSrGramNotifySinkPtr = Marshal::GetIUnknownForObject(
+        isrGramNotifySink
+    );
 
-   isrGramNotifySink = gcnew SrGramNotifySink(
-      gcnew Action<UInt32, Object^, ISrResBasic^>(this, &GrammarService::PhraseFinishedCallback), ge
-   );
+    try {
+        _isrCentral->GrammarLoad(
+            SRGRMFMT_CFG,
+            data,
+            iSrGramNotifySinkPtr,
+            __uuidof(ISrGramNotifySink^),
+            &pUnknown
+        );
+    } catch (COMException^ e) {
+        if (e->HResult == SrErrorCodes::SRERR_INVALIDCHAR) {
+            throw gcnew GrammarException(
+                "Invalid Word/Character in Grammar",
+                e
+            );
+        }
+        if (e->HResult == SrErrorCodes::SRERR_GRAMMARERROR) {
+            throw gcnew GrammarException("Grammar Error", e);
+        }
+        throw gcnew GrammarException("Unexpected Grammar Error!", e);
+    }
 
-   iSrGramNotifySinkPtr = Marshal::GetIUnknownForObject(isrGramNotifySink);
+    auto isrGramCommon = static_cast<ISrGramCommon^>(
+        Marshal::GetTypedObjectForIUnknown(
+            IntPtr(pUnknown),
+            ISrGramCommon::typeid
+        ));
 
-   try {
-      _isrCentral->GrammarLoad(
-         SRGRMFMT_CFG, data, iSrGramNotifySinkPtr, __uuidof(ISrGramNotifySink^), &pUnknown
-      );
-   } catch (COMException ^e) {
-      if (e->HResult == SrErrorCodes::SRERR_INVALIDCHAR)
-         throw gcnew GrammarException("Invalid Word/Character in Grammar", e);
-      if (e->HResult == SrErrorCodes::SRERR_GRAMMARERROR)
-         throw gcnew GrammarException("Grammar Error", e);
-      throw gcnew GrammarException("Unexpected Grammar Error!", e);
-   }
+    pUnknown->Release();
+    Marshal::Release(iSrGramNotifySinkPtr);
 
-   ISrGramCommon ^isrGramCommon = (ISrGramCommon^)
-      Marshal::GetTypedObjectForIUnknown(IntPtr(pUnknown), ISrGramCommon::typeid);
-
-   pUnknown->Release();
-   Marshal::Release(iSrGramNotifySinkPtr);
-
-   // Store isrGramCommon with our grammar
-   ge->GramCommonInterface = isrGramCommon;
-
+    // Store isrGramCommon with our grammar
+    grammarExecutive->GramCommonInterface = isrGramCommon;
 }
 
 void GrammarService::PausedProcessor(UInt64 cookie) {
-   Debug::WriteLine(__FUNCTION__ + "(cookie: " + cookie + ")");
+    Debug::WriteLine(__FUNCTION__ + "(cookie: " + cookie + ")");
 
-   // TODO: Call grammar activation method(s)
+    // TODO: Call grammar activation method(s)
 
-   Debug::WriteLine(__FUNCTION__ + ", Resuming.");
-   _idgnSrEngineControl->Resume(cookie);
+    Debug::WriteLine(__FUNCTION__ + ", Resuming.");
+    _idgnSrEngineControl->Resume(cookie);
 }
 
-void GrammarService::PhraseFinishedCallback(UInt32 flags, Object ^grammarObj, ISrResBasic^ isrResBasic) {
-   Debug::WriteLine(__FUNCTION__);
+void GrammarService::PhraseFinishedCallback(
+    UInt32 flags,
+    Object^ grammarObj,
+    ISrResBasic^ isrResBasic
+) {
+    Debug::WriteLine(__FUNCTION__);
 
-   auto ge = (GrammarExecutive^)grammarObj;
+    Debug::Assert(grammarObj != nullptr);
+    Debug::Assert(isrResBasic != nullptr);
 
-   if (ge == nullptr)
-      throw gcnew InvalidStateException("grammarObj is unexpectedly NULL!");
+    auto grammarExecutive = safe_cast<GrammarExecutive^>(grammarObj);
 
-   //
-   // Test Processing The Results
-   //
+    if (grammarExecutive == nullptr) {
+        throw gcnew InvalidStateException("grammarObj is unexpectedly NULL!");
+    }
 
-   /* MOVE BELOW BasePathWord
-   *if ((flags & ISRNOTEFIN_RECOGNIZED) == 0) {
-   Debug::WriteLine("Rejected");
-   return;
-   }
+    if ((flags & ISRNOTEFIN_RECOGNIZED) == 0) {
+        Debug::WriteLine("Phrase rejected.");
+        return;
+    }
 
-   if ((flags & ISRNOTEFIN_THISGRAMMAR) == 0) {
-   Debug::WriteLine("Other");
-   return;
-   }*/
+    if ((flags & ISRNOTEFIN_THISGRAMMAR) == 0) {
+        Debug::WriteLine("Phrase is not from this grammar.");
+        return;
+    }
 
-   auto isrResGraph = (ISrResGraph^)isrResBasic;
+    auto isrResGraph = safe_cast<ISrResGraph^>(isrResBasic);
 
-   DWORD pathSize = 0;
-   PDWORD path = nullptr;
+    const auto path = new DWORD[MaxPathEntries];
+    DWORD pathSize = sizeof(DWORD) * MaxPathEntries;
 
-   try {
-      // Find out how big the path is
-      isrResGraph->BestPathWord(0, &pathSize, 0, &pathSize);
-   } catch (COMException ^e) {
-      // Allocate space for the path
-      if (e->HResult == EVENT_E_ALL_SUBSCRIBERS_FAILED) {
-         path = new DWORD[pathSize];
-         isrResGraph->BestPathWord(0, path, pathSize * sizeof(DWORD), &pathSize);
-      }
-   }
+    isrResGraph->BestPathWord(0, path, pathSize, &pathSize);
 
-   auto spokenWords = gcnew List<String^>();
+    Debug::Assert(pathSize != 0);
+    Debug::Assert(pathSize <= sizeof(DWORD) * MaxPathEntries);
 
-   DWORD numWords = pathSize / sizeof(DWORD);
+    const auto bufferSize = sizeof(SRWORDW) + MaxWordSize;
+    const auto buffer = new BYTE[bufferSize];
+    const auto pWord = reinterpret_cast<PSRWORDW>(buffer);
 
-   for (DWORD i = 0; i < numWords; i++) {
-      SRRESWORDNODE node;
+    const auto spokenWords = gcnew List<SpokenWord^>();
+    const auto numWords = pathSize / sizeof(DWORD);
 
-      DWORD srWordSize = 0;
-      SRWORDW srWord;
+    for (DWORD i = 0; i < numWords; i++) {
+        SRRESWORDNODE node;
+        DWORD ignore;
 
-      // Get the word size to allocate space for it
-      isrResGraph->GetWordNode(path[i], &node, &srWord, 0, &srWordSize);
+        isrResGraph->GetWordNode(path[i], &node, pWord, bufferSize, &ignore);
 
-      if (srWordSize == 0)
-         throw gcnew InvalidStateException("Word with no size!");
+        auto word = gcnew String(pWord->szWord);
+        auto wordId = pWord->dwWordNum;
+        auto ruleId = node.dwCFGParse;
 
-      // Allocate an appropriately ized struct.
-      PSRWORDW psrWord = (PSRWORDW) new BYTE[srWordSize];
+        spokenWords->Add(gcnew SpokenWord(word, wordId, ruleId));
+    }
 
-      isrResGraph->GetWordNode(path[i], &node, psrWord, srWordSize, &srWordSize);
+    delete[] buffer;
+    delete[] path;
 
-      // Ignore the rule number, because it's only really useful if we
-      // want to invoke nested "sub-rules" directly - which we don't.
-      //
-      // if (ruleNumber == 0)
-      //    ruleNumber = node.dwCFGParse;
-
-      Debug::WriteLine(
-         "Word Number: {0}, Word: {1}, Rule: {2}",
-         psrWord->dwWordNum,
-         gcnew String(psrWord->szWord),
-         node.dwCFGParse
-      );
-
-      spokenWords->Add(gcnew String(psrWord->szWord));
-
-      delete[] psrWord;
-   }
-
-   delete[] path;
-
-   // Evaluate the list of spoken words against the
-   // list of available rules in the grammar.
-   ge->Grammar->InvokeRule(spokenWords);
-
+    grammarExecutive->Grammar->InvokeRule(spokenWords);
 }
 
-GrammarExecutive ^GrammarService::RemoveGrammarFromList(IGrammar ^grammar) {
-   auto ge = GetGrammarExecutive(grammar);
+GrammarExecutive^ GrammarService::RemoveGrammarFromList(IGrammar^ grammar) {
+    auto ge = GetGrammarExecutive(grammar);
 
-   _grammars->Remove(grammar);
+    _grammars->Remove(grammar);
 
-   return ge;
+    return ge;
 }
 
-void GrammarService::SetExclusiveGrammar(IGrammar ^grammar, bool exclusive) {
-   auto ge = GetGrammarExecutive(grammar);
+void GrammarService::SetExclusiveGrammar(IGrammar^ grammar, bool exclusive) {
+    auto ge = GetGrammarExecutive(grammar);
 
-   ((IDgnSrGramCommon^)(ge->GramCommonInterface))->SpecialGrammar(exclusive);
+    safe_cast<IDgnSrGramCommon^>(ge->GramCommonInterface)->SpecialGrammar(
+        exclusive
+    );
 }
 
-void GrammarService::UnloadGrammar(IGrammar ^grammar) {
-   if (grammar == nullptr)
-      throw gcnew ArgumentNullException("grammar");
+void GrammarService::UnloadGrammar(IGrammar^ grammar) {
+    if (grammar == nullptr) {
+        throw gcnew ArgumentNullException("grammar");
+    }
 
-   Debug::WriteLine("GrammarService: Unloading " + grammar + ".");
+    Debug::WriteLine("GrammarService: Unloading " + grammar + ".");
 
-   auto ge = RemoveGrammarFromList(grammar);
+    auto ge = RemoveGrammarFromList(grammar);
 
-   if (ge->GramCommonInterface == nullptr)
-      throw gcnew InvalidStateException("isrGramCommon interface is not set!");
+    if (ge->GramCommonInterface == nullptr) {
+        throw gcnew InvalidStateException(
+            "isrGramCommon interface is not set!"
+        );
+    }
 
-   Marshal::ReleaseComObject(ge->GramCommonInterface);
-   ge->GramCommonInterface = nullptr;
+    Marshal::ReleaseComObject(ge->GramCommonInterface);
+    ge->GramCommonInterface = nullptr;
 }
-

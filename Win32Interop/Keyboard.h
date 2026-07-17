@@ -20,11 +20,11 @@
 #include "KeyChord.h"
 
 namespace Renfrew::Win32::Interop {
-   public ref class Keyboard abstract sealed {
-      static void PlayChord(KeyChord^ chord);
+    public ref class Keyboard abstract sealed {
+        static void PlayChord(KeyChord^ chord);
 
-   public:
-      static void PlayKeys(IEnumerable<KeyChord^>^ chords);
-      static void PlayKeys(... array<KeyChord^>^ chords);
-   };
+        public:
+            static void PlayKeys(IEnumerable<KeyChord^>^ chords);
+            static void PlayKeys(... array<KeyChord^>^ chords);
+    };
 }

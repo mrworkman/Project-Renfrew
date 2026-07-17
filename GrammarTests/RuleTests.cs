@@ -15,34 +15,140 @@
 // along with this program.If not, see<http://www.gnu.org/licenses/>.
 //
 
-using System.Linq;
 
+using System.Collections.Generic;
+using Newtonsoft.Json;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
-
-using Renfrew.Grammar.Elements;
-using Renfrew.Grammar.Exceptions;
+using Renfrew.Grammar;
 using Renfrew.Grammar.FluentApi;
+using Renfrew.Grammar.FluentApi.ExpressionParts;
+using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
+using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace GrammarTests {
-   [TestFixture()]
-   public class RuleTests {
-      private RuleFactory _factory;
+    [TestFixture]
+    public class RuleTests {
+        [OneTimeSetUp]
+        public void OneTimeSetup() {
+            var settings = new JsonSerializerSettings {
+                TypeNameHandling = TypeNameHandling.Objects,
+                Formatting = Formatting.Indented
+            };
 
-      [SetUp]
-      public void Initialize() {
-         _factory = new RuleFactory();
-      }
+            TestContext.AddFormatter<Sequence>(
+               o => JsonConvert.SerializeObject(o, settings)
+            );
+        }
 
-      [Test]
-      public void OneWordGrammarNestedInSequenceGrouping() {
-         var rule = _factory.Create();
+        [SetUp]
+        public void Initialize() {
+            _factory = new RuleFactory();
+            _idGenerator = new IdGenerator();
+        }
 
-         rule.Say("test");
+        private RuleFactory _factory;
+        private IIdGenerator _idGenerator;
 
-         Assert.That(rule.Elements, Is.InstanceOf<ISequence>());
-         Assert.That(rule.Elements.Elements.First(), Is.InstanceOf<IWordElement>());
-      }
+        [Test]
+        public void ShouldProduceSimpleAlternativeRule() {
+            var testRule = new Rule("some_rule", _idGenerator);
 
-   }
+            testRule.SayOneOf("hello", "jello");
+
+            var expectedSequence = Sequence.Create(
+               Alternatives.Create(
+                  Word.Create(1, "hello"),
+                  Word.Create(2, "jello")
+               )
+            );
+
+            Assert.That(testRule.Sequence, Is.EqualTo(expectedSequence));
+        }
+
+        [Test]
+        public void ShouldProduceSimpleAlternativeRuleFromEnumerable() {
+            var testRule = new Rule("some_rule", _idGenerator);
+
+            testRule.SayOneOf(
+               new List<string> {
+               "hello",
+               "jello"
+               }
+            );
+
+            var expectedSequence = Sequence.Create(
+               Alternatives.Create(
+                  Word.Create(1, "hello"),
+                  Word.Create(2, "jello")
+               )
+            );
+
+            Assert.That(testRule.Sequence, Is.EqualTo(expectedSequence));
+        }
+
+        [Test]
+        public void ShouldProduceSimpleOptionalRule() {
+            var testRule = new Rule("some_rule", _idGenerator);
+
+            testRule.Optionally(r => r.Say("hello"));
+
+            var expectedSequence = Sequence.Create(
+               Optional.Create(
+                  Word.Create(1, "hello")
+               )
+            );
+
+            Assert.That(testRule.Sequence, Is.EqualTo(expectedSequence));
+        }
+
+        [Test]
+        public void ShouldProduceSimpleRepetitionRule() {
+            var testRule = new Rule("some_rule", _idGenerator);
+
+            testRule.Repeat(r => r.Say("hello"));
+
+            var expectedSequence = Sequence.Create(
+               Repeated.Create(
+                  Word.Create(1, "hello")
+               )
+            );
+
+            Assert.That(testRule.Sequence, Is.EqualTo(expectedSequence));
+        }
+
+        [Test]
+        public void ShouldProduceSimpleSequenceRule() {
+            var testRule = new Rule("some_rule", _idGenerator);
+
+            testRule.Say("hello");
+
+            var expectedSequence = Sequence.Create(Word.Create(1, "hello"));
+
+            Assert.That(testRule.Sequence, Is.EqualTo(expectedSequence));
+        }
+
+        [Test]
+        public void Foo2() {
+            var testRule = new Rule("some_rule", _idGenerator);
+
+            testRule.Optionally(e => e.SayOneOf("cheese", "cheese"));
+            testRule.Say("Hello").OneOf(r => r.Say("Hi"), r => r.Say("Boo"));
+
+            var expectedSequence = Sequence.Create(
+               Optional.Create(
+                  Alternatives.Create(
+                     Word.Create(1, "cheese"),
+                     Word.Create(1, "cheese")
+                  )
+               ),
+               Word.Create(2, "Hello"),
+               Alternatives.Create(
+                  Word.Create(3, "Hi"),
+                  Word.Create(4, "Boo")
+               )
+            );
+
+            Assert.That(testRule.Sequence, Is.EqualTo(expectedSequence));
+        }
+    }
 }

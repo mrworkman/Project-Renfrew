@@ -21,16 +21,14 @@
 #define IDgnSREngineNotifySinkGUID "dd109001-6205-11cf-ae61-0000e8a28647"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(IDgnSREngineNotifySinkGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class 
-      DECLSPEC_UUID(IDgnSREngineNotifySinkGUID) IDgnSrEngineNotifySink {
-
-      void AttribChanged2(DWORD);
-      void Paused(QWORD);
-      void MimicDone(DWORD, LPUNKNOWN);
-      void ErrorHappened(LPUNKNOWN);
-      void Progress(int, const WCHAR*);
-   };
+    [ComImport, Guid(IDgnSREngineNotifySinkGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(IDgnSREngineNotifySinkGUID) IDgnSrEngineNotifySink {
+        void AttribChanged2(DWORD);
+        void Paused(QWORD);
+        void MimicDone(DWORD, LPUNKNOWN);
+        void ErrorHappened(LPUNKNOWN);
+        void Progress(int, const WCHAR*);
+    };
 }

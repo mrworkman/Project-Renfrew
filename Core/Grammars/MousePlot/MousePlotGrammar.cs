@@ -27,40 +27,40 @@ using System.Windows.Forms;
 using Cursor = System.Windows.Forms.Cursor;
 
 namespace Renfrew.Core.Grammars.MousePlot {
-   using Grammar;
-   using NatSpeakInterop;
-   using Win32.Interop;
+    using Grammar;
+    using NatSpeakInterop;
+    using Win32.Interop;
 
-   [GrammarExport("Mouse Plot", "A replacement for \"Mouse Grid\".")]
-   public class MousePlotGrammar : Grammar {
+    [GrammarExport("Mouse Plot", "A replacement for \"Mouse Grid\".")]
+    public class MousePlotGrammar : Grammar {
 
-      private IScreen _currentScreen;
-      private Size _cellSize = new Size(100, 100);
+        private IScreen _currentScreen;
+        private Size _cellSize = new(100, 100);
 
-      private bool _firstLoad = true;
+        private bool _firstLoad = true;
 
-      private IWindow _plotWindow;
-      private IWindow _cellWindow;
-      private IWindow _markArrowWindow;
+        private IWindow _plotWindow;
+        private IWindow _cellWindow;
+        private IWindow _markArrowWindow;
 
-      private IZoomWindow _zoomWindow;
+        private IZoomWindow _zoomWindow;
 
-      private Point _currentCell = Point.Empty;
+        private Point _currentCell = Point.Empty;
 
-      // TODO: Add support for determining this from windows and setting it by configuration.
-      private readonly double _displayScaleMultiplier = 1;
+        // TODO: Add support for determining this from windows and setting it by configuration.
+        private readonly double _displayScaleMultiplier = 1.0;
 
-      private readonly uint _scrollWheelDelta = 300;
+        private readonly uint _scrollWheelDelta = 300;
 
-      private Bitmap _bitmap;
+        private Bitmap _bitmap;
 
-      private bool _isZoomed = false;
+        private bool _isZoomed = false;
 
-      private bool  _dragSet = false;
-      private Point _dragAnchor = Point.Empty;
+        private bool _dragSet = false;
+        private Point _dragAnchor = Point.Empty;
 
-      #region Word Lists
-      private Dictionary<String, String> _alphaList = new Dictionary<String, String> {
+        #region Word Lists
+        private Dictionary<string, string> _alphaList = new() {
          { "Alpha"   , "A" }, { "A", "A" },
          { "Bravo"   , "B" }, { "B", "B" },
          { "Charlie" , "C" }, { "C", "C" },
@@ -99,7 +99,7 @@ namespace Renfrew.Core.Grammars.MousePlot {
          { "Eight", "8" },
          { "Nine",  "9" },
       };
-      private List<String> _colourList = new List<String> {
+        private List<string> _colourList = new() {
          "Black",
          "Blue",
          "Green",
@@ -108,13 +108,13 @@ namespace Renfrew.Core.Grammars.MousePlot {
          "White",
          "Yellow",
       };
-      private List<String> _clickList = new List<String> {
+        private List<string> _clickList = new() {
          "Click",        "Right Click",
          "Double Click", "Right Double",
          "Triple Click", "Right Triple",
          "Middle Click",
       };
-      private Dictionary<String, Int32> _numbersList = new Dictionary<String, Int32> {
+        private Dictionary<string, int> _numbersList = new() {
          { "One",    1 },
          { "Two",    2 },
          { "Three",  3 },
@@ -128,565 +128,595 @@ namespace Renfrew.Core.Grammars.MousePlot {
          { "Eleven", 11 },
          { "Twelve", 12 },
       };
-      #endregion
+        #endregion
 
-      [DllImport("user32.dll", SetLastError = true)]
-      private static extern uint SendInput(uint cInputs, IntPtr pInputs, int cbSize);
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern uint SendInput(uint cInputs, IntPtr pInputs, int cbSize);
 
-      // For Testing
-      public MousePlotGrammar(IGrammarService grammarService, INatSpeak natSpeak, IScreen screen,
-                              IWindow plotWindow, IZoomWindow zoomWindow, IWindow cellWindow,
-                              IWindow markArrowWindow)
-         : base(grammarService, natSpeak) {
+        // For Testing
+        public MousePlotGrammar(IGrammarService grammarService, INatSpeak natSpeak, IScreen screen,
+                                IWindow plotWindow, IZoomWindow zoomWindow, IWindow cellWindow,
+                                IWindow markArrowWindow)
+           : base(grammarService, natSpeak) {
 
-         _currentScreen   = screen;
-         _plotWindow      = plotWindow;
-         _zoomWindow      = zoomWindow;
-         _cellWindow      = cellWindow;
-         _markArrowWindow = markArrowWindow;
-      }
+            _currentScreen = screen;
+            _plotWindow = plotWindow;
+            _zoomWindow = zoomWindow;
+            _cellWindow = cellWindow;
+            _markArrowWindow = markArrowWindow;
+        }
 
-      public MousePlotGrammar(IGrammarService grammarService, INatSpeak natSpeak)
-         : this(grammarService, natSpeak, new TestableScreen().PrimaryScreen,
-              new PlotWindow(), new ZoomWindow(), new CellWindow(),
-              new ArrowWindow()) {
+        public MousePlotGrammar(IGrammarService grammarService, INatSpeak natSpeak)
+           : this(grammarService, natSpeak, new TestableScreen().PrimaryScreen,
+                new PlotWindow(), new ZoomWindow(), new CellWindow(),
+                new ArrowWindow()) {
 
-      }
+        }
 
-      public override void Dispose() {
-         throw new NotImplementedException();
-      }
+        public override void Dispose() {
+            throw new NotImplementedException();
+        }
 
-      public override void Initialize() {
-         var alphaWords = _alphaList.Select(e => e.Key).ToArray();
+        public override void Initialize() {
+            var alphaWords = _alphaList.Select(e => e.Key).ToArray();
 
-         // The main rule that opens the full-screen plot grid
-         AddRule("mouse_plot", e => e
-            .Say("Plot")
-               .Do(ShowPlotWindow)
-            .OptionallyWithRule("post_plot")
-         );
+            // The main rule that opens the full-screen plot grid
+            AddRule("mouse_plot", e => e
+               .Say("Plot")
+                  .Do(ShowPlotWindow)
+               .OptionallyWithRule("post_plot")
+            );
 
-         // After the plot grid is displayed
-         AddRule("post_plot", e => e
-            .OneOf(
-               p => p.WithRule("mouse_click"),
+            // After the plot grid is displayed
+            AddRule("post_plot", e => e
+               .OneOf(
+                  p => p.WithRule("mouse_click"),
 
-               p => p.Say("Dismiss").Do(Dismiss),
-               p => p.Say("Drag").Do(Drag),
-               p => p.Say("Mark").Do(Mark),
+                  p => p.Say("Dismiss").Do(Dismiss),
+                  p => p.Say("Drag").Do(Drag),
+                  p => p.Say("Mark").Do(Mark),
 
-               p => p
-                  .SayOneOf("Monitor", "Screen")
+                  p => p
+                     .SayOneOf("Monitor", "Screen")
+                     .SayOneOf(_numbersList.Keys)
+                        .Do(spokenWords => SwitchScreen(_numbersList[spokenWords.Last()])),
+
+                  p => p
+                     .SayOneOf(_colourList)
+                        .Do(spokenWords => SetColour(spokenWords.First())),
+
+                  p => p
+                     .SayOneOf(alphaWords)
+                     .SayOneOf(alphaWords)
+                        .Do(spokenWords => MoveCursor(spokenWords.Last(), spokenWords.First()))
+                     .OptionallyOneOf(
+                        o => o.WithRule("mouse_click"),
+                        o => o
+                           .SayOneOf(alphaWords)
+                           .SayOneOf(alphaWords)
+                              .Do(spokenWords => MoveCursor(spokenWords.Last(), spokenWords.First()))
+                           .OptionallyOneOf(
+                              q => q.WithRule("mouse_click"),
+                              q => o.Say("Drag").Do(Drag),
+                              q => o.Say("Mark").Do(Mark)
+                           ),
+                        o => o.Say("Drag").Do(Drag),
+                        o => o.Say("Mark").Do(Mark)
+                     )
+               )
+            );
+
+            // Mouse movement
+            AddRule("mouse_click", e => e
+               .OptionallySay("Mouse")
+               .SayOneOf(_clickList)
+                  .Do(Click)
+            );
+
+            // Fine-grained movement of the mouse when zoomed
+            AddRule("mouse_nudge", e => e
+               .SayOneOf("Up", "Down", "Left", "Right")
+               .Optionally(p => p
                   .SayOneOf(_numbersList.Keys)
-                     .Do(spokenWords => SwitchScreen( _numbersList[spokenWords.Last()] )),
-
-               p => p
-                  .SayOneOf(_colourList)
-                     .Do(spokenWords => SetColour(spokenWords.First())),
-
-               p => p
-                  .SayOneOf(alphaWords)
-                  .SayOneOf(alphaWords)
-                     .Do(spokenWords => MoveCursor(spokenWords.Last(), spokenWords.First()))
-                  .OptionallyOneOf(
-                     o => o.WithRule("mouse_click"),
-                     o => o
-                        .SayOneOf(alphaWords)
-                        .SayOneOf(alphaWords)
-                           .Do(spokenWords => MoveCursor(spokenWords.Last(), spokenWords.First()))
-                        .OptionallyOneOf(
-                           q => q.WithRule("mouse_click"),
-                           q => o.Say("Drag").Do(Drag),
-                           q => o.Say("Mark").Do(Mark)
-                        ),
-                     o => o.Say("Drag").Do(Drag),
-                     o => o.Say("Mark").Do(Mark)
-                  )
-            )
-         );
-
-         // Mouse movement
-         AddRule("mouse_click", e => e
-            .OptionallySay("Mouse")
-            .SayOneOf(_clickList)
-               .Do(Click)
-         );
-
-         // Fine-grained movement of the mouse when zoomed
-         AddRule("mouse_nudge", e => e
-            .SayOneOf("Up", "Down", "Left", "Right")
-            .Optionally(p => p
-               .SayOneOf(_numbersList.Keys)
-            )
-            .Do(spokenWords => NudgeCursor(spokenWords.ToArray()))
-         );
-
-         AddRule("scroll", e => e
-            .SayOneOf("Scroll", "Troll")
-            .Optionally(p => p
-               .SayOneOf(_numbersList.Keys)
-            )
-            .Do(spokenWords => ScrollMouse(spokenWords.ToArray()))
-         );
-
-         // Load grammar into the grammar service
-         Load();
-         
-         ActivateRule("mouse_plot");
-         ActivateRule("scroll");
-      }
-
-      private void ReactivateDefaultRules() {
-         ReactivateRule("mouse_plot");
-         ReactivateRule("scroll");
-      }
-
-      private void Click(IEnumerable<String> spokenWords) {
-         MakeGrammarNotExclusive();
-         DeactivateRule("post_plot");
-
-         // Due to a problem with Dragon 15, rules we want to remain active
-         // need to be explicitly re-activated when another is de-activated.
-         ReactivateDefaultRules();
-
-         CloseWindows();
-
-         // Wait a short period to make sure the windows have closed
-         System.Threading.Thread.Sleep(100);
-
-         var s = spokenWords.Last();
-         var b = MouseButtons.Left;
-         var c = 1;
-
-         // Which button ?
-         if (s.Contains("Right") == true)
-            b = MouseButtons.Right;
-         if (s.Contains("Middle") == true)
-            b = MouseButtons.Middle;
-
-         // How many clicks ?
-         if (s.Contains("Double") == true)
-            c = 2;
-         if (s.Contains("Triple") == true)
-            c = 3;
-
-         ClickMouse(b, c);
-
-         _isZoomed = false;
-      }
-
-      private void ClickMouse(MouseButtons buttons, Int32 times) {
-         for (int i = 0; i < times; i++)
-            Mouse.Click(buttons);
-      }
-
-      private void CloseWindows() {
-         _zoomWindow.Close();
-         _cellWindow.Close();
-         _plotWindow.Close();
-         _markArrowWindow.Close();
-
-         DeactivateRule("mouse_nudge");
-
-         // Due to a problem with Dragon 15, rules we want to remain active
-         // need to be explicitly re-activated when another is de-activated.
-         ReactivateDefaultRules();
-      }
-
-      private void Dismiss() {
-         CloseWindows();
-
-         MakeGrammarNotExclusive();
-         DeactivateRule("post_plot");
-
-         // Due to a problem with Dragon 15, rules we want to remain active
-         // need to be explicitly re-activated when another is de-activated.
-         ReactivateDefaultRules();
-      }
-
-      public void Drag() {
-         Int32 x = Cursor.Position.X;
-         Int32 y = Cursor.Position.Y;
-
-         CloseWindows();
-
-         MakeGrammarNotExclusive();
-         DeactivateRule("post_plot");
-
-         // Due to a problem with Dragon 15, rules we want to remain active
-         // need to be explicitly re-activated when another is de-activated.
-         ReactivateDefaultRules();
-
-         // If no start point has been selected, then don't do anything.
-         if (_dragSet == false)
-            return;
-
-         // Show the arrow, wherever it was last time.
-         _markArrowWindow.Show();
-
-         var handle = Win32.WindowFromPoint(x, y);
-
-         Win32.BringWindowToTop(handle);
-         Win32.SetForegroundWindow(handle);
-
-         Console.WriteLine($"Dragging from ({_dragAnchor.X}, {_dragAnchor.Y}) to ({x}, {y})");
-
-         Mouse.Animate(x, y, _dragAnchor.X, _dragAnchor.Y, 50);
-         Mouse.Down(MouseButtons.Left);
-
-         Mouse.Animate(_dragAnchor.X, _dragAnchor.Y, x, y);
-         Mouse.Up(MouseButtons.Left);
-
-         CloseWindows();
-
-         _isZoomed = false;
-      }
-
-      public Int32 GetCellXCoord(Int32 x) {
-         var i = GetXScreenOffset(x);
-
-         // Integer truncation will have the desired effect
-         if (i > _currentScreen.Bounds.Right)
-            i = _currentScreen.Bounds.Left + (_currentScreen.Bounds.Width / _cellSize.Width) * _cellSize.Width;
-
-         return i;
-      }
-
-      public Int32 GetCellYCoord(Int32 y) {
-         var i = GetYScreenOffset(y);
-
-         // Integer truncation will have the desired effect
-         if (i > _currentScreen.Bounds.Bottom)
-            i = _currentScreen.Bounds.Top + (_currentScreen.Bounds.Height / _cellSize.Height) * _cellSize.Height;
-
-         return i;
-      }
-
-      public Int32 GetCoordinateOrdinal(String c) {
-         if (_alphaList.ContainsKey(c) == false)
-            throw new ArgumentOutOfRangeException(nameof(c), c);
-
-         c = _alphaList[c];
-
-         if (Int32.TryParse(c, out int i) == true)
-            return i;
-
-         return c.First() - 'A' + 10;
-      }
-
-      public Int32 GetMouseXCoord(Int32 x) {
-         x = GetXScreenOffset(x) + (_cellSize.Width / 2);
-
-         if (x > _currentScreen.Bounds.Right)
-            x = _currentScreen.Bounds.Right - 1;
-
-         return ScaleToScreen(x);
-      }
-
-      public Int32 GetMouseYCoord(Int32 y) {
-         y = GetYScreenOffset(y) + (_cellSize.Height / 2);
-
-         if (y > _currentScreen.Bounds.Bottom)
-            y = _currentScreen.Bounds.Bottom - 1;
-
-         return ScaleToScreen(y);
-      }
-
-      public Int32 GetXScreenOffset(Int32 x) =>
-         _currentScreen.Bounds.Left + (_cellSize.Width * x);
-
-      public Int32 GetYScreenOffset(Int32 y) =>
-         _currentScreen.Bounds.Top + (_cellSize.Height * y);
-
-      public Int32 GetZoomedCellXCoord(Int32 x) {
-         if (x > 8) x = 8;
-
-         var subCellWidth = _cellSize.Width * 3 / 9;
-         return (subCellWidth * x) + (subCellWidth / 2);
-      }
-
-      public Int32 GetZoomedCellYCoord(Int32 y) {
-         if (y > 8) y = 8;
-
-         var subCellHeight = _cellSize.Height * 3 / 9;
-         return (subCellHeight * y) + (subCellHeight / 2);
-      }
-
-      public Int32 GetZoomedMouseXCoord(Int32 x) {
-         if (x > 8) x = 8;
-
-         var subCellWidth = _cellSize.Width / 9;
-         return ScaleToScreen(_currentCell.X + (subCellWidth * x) + (subCellWidth / 2));
-      }
-
-      public Int32 GetZoomedMouseYCoord(Int32 y) {
-         if (y > 8) y = 8;
-
-         var subCellHeight = _cellSize.Height / 9;
-         return ScaleToScreen(_currentCell.Y + (subCellHeight * y) + (subCellHeight / 2));
-      }
-
-      public void Mark() {
-         Int32 x = Cursor.Position.X;
-         Int32 y = Cursor.Position.Y;
-
-         MakeGrammarNotExclusive();
-         DeactivateRule("post_plot");
-
-         // Due to a problem with Dragon 15, rules we want to remain active
-         // need to be explicitly re-activated when another is de-activated.
-         ReactivateDefaultRules();
-
-         CloseWindows();
-
-         _dragAnchor = new Point(x, y);
-         _dragSet    = true;
-         _isZoomed   = false;
-
-         Int32  offsetX = x;
-         Int32  offsetY = y;
-         double angle = 0;
-
-         // Position and rotate the "mark" arrow
-
-         if (offsetX + _markArrowWindow.Width >= _currentScreen.Bounds.Right) {
-            offsetX = x - (Int32) _markArrowWindow.Width;
-            angle = 90;
-         }
-
-         if (offsetY + _markArrowWindow.Height >= _currentScreen.Bounds.Bottom) {
-            offsetY = y - (Int32) _markArrowWindow.Height;
-
-            if (offsetX == x) {
-               angle = -90;
-            } else {
-               angle = 180;
+               )
+               .Do(spokenWords => NudgeCursor(spokenWords.ToArray()))
+            );
+
+            AddRule("scroll", e => e
+               .SayOneOf("Scroll", "Troll")
+               .Optionally(p => p
+                  .SayOneOf(_numbersList.Keys)
+               )
+               .Do(spokenWords => ScrollMouse(spokenWords.ToArray()))
+            );
+
+            // Load grammar into the grammar service
+            Load();
+
+            ActivateRule("mouse_plot");
+            ActivateRule("scroll");
+        }
+
+        private void ReactivateDefaultRules() {
+            ReactivateRule("mouse_plot");
+            ReactivateRule("scroll");
+        }
+
+        private void Click(IEnumerable<string> spokenWords) {
+            MakeGrammarNotExclusive();
+            DeactivateRule("post_plot");
+
+            // Due to a problem with Dragon 15, rules we want to remain active
+            // need to be explicitly re-activated when another is de-activated.
+            ReactivateDefaultRules();
+
+            CloseWindows();
+
+            // Wait a short period to make sure the windows have closed
+            System.Threading.Thread.Sleep(100);
+
+            var s = spokenWords.Last();
+            var b = MouseButtons.Left;
+            var c = 1;
+
+            // Which button ?
+            if (s.Contains("Right") == true) {
+                b = MouseButtons.Right;
             }
-         }
 
-         _markArrowWindow.Rotate(angle);
-         _markArrowWindow.Move(ScaleToWindow(offsetX), ScaleToWindow(offsetY));
+            if (s.Contains("Middle") == true) {
+                b = MouseButtons.Middle;
+            }
 
-         _markArrowWindow.Show();
-      }
+            // How many clicks ?
+            if (s.Contains("Double") == true) {
+                c = 2;
+            }
 
-      public void MoveCursor(String x, String y) {
-         Int32 mouseX, mouseY;
+            if (s.Contains("Triple") == true) {
+                c = 3;
+            }
 
-         if (_isZoomed == true) {
-            mouseX = GetZoomedMouseXCoord(GetCoordinateOrdinal(x));
-            mouseY = GetZoomedMouseYCoord(GetCoordinateOrdinal(y));
+            ClickMouse(b, c);
+
+            _isZoomed = false;
+        }
+
+        private void ClickMouse(MouseButtons buttons, int times) {
+            for (var i = 0; i < times; i++) {
+                Mouse.Click(buttons);
+            }
+        }
+
+        private void CloseWindows() {
+            _zoomWindow.Close();
+            _cellWindow.Close();
+            _plotWindow.Close();
+            _markArrowWindow.Close();
+
+            DeactivateRule("mouse_nudge");
+
+            // Due to a problem with Dragon 15, rules we want to remain active
+            // need to be explicitly re-activated when another is de-activated.
+            ReactivateDefaultRules();
+        }
+
+        private void Dismiss() {
+            CloseWindows();
+
+            MakeGrammarNotExclusive();
+            DeactivateRule("post_plot");
+
+            // Due to a problem with Dragon 15, rules we want to remain active
+            // need to be explicitly re-activated when another is de-activated.
+            ReactivateDefaultRules();
+        }
+
+        public void Drag() {
+            var x = Cursor.Position.X;
+            var y = Cursor.Position.Y;
+
+            CloseWindows();
+
+            MakeGrammarNotExclusive();
+            DeactivateRule("post_plot");
+
+            // Due to a problem with Dragon 15, rules we want to remain active
+            // need to be explicitly re-activated when another is de-activated.
+            ReactivateDefaultRules();
+
+            // If no start point has been selected, then don't do anything.
+            if (_dragSet == false) {
+                return;
+            }
+
+            // Show the arrow, wherever it was last time.
+            _markArrowWindow.Show();
+
+            var handle = Win32.WindowFromPoint(x, y);
+
+            Win32.BringWindowToTop(handle);
+            Win32.SetForegroundWindow(handle);
+
+            Console.WriteLine($"Dragging from ({_dragAnchor.X}, {_dragAnchor.Y}) to ({x}, {y})");
+
+            Mouse.Animate(x, y, _dragAnchor.X, _dragAnchor.Y, 50);
+            Mouse.Down(MouseButtons.Left);
+
+            Mouse.Animate(_dragAnchor.X, _dragAnchor.Y, x, y);
+            Mouse.Up(MouseButtons.Left);
+
+            CloseWindows();
+
+            _isZoomed = false;
+        }
+
+        public int GetCellXCoord(int x) {
+            var i = GetXScreenOffset(x);
+
+            // Integer truncation will have the desired effect
+            if (i > _currentScreen.Bounds.Right) {
+                i = _currentScreen.Bounds.Left + (_currentScreen.Bounds.Width / _cellSize.Width) * _cellSize.Width;
+            }
+
+            return i;
+        }
+
+        public int GetCellYCoord(int y) {
+            var i = GetYScreenOffset(y);
+
+            // Integer truncation will have the desired effect
+            if (i > _currentScreen.Bounds.Bottom) {
+                i = _currentScreen.Bounds.Top + (_currentScreen.Bounds.Height / _cellSize.Height) * _cellSize.Height;
+            }
+
+            return i;
+        }
+
+        public int GetCoordinateOrdinal(string c) {
+            if (_alphaList.ContainsKey(c) == false) {
+                throw new ArgumentOutOfRangeException(nameof(c), c);
+            }
+
+            c = _alphaList[c];
+
+            if (int.TryParse(c, out var i) == true) {
+                return i;
+            }
+
+            return c.First() - 'A' + 10;
+        }
+
+        public int GetMouseXCoord(int x) {
+            x = GetXScreenOffset(x) + (_cellSize.Width / 2);
+
+            if (x > _currentScreen.Bounds.Right) {
+                x = _currentScreen.Bounds.Right - 1;
+            }
+
+            return ScaleToScreen(x);
+        }
+
+        public int GetMouseYCoord(int y) {
+            y = GetYScreenOffset(y) + (_cellSize.Height / 2);
+
+            if (y > _currentScreen.Bounds.Bottom) {
+                y = _currentScreen.Bounds.Bottom - 1;
+            }
+
+            return ScaleToScreen(y);
+        }
+
+        public int GetXScreenOffset(int x) =>
+           _currentScreen.Bounds.Left + (_cellSize.Width * x);
+
+        public int GetYScreenOffset(int y) =>
+           _currentScreen.Bounds.Top + (_cellSize.Height * y);
+
+        public int GetZoomedCellXCoord(int x) {
+            if (x > 8) {
+                x = 8;
+            }
+
+            var subCellWidth = _cellSize.Width * 3 / 9;
+            return (subCellWidth * x) + (subCellWidth / 2);
+        }
+
+        public int GetZoomedCellYCoord(int y) {
+            if (y > 8) {
+                y = 8;
+            }
+
+            var subCellHeight = _cellSize.Height * 3 / 9;
+            return (subCellHeight * y) + (subCellHeight / 2);
+        }
+
+        public int GetZoomedMouseXCoord(int x) {
+            if (x > 8) {
+                x = 8;
+            }
+
+            var subCellWidth = _cellSize.Width / 9;
+            return ScaleToScreen(_currentCell.X + (subCellWidth * x) + (subCellWidth / 2));
+        }
+
+        public int GetZoomedMouseYCoord(int y) {
+            if (y > 8) {
+                y = 8;
+            }
+
+            var subCellHeight = _cellSize.Height / 9;
+            return ScaleToScreen(_currentCell.Y + (subCellHeight * y) + (subCellHeight / 2));
+        }
+
+        public void Mark() {
+            var x = Cursor.Position.X;
+            var y = Cursor.Position.Y;
+
+            MakeGrammarNotExclusive();
+            DeactivateRule("post_plot");
+
+            // Due to a problem with Dragon 15, rules we want to remain active
+            // need to be explicitly re-activated when another is de-activated.
+            ReactivateDefaultRules();
+
+            CloseWindows();
+
+            _dragAnchor = new Point(x, y);
+            _dragSet = true;
+            _isZoomed = false;
+
+            var offsetX = x;
+            var offsetY = y;
+            double angle = 0;
+
+            // Position and rotate the "mark" arrow
+
+            if (offsetX + _markArrowWindow.Width >= _currentScreen.Bounds.Right) {
+                offsetX = x - (int)_markArrowWindow.Width;
+                angle = 90;
+            }
+
+            if (offsetY + _markArrowWindow.Height >= _currentScreen.Bounds.Bottom) {
+                offsetY = y - (int)_markArrowWindow.Height;
+
+                if (offsetX == x) {
+                    angle = -90;
+                } else {
+                    angle = 180;
+                }
+            }
+
+            _markArrowWindow.Rotate(angle);
+            _markArrowWindow.Move(ScaleToWindow(offsetX), ScaleToWindow(offsetY));
+
+            _markArrowWindow.Show();
+        }
+
+        public void MoveCursor(string x, string y) {
+            int mouseX, mouseY;
+
+            if (_isZoomed == true) {
+                mouseX = GetZoomedMouseXCoord(GetCoordinateOrdinal(x));
+                mouseY = GetZoomedMouseYCoord(GetCoordinateOrdinal(y));
+
+                Mouse.SetPosition(mouseX, mouseY);
+
+                return;
+            }
+
+            mouseX = GetMouseXCoord(GetCoordinateOrdinal(x));
+            mouseY = GetMouseYCoord(GetCoordinateOrdinal(y));
+
+            _currentCell = new Point(
+               GetCellXCoord(GetCoordinateOrdinal(x)),
+               GetCellYCoord(GetCoordinateOrdinal(y))
+            );
+
+            Zoom(x, y);
+            ActivateRule("mouse_nudge");
 
             Mouse.SetPosition(mouseX, mouseY);
+        }
 
-            return;
-         }
+        public void NudgeCursor(string[] spokenWords) {
+            var direction = spokenWords[0];
+            string countStr = null;
 
-         mouseX = GetMouseXCoord(GetCoordinateOrdinal(x));
-         mouseY = GetMouseYCoord(GetCoordinateOrdinal(y));
-
-         _currentCell = new Point(
-            GetCellXCoord(GetCoordinateOrdinal(x)),
-            GetCellYCoord(GetCoordinateOrdinal(y))
-         );
-
-         Zoom(x, y);
-         ActivateRule("mouse_nudge");
-
-         Mouse.SetPosition(mouseX, mouseY);
-      }
-
-      public void NudgeCursor(String[] spokenWords) {
-         String direction = spokenWords[0];
-         String countStr = null;
-
-         if (spokenWords.Length == 2)
-            countStr = spokenWords[1];
-
-         Int32 count = 1;
-
-         if (countStr != null)
-            count = _numbersList[countStr];
-
-         var x = Cursor.Position.X;
-         var y = Cursor.Position.Y;
-
-         for (int i = 0; i < count; i++) {
-            switch (direction) {
-               case "Up":
-                  y--;
-                  break;
-               case "Down":
-                  y++;
-                  break;
-               case "Left":
-                  x--;
-                  break;
-               case "Right":
-                  x++;
-                  break;
+            if (spokenWords.Length == 2) {
+                countStr = spokenWords[1];
             }
-         }
 
-         // Keep the pointer from leaving the "cell" window
+            var count = 1;
 
-         var borderThickness = 4;
+            if (countStr != null) {
+                count = _numbersList[countStr];
+            }
 
-         var left   = ScaleToScreen(_cellWindow.Left + borderThickness);
-         var top    = ScaleToScreen(_cellWindow.Top + borderThickness);
-         var right  = ScaleToScreen(left + _cellWindow.Width - borderThickness * 2 - 1);
-         var bottom = ScaleToScreen(top + _cellWindow.Height - borderThickness * 2 - 1);
+            var x = Cursor.Position.X;
+            var y = Cursor.Position.Y;
 
-         if (x >= right)
-            x = (Int32) right;
-         else if (x < left)
-            x = (Int32) left;
+            for (var i = 0; i < count; i++) {
+                switch (direction) {
+                    case "Up":
+                        y--;
+                        break;
+                    case "Down":
+                        y++;
+                        break;
+                    case "Left":
+                        x--;
+                        break;
+                    case "Right":
+                        x++;
+                        break;
+                }
+            }
 
-         if (y >= bottom)
-            y = (Int32) bottom;
-         else if (y < top)
-            y = (Int32) top;
+            // Keep the pointer from leaving the "cell" window
 
-         // Move the pointer
+            var borderThickness = 4;
 
-         Mouse.SetPosition(x, y);
-      }
+            var left = ScaleToScreen(_cellWindow.Left + borderThickness);
+            var top = ScaleToScreen(_cellWindow.Top + borderThickness);
+            var right = ScaleToScreen(left + _cellWindow.Width - borderThickness * 2 - 1);
+            var bottom = ScaleToScreen(top + _cellWindow.Height - borderThickness * 2 - 1);
 
-      private void ScrollMouse(String[] spokenWords) {
-         String actionWord = spokenWords[0];
-         String countStr = null;
+            if (x >= right) {
+                x = (int)right;
+            } else if (x < left) {
+                x = (int)left;
+            }
 
-         if (spokenWords.Length == 2) {
-            countStr = spokenWords[1];
-         }
+            if (y >= bottom) {
+                y = (int)bottom;
+            } else if (y < top) {
+                y = (int)top;
+            }
 
-         Int32 count = 1;
+            // Move the pointer
 
-         if (countStr != null) {
-            count = _numbersList[countStr];
-         }
+            Mouse.SetPosition(x, y);
+        }
 
-         var direction = (actionWord == "Scroll") ? MouseScrollDirection.Down : MouseScrollDirection.Up;
+        private void ScrollMouse(string[] spokenWords) {
+            var actionWord = spokenWords[0];
+            string countStr = null;
 
-         for (int i = 0; i < count; i++) {
-            Mouse.Scroll(direction, _scrollWheelDelta);
-         }
-      }
+            if (spokenWords.Length == 2) {
+                countStr = spokenWords[1];
+            }
 
-      private void SetColour(String colourName) {
-         if (Enum.TryParse(colourName, out GridColour colour) == false)
-            colour = GridColour.Yellow;
+            var count = 1;
 
-         _plotWindow.SetColour(colour);
-         _zoomWindow.SetColour(colour);
-         _cellWindow.SetColour(colour);
-         _markArrowWindow.SetColour(colour);
-      }
+            if (countStr != null) {
+                count = _numbersList[countStr];
+            }
 
-      public void ShowPlotWindow() {
-         ActivateRule("post_plot");
-         MakeGrammarExclusive();
+            var direction = (actionWord == "Scroll") ? MouseScrollDirection.Down : MouseScrollDirection.Up;
 
-         _zoomWindow.Close();
-         _cellWindow.Close();
+            for (var i = 0; i < count; i++) {
+                Mouse.Scroll(direction, _scrollWheelDelta);
+            }
+        }
 
-         _plotWindow.Show();
+        private void SetColour(string colourName) {
+            if (Enum.TryParse(colourName, out GridColour colour) == false) {
+                colour = GridColour.Yellow;
+            }
 
-         // Force the plot window onto the primary display if this is the first
-         // time that the window is being shown since application start.
-         if (_firstLoad == true) {
-            _plotWindow.Move(0, 0);
-            _firstLoad = false;
-         }
+            _plotWindow.SetColour(colour);
+            _zoomWindow.SetColour(colour);
+            _cellWindow.SetColour(colour);
+            _markArrowWindow.SetColour(colour);
+        }
 
-         _isZoomed = false;
-      }
+        public void ShowPlotWindow() {
+            ActivateRule("post_plot");
+            MakeGrammarExclusive();
 
-      private void SwitchScreen(Int32 screenNumber) {
-         screenNumber--;
+            _zoomWindow.Close();
+            _cellWindow.Close();
 
-         if (screenNumber >= Screen.AllScreens.Length)
-            return;
+            _plotWindow.Show();
 
-         _currentScreen = _currentScreen.AllScreens[screenNumber];
+            // Force the plot window onto the primary display if this is the first
+            // time that the window is being shown since application start.
+            if (_firstLoad == true) {
+                _plotWindow.Move(0, 0);
+                _firstLoad = false;
+            }
 
-         _plotWindow.Move(_currentScreen.Bounds.Left, _currentScreen.Bounds.Top);
-         _plotWindow.Show();
-      }
+            _isZoomed = false;
+        }
 
-      private void TakeScreenshot(Int32 x, Int32 y, Int32 width, Int32 height) {
-         if (_bitmap != null) {
-            _bitmap.Dispose();
-         }
+        private void SwitchScreen(int screenNumber) {
+            screenNumber--;
 
-         _bitmap = new Bitmap(width, height);
+            if (screenNumber >= Screen.AllScreens.Length) {
+                return;
+            }
 
-         // Take the screenshot
-         using (var g = Graphics.FromImage(_bitmap)) {
-            g.InterpolationMode = InterpolationMode.NearestNeighbor;
-            g.PixelOffsetMode = PixelOffsetMode.None;
+            _currentScreen = _currentScreen.AllScreens[screenNumber];
 
-            g.CopyFromScreen(x, y, 0, 0, _bitmap.Size);
-         }
-      }
+            _plotWindow.Move(_currentScreen.Bounds.Left, _currentScreen.Bounds.Top);
+            _plotWindow.Show();
+        }
 
-      public void Zoom(String x, String y) {
-         var mouseX = GetMouseXCoord(GetCoordinateOrdinal(x));
-         var mouseY = GetMouseYCoord(GetCoordinateOrdinal(y));
-         var cellX  = GetCellXCoord(GetCoordinateOrdinal(x));
-         var cellY  = GetCellYCoord(GetCoordinateOrdinal(y));
+        private void TakeScreenshot(int x, int y, int width, int height) {
+            if (_bitmap != null) {
+                _bitmap.Dispose();
+            }
 
-         _plotWindow.Close();
+            _bitmap = new Bitmap(width, height);
 
-         // Position the zoom window so it appears
-         // on the current screen in its entirety.
-         Int32 offsetX = (_cellSize.Width / 4) * 3;
-         Int32 offsetY = (_cellSize.Height / 4) * 3;
+            // Take the screenshot
+            using (var g = Graphics.FromImage(_bitmap)) {
+                g.InterpolationMode = InterpolationMode.NearestNeighbor;
+                g.PixelOffsetMode = PixelOffsetMode.None;
 
-         if (mouseX + offsetX + ScaleToScreen(_zoomWindow.Width) >= _currentScreen.Bounds.Right)
-            offsetX = -offsetX - (Int32) _zoomWindow.Width;
+                g.CopyFromScreen(x, y, 0, 0, _bitmap.Size);
+            }
+        }
 
-         if (mouseY + offsetY + ScaleToScreen(_zoomWindow.Height) >= _currentScreen.Bounds.Bottom)
-            offsetY = -offsetY - (Int32) _zoomWindow.Height;
+        public void Zoom(string x, string y) {
+            var mouseX = GetMouseXCoord(GetCoordinateOrdinal(x));
+            var mouseY = GetMouseYCoord(GetCoordinateOrdinal(y));
+            var cellX = GetCellXCoord(GetCoordinateOrdinal(x));
+            var cellY = GetCellYCoord(GetCoordinateOrdinal(y));
 
-         _cellWindow.Move(cellX-4, cellY-4);
-         _cellWindow.Show();
+            _plotWindow.Close();
 
-         _zoomWindow.SetScaleMultiplier(_displayScaleMultiplier);
-         _zoomWindow.SetSource(
-            ScaleToScreen(cellX),
-            ScaleToScreen(cellY),
-            ScaleToScreen(_cellSize.Width),
-            ScaleToScreen(_cellSize.Height)
-         );
+            // Position the zoom window so it appears
+            // on the current screen in its entirety.
+            var offsetX = (_cellSize.Width / 4) * 3;
+            var offsetY = (_cellSize.Height / 4) * 3;
 
-         _zoomWindow.SetScreenBounds(_currentScreen.Bounds);
-         _cellWindow.SetScreenBounds(_currentScreen.Bounds);
+            if (mouseX + offsetX + ScaleToScreen(_zoomWindow.Width) >= _currentScreen.Bounds.Right) {
+                offsetX = -offsetX - (int)_zoomWindow.Width;
+            }
 
-         _zoomWindow.Move(
-            ScaleToWindow(mouseX) + offsetX,
-            ScaleToWindow(mouseY) + offsetY
-         );
-         _zoomWindow.Show();
+            if (mouseY + offsetY + ScaleToScreen(_zoomWindow.Height) >= _currentScreen.Bounds.Bottom) {
+                offsetY = -offsetY - (int)_zoomWindow.Height;
+            }
 
-         _isZoomed = true;
-      }
+            _cellWindow.Move(cellX - 4, cellY - 4);
+            _cellWindow.Show();
 
-      private int ScaleToScreen(int value) {
-         return (int)(value * _displayScaleMultiplier);
-      }
+            _zoomWindow.SetScaleMultiplier(_displayScaleMultiplier);
+            _zoomWindow.SetSource(
+               ScaleToScreen(cellX),
+               ScaleToScreen(cellY),
+               ScaleToScreen(_cellSize.Width),
+               ScaleToScreen(_cellSize.Height)
+            );
 
-      private double ScaleToScreen(double value) {
-         return value * _displayScaleMultiplier;
-      }
+            _zoomWindow.SetScreenBounds(_currentScreen.Bounds);
+            _cellWindow.SetScreenBounds(_currentScreen.Bounds);
 
-      private int ScaleToWindow(int value) {
-         return (int)(value / _displayScaleMultiplier);
-      }
+            _zoomWindow.Move(
+               ScaleToWindow(mouseX) + offsetX,
+               ScaleToWindow(mouseY) + offsetY
+            );
+            _zoomWindow.Show();
 
-      private double ScaleToWindow(double value) {
-         return value / _displayScaleMultiplier;
-      }
-   }
+            _isZoomed = true;
+        }
+
+        private int ScaleToScreen(int value) {
+            return (int)(value * _displayScaleMultiplier);
+        }
+
+        private double ScaleToScreen(double value) {
+            return value * _displayScaleMultiplier;
+        }
+
+        private int ScaleToWindow(int value) {
+            return (int)(value / _displayScaleMultiplier);
+        }
+
+        private double ScaleToWindow(double value) {
+            return value / _displayScaleMultiplier;
+        }
+    }
 }

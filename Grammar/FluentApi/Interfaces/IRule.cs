@@ -18,28 +18,34 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Renfrew.Grammar.FluentApi.ExpressionParts;
+using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
+using Renfrew.Grammar.Types;
 
-namespace Renfrew.Grammar.FluentApi {
-   using Elements;
+namespace Renfrew.Grammar.FluentApi.Interfaces {
+    public interface IRule : IIdString {
+        Sequence Sequence { get; }
+        IReadOnlyList<Word> Words { get; }
 
-   public interface IRule {
-      IElementContainer Elements { get; }
+        IActionableRule Say(string word);
+        IActionableRule Say(string firstWord, params string[] additionalWords);
+        IActionableRule SayOneOf(IEnumerable<string> words);
+        IActionableRule SayOneOf(params string[] words);
 
-      IActionableRule Say(String word);
-      IActionableRule SayOneOf(IEnumerable<String> words);
-      IActionableRule SayOneOf(params String[] words);
+        IActionableRule OneOf(params Expression<Action<IRule>>[] actions);
 
-      IActionableRule OneOf(params Expression<Action<IRule>>[] actions);
+        IActionableRule Optionally(Expression<Action<IRule>> action);
 
-      IActionableRule Optionally(Expression<Action<IRule>> action);
-      IActionableRule OptionallyOneOf(params Expression<Action<IRule>>[] actions);
+        IActionableRule OptionallyOneOf(
+           params Expression<Action<IRule>>[] actions
+        );
 
-      IActionableRule OptionallySay(String word);
+        IActionableRule OptionallySay(string word);
 
-      IActionableRule Repeat(Expression<Action<IRule>> action);
-      IActionableRule RepeatOneOf(params Expression<Action<IRule>>[] actions);
+        IActionableRule Repeat(Expression<Action<IRule>> action);
+        IActionableRule RepeatOneOf(params Expression<Action<IRule>>[] actions);
 
-      IActionableRule OptionallyWithRule(String ruleName);
-      IActionableRule WithRule(String ruleName);
-   }
+        IActionableRule OptionallyWithRule(string ruleName);
+        IActionableRule WithRule(string ruleName);
+    }
 }

@@ -17,347 +17,263 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
-
-using Renfrew.Grammar.Elements;
+using NLog;
+using Renfrew.Grammar.Collections;
 using Renfrew.Grammar.Exceptions;
 using Renfrew.Grammar.FluentApi;
+using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
+using Renfrew.Grammar.FluentApi.Interfaces;
+using Renfrew.Grammar.Parsing;
 using Renfrew.NatSpeakInterop;
 
 namespace Renfrew.Grammar {
+    public abstract class Grammar : IGrammar, IDisposable {
+        private static readonly Logger Logger =
+           LogManager.GetCurrentClassLogger();
 
-   public abstract class Grammar : IGrammar, IDisposable {
+        private readonly IGrammarService _grammarService;
 
-      private IGrammarService _grammarService;
+        private readonly Lookup<IRule> _allRules = new();
+        private readonly Lookup<IRule> _exportedRules = new();
+        private readonly Lookup<IRule> _importedRules = new();
+        private readonly Lookup<IRule> _activeRules = new();
 
-      private readonly Dictionary<String, IRule> _rules;
-      private readonly Dictionary<UInt32, IRule> _rulesById;
+        private readonly Lookup<Word> _allWords = new();
 
-      private UInt32 _wordCount = 1;
-      private readonly Dictionary<String, UInt32> _wordIds;
+        private readonly RuleFactory _ruleFactory;
+        private readonly IIdGenerator _idGenerator;
 
-      private UInt32 _ruleCount = 1;
-      private readonly Dictionary<String, UInt32> _ruleIds;
 
-      private readonly Dictionary<String, UInt32> _activeRules;
+        protected Grammar(IGrammarService grammarService, INatSpeak natSpeak) :
+           this(
+              new RuleFactory(),
+              new IdGenerator(),
+              grammarService,
+              natSpeak
+           ) { }
 
-      protected Grammar(IGrammarService grammarService, INatSpeak natSpeak)
-         : this(new RuleFactory(), grammarService, natSpeak) {
+        protected Grammar(
+           RuleFactory ruleFactory,
+           IIdGenerator idGenerator,
+           IGrammarService grammarService,
+           INatSpeak natSpeak
+        ) {
+            Debug.Assert(ruleFactory != null);
+            Debug.Assert(grammarService != null);
+            Debug.Assert(natSpeak != null);
 
-         // This is a list of the rules themselves (by name)
-         _rules = new Dictionary<String, IRule>(StringComparer.CurrentCultureIgnoreCase);
-         _rulesById = new Dictionary<UInt32, IRule>();
+            _ruleFactory = ruleFactory;
+            _idGenerator = idGenerator;
 
-         // These are lookups to find the numeric ids for words/rule names
-         _wordIds = new Dictionary<String, UInt32>(StringComparer.CurrentCultureIgnoreCase);
-         _ruleIds = new Dictionary<String, UInt32>(StringComparer.CurrentCultureIgnoreCase);
+            _grammarService = grammarService;
+            NatSpeak = natSpeak;
+        }
 
-         _activeRules = new Dictionary<String, UInt32>();
-      }
+        protected INatSpeak NatSpeak { get; }
 
-      protected Grammar(
-         RuleFactory ruleFactory, 
-         IGrammarService grammarService, 
-         INatSpeak natSpeak
-      ) {
-         Debug.Assert(ruleFactory != null);
-         Debug.Assert(grammarService != null);
-         Debug.Assert(natSpeak != null);
+        internal IReadOnlyList<IRule> AllRules => _allRules.Values.ToList();
 
-         _grammarService = grammarService;
+        internal IReadOnlyList<IRule> ExportedRules =>
+           _exportedRules.Values.ToList();
 
-         NatSpeak = natSpeak;
-         RuleFactory = ruleFactory;
-      }
+        internal IReadOnlyList<IRule> ImportedRules =>
+           _importedRules.Values.ToList();
 
-      public void ActivateRule(String name) {
-         _grammarService.ActivateRule(this, IntPtr.Zero, name);
+        internal IReadOnlyList<Word> Words => _allWords.Values.ToList();
 
-         if (_activeRules.ContainsKey(name) == false)
-            _activeRules.Add(name, _ruleIds[name]);
-      }
+        public IReadOnlyList<string> WordList => _allWords.Keys
+           .OrderBy(word => word.ToLowerInvariant())
+           .ToList();
 
-      public void AddRule(String name, IRule rule) {
-         if (String.IsNullOrWhiteSpace(name) == true)
-            throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
+        public void ActivateRule(string name) {
+            _grammarService.ActivateRule(this, IntPtr.Zero, name);
 
-         if (rule == null)
-            throw new ArgumentNullException(nameof(rule));
+            if (!_activeRules.ContainsKey(name)) {
+                _activeRules.Add(_exportedRules.Get(name));
+            }
+        }
 
-         EnforceRuleNaming(name);
+        public void AddRule(string name, IRule rule) {
+            if (string.IsNullOrWhiteSpace(name)) {
+                throw new ArgumentException(
+                   "Value cannot be null or whitespace.",
+                   nameof(name)
+                );
+            }
 
-         if (_rules.ContainsKey(name) == true)
-            throw new ArgumentException($"Grammar already contains a rule called '{name}'.", nameof(name));
+            if (rule == null) {
+                throw new ArgumentNullException(nameof(rule));
+            }
 
-         foreach (var word in GetWordsFromRule(rule)) {
-            if (_wordIds.ContainsKey(word) == false)
-               _wordIds.Add(word, _wordCount++);
-         }
+            EnforceRuleNaming(name);
 
-         var ruleId = _ruleCount++;
+            if (_allRules.ContainsKey(name)) {
+                throw new ArgumentException(
+                   $"Grammar already contains a rule called '{name}'.",
+                   nameof(name)
+                );
+            }
 
-         if (_ruleIds.ContainsKey(name) == false)
-            _ruleIds.Add(name, ruleId);
+            foreach (var word in rule.Words) {
+                if (!_allWords.ContainsKey(word.String)) {
+                    _allWords.Add(word);
+                }
+            }
 
-         _rules.Add(name, rule);
-         _rulesById.Add(ruleId, rule);
-      }
+            _allRules.Add(rule);
+            _exportedRules.Add(rule);
+        }
 
-      public void AddRule(String name, Func<IRule, IRule> ruleFunc) =>
-         AddRule(name, ruleFunc?.Invoke(RuleFactory.Create()));
+        protected void AddRule(
+           string name,
+           Expression<Action<IRule>> ruleExpression
+        ) {
+            AddRule(name, _ruleFactory.Create(name, _idGenerator, ruleExpression));
+        }
 
-      public void DeactivateRule(String name) {
-         _grammarService.DeactivateRule(this, name);
-
-         if (_activeRules.ContainsKey(name) == true)
-            _activeRules.Remove(name);
-      }
-
-      public abstract void Dispose();
-
-      private void EnforceRuleNaming(String ruleName) {
-         var validChars = @"[a-zA-Z0-9_]";
-
-         if (Regex.IsMatch(ruleName, $@"^{validChars}+$") == false) {
-            throw new ArgumentOutOfRangeException(nameof(ruleName),
-               $@"Rule name '{ruleName}' contains invalid character(s): '{
-                  Regex.Replace(ruleName, validChars, String.Empty)
-               }'"
+        public void AddRule(string name, Func<IRule, IRule> ruleFunc) {
+            AddRule(
+               name,
+               rule: ruleFunc?.Invoke(_ruleFactory.Create(name, _idGenerator))
             );
-         }
-      }
+        }
 
-      public abstract void Initialize();
+        public void DeactivateRule(string name) {
+            _grammarService.DeactivateRule(this, name);
 
-      protected void Load() {
-         _grammarService.LoadGrammar(this);
-      }
-
-      protected void MakeGrammarExclusive() {
-         _grammarService.SetExclusiveGrammar(this, true);
-      }
-
-      protected void MakeGrammarNotExclusive() {
-         _grammarService.SetExclusiveGrammar(this, false);
-      }
-
-      protected void RemoveRule(String name) {
-         if (String.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
-
-         _rules.Remove(name);
-
-         _rulesById.Remove(_ruleIds[name]);
-         _ruleIds.Remove(name);
-
-      }
-
-      private IEnumerable<String> GetWordsFromRule(IRule rule) {
-         return GetWordsFromRuleElements(rule.Elements.Elements);
-      }
-
-      private IEnumerable<String> GetWordsFromRuleElements(IEnumerable<IElement> elements) {
-         foreach (var element in elements) {
-
-            // Ignore action elements
-            if (element is IGrammarAction)
-               continue;
-
-            // Get the word from the element/sub-elements
-            if (element is IElementContainer == false) {
-               yield return element.ToString();
-            } else {
-               foreach (var word in GetWordsFromRuleElements((element as IElementContainer).Elements))
-                  yield return word;
+            if (_activeRules.ContainsKey(name)) {
+                _activeRules.Remove(name);
             }
-         }
-      }
+        }
 
-      public void InvokeRule(IEnumerable<String> spokenWords) {
+        public abstract void Dispose();
 
-         if (spokenWords == null)
-            throw new ArgumentNullException(nameof(spokenWords));
+        private void EnforceRuleNaming(string ruleName) {
+            var validChars = @"[a-zA-Z0-9_]";
 
-         // Make sure there is at least one rule activated
-         if (_activeRules.Any() == false)
-            throw new NoActiveRulesException();
+            if (!Regex.IsMatch(ruleName, $@"^{validChars}+$")) {
+                var invalidChars = Regex.Replace(ruleName, validChars, string.Empty);
 
-         bool result = false;
+                throw new ArgumentOutOfRangeException(
+                   nameof(ruleName),
+                   $@"Rule name '{ruleName}' contains invalid character(s): '{invalidChars}'"
+                );
+            }
+        }
 
-         // Enumerate each rule in the grammar, trying to invoke each one.
-         // The one that "works" will be assumed to be the correct rule.
-         foreach (var ruleNumber in _activeRules.Values.OrderBy(e => e)) {
-            var rule = _rulesById[ruleNumber];
+        public void ImportRule(string name) {
+            if (string.IsNullOrWhiteSpace(name)) {
+                throw new ArgumentException(
+                   "Value cannot be null or whitespace.",
+                   nameof(name)
+                );
+            }
 
-            var spokenWordsStack = new Stack<String>(spokenWords.Reverse());
-            var callbacks = new List<KeyValuePair<IGrammarAction, IEnumerable<String>>>();
+            var rule = _ruleFactory.Create(name, _idGenerator);
 
-            // Check the word sequence to see if it's a match.
-            result = ProcessSpokenWords(
-               rule.Elements,
-               spokenWordsStack,
-               callbacks
+            EnforceRuleNaming(name);
+
+            if (_allRules.ContainsKey(name)) {
+                throw new ArgumentException(
+                   $"Grammar already contains a rule called '{name}'.",
+                   nameof(name)
+                );
+            }
+
+            _allRules.Add(rule);
+            _importedRules.Add(rule);
+        }
+
+        public abstract void Initialize();
+
+        protected void Load() {
+            _grammarService.LoadGrammar(this);
+        }
+
+        protected void MakeGrammarExclusive() {
+            _grammarService.SetExclusiveGrammar(this, true);
+        }
+
+        protected void MakeGrammarNotExclusive() {
+            _grammarService.SetExclusiveGrammar(this, false);
+        }
+
+        protected void RemoveRule(string name) {
+            if (string.IsNullOrWhiteSpace(name)) {
+                throw new ArgumentException(
+                   "Value cannot be null or whitespace.",
+                   nameof(name)
+                );
+            }
+
+            _exportedRules.Remove(name);
+            _importedRules.Remove(name);
+
+            _allRules.Remove(name);
+        }
+
+        /// <summary>
+        ///    Looks up a rule by its numeric id, or returns <c>null</c> if no
+        ///    such rule exists. Used by the <see cref="Parser" /> to
+        ///    resolve the start rule and any referenced sub-rules.
+        /// </summary>
+        internal IRule GetRule(uint id) {
+            return _allRules.ContainsKey(id) ? _allRules.Get(id) : null;
+        }
+
+        public void InvokeRule(List<SpokenWord> spokenWords) {
+            if (spokenWords == null || spokenWords.Count == 0) {
+                throw new ArgumentException(
+                   "A speech event must contain at least one spoken word.",
+                   nameof(spokenWords)
+                );
+            }
+
+            Logger.Debug("InvokeRule: {0}", string.Join(", ", spokenWords));
+
+            if (!_activeRules.Any()) {
+                throw new NoActiveRulesException();
+            }
+
+            var startRuleId = spokenWords.First().RuleId;
+
+            // TODO: Consider where we should actually look for rules (_allRules vs _activeRules)
+            if (!_allRules.ContainsKey(startRuleId)) {
+                throw new InvalidSequenceInCallbackException(
+                   $"Speech event started in rule {startRuleId}, " +
+                   "which is not active."
+                );
+            }
+
+            var result = Parser.Parse(
+               this,
+               new ListWalker<SpokenWord>(spokenWords)
             );
 
-            // Make sure there are no words left in the stack
-            if (spokenWordsStack.Any() == true) {
-               Debug.WriteLine(
-                  $"There are extra words in the callback: {String.Join(", ", spokenWords)}"
-               );
-
-               // The result of ProcessSpokenWords above could be "true", but
-               // that doesn't mean that this rule is the correct one. If there
-               // are spoken words that aren't accounted for, then it's the wrong
-               // rule.
-               result = false;
+            if (result is not ParseResult.Success success) {
+                throw new InvalidSequenceInCallbackException(
+                   "No active rule path matched the spoken words: " +
+                   string.Join(", ", spokenWords)
+                );
             }
 
-            // Invoke callback(s)
-            if (result == true) {
-               foreach (var callback in callbacks)
-                  callback.Key.InvokeAction(callback.Value);
-               break;
+            foreach (var matched in success.Actions) {
+                matched.Action.InvokeAction(matched.Words);
             }
-         }
+        }
 
-         // Did the spoken words match the rule's structure?
-         if (result == false)
-            throw new InvalidSequenceInCallbackException();
-
-      }
-
-      private bool ProcessSpokenWords(
-         IElementContainer elementContainer, Stack<String> spokenWordsStack,
-         List<KeyValuePair<IGrammarAction, IEnumerable<String>>> callbacks,
-         List<String> aw = null
-         ) {
-
-         if (callbacks == null)
-            throw new ArgumentNullException(nameof(callbacks));
-
-         var sc = StringComparison.CurrentCultureIgnoreCase;
-         var actionWords = new List<String>();
-
-         foreach (var element in elementContainer.Elements) {
-
-            if (element is IWordElement) {
-               var wordElement = element as IWordElement;
-
-               var spokenWord = spokenWordsStack.FirstOrDefault();
-
-               // If the words don't match, then this sub-rule doesn't match.
-               if (spokenWord == null || String.Equals(spokenWord, element.ToString(), sc) == false)
-                  return false;
-
-               // Add word to callback stack
-               spokenWordsStack.Pop();
-               actionWords.Add(spokenWord);
-
-               continue;
-            }
-
-            // This rule refers to another rule, so we need to
-            // look it up and traverse it as well...a
-            if (element is IRuleElement) {
-               var ruleElement = element as IRuleElement;
-               var nestedRule = _rules[ruleElement.ToString()];
-
-               var nestedResult = ProcessSpokenWords(
-                  nestedRule.Elements,
-                  spokenWordsStack,
-                  callbacks,
-                  actionWords
-               );
-
-               if (nestedResult == false)
-                  return false;
-
-               continue;
-            }
-
-            // Check if we need to descend into a sub-rule (Optional, Repeats, Alternatives...)
-            if (element is IElementContainer) {
-               var subRule = (element as IElementContainer);
-               var subRuleResult = false;
-
-               if (subRule is IOptionals) {
-                  ProcessSpokenWords(subRule, spokenWordsStack, callbacks, actionWords);
-                  subRuleResult = true;
-               } else if (subRule is IAlternatives) {
-                  var alternatives = (subRule as IAlternatives)?.Elements;
-
-                  foreach (var alternative in alternatives) {
-
-                     // Encapsulate in a sequence
-                     var s = new Sequence();
-                     s.AddElement(alternative);
-
-                     subRuleResult = ProcessSpokenWords(s, spokenWordsStack, callbacks, actionWords);
-
-                     if (subRuleResult == true)
-                        break;
-                  }
-
-               } else if (subRule is IRepeats) {
-                  var repeatable = (subRule as IRepeats)?.Elements;
-
-                  while (ProcessSpokenWords(subRule, spokenWordsStack, callbacks, actionWords))
-                     subRuleResult = true;
-
-               } else { // Must be an ISequence
-                  subRuleResult = ProcessSpokenWords(subRule, spokenWordsStack, callbacks, actionWords);
-               }
-
-               if (subRuleResult == false)
-                  return false;
-
-               continue;
-            }
-
-            if (element is IGrammarAction) {
-
-               callbacks.Add(
-                  new KeyValuePair<IGrammarAction, IEnumerable<string>>(
-                     element as IGrammarAction, actionWords
-                  )
-               );
-
-               actionWords = new List<String>();
-            }
-         }
-
-         aw?.AddRange(actionWords);
-
-         // If we get here, the rule matches the spoken words
-         return true;
-      }
-
-      /// <summary>
-      /// Due to a problem with Dragon 15, rules we want to remain active
-      /// need to be explicitly re-activated when another is de-activated.
-      /// </summary>
-      /// <param name="name">The name of the rule</param>
-      public void ReactivateRule(String name) {
-         DeactivateRule(name);
-         ActivateRule(name);
-      }
-
-      protected INatSpeak NatSpeak { get; private set; }
-
-      protected RuleFactory RuleFactory { get; private set; }
-
-      public IReadOnlyDictionary<String, UInt32> RuleIds => _ruleIds;
-
-      // Expose internally for serialization
-      internal IReadOnlyList<IRule> Rules =>
-         _rulesById.OrderBy(e => e.Key).Select(e => e.Value).ToList();
-
-      public IReadOnlyDictionary<String, UInt32> WordIds => _wordIds;
-
-   }
-
+        /// <summary>
+        /// Due to a problem with Dragon 15, rules we want to remain active
+        /// need to be explicitly re-activated when another is de-activated.
+        /// </summary>
+        /// <param name="name">The name of the rule</param>
+        public void ReactivateRule(string name) {
+            DeactivateRule(name);
+            ActivateRule(name);
+        }
+    }
 }

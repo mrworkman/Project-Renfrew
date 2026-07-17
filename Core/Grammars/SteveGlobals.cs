@@ -18,21 +18,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Renfrew.NatSpeakInterop;
 using Renfrew.Win32.Interop;
 
 namespace Renfrew.Core.Grammars {
-   using Grammar;
+    using Grammar;
 
-   [GrammarExport("Steve's Grammar", "Steve's own grammar.")]
-   public class SteveGlobalsGrammar : Grammar {
+    [GrammarExport("Steve's Grammar", "Steve's own grammar.")]
+    public class SteveGlobalsGrammar : Grammar {
+        private IEnumerable<KeyChord> _currentCommand = new List<KeyChord>();
 
-      private IEnumerable<KeyChord> _currentCommand = new List<KeyChord>();
+        private static readonly Dictionary<string, List<KeyChord>> Commands =
+           new();
 
-      private static readonly Dictionary<string, List<KeyChord>> Commands = new();
-
-      private static readonly Dictionary<string, KeyPress> NumberKeys = new() {
+        // @formatter:off
+        private static readonly Dictionary<string, KeyPress> NumberKeys = new() {
          #region Number -> Key
          { "zero",  Key.D0 },
          { "one",   Key.D1 },
@@ -47,7 +47,7 @@ namespace Renfrew.Core.Grammars {
          #endregion
       };
 
-      private static readonly Dictionary<string, KeyPress> LetterKeys = new () {
+        private static readonly Dictionary<string, KeyPress> LetterKeys = new() {
          #region Letter -> Key
          { "alpha",    Key.A },
          { "bravo",    Key.B },
@@ -79,7 +79,7 @@ namespace Renfrew.Core.Grammars {
          #endregion
       };
 
-      private static readonly Dictionary<string, uint> Numbers = new() {
+        private static readonly Dictionary<string, uint> Numbers = new() {
          #region Numbers
          { "zero",         0 },
          { "one",          1 },
@@ -114,14 +114,20 @@ namespace Renfrew.Core.Grammars {
          { "thirty",       30 },
          #endregion
       };
+        // @formatter:on
 
-      public SteveGlobalsGrammar(IGrammarService grammarService, INatSpeak natSpeak)
-         : base(grammarService, natSpeak) {
+        public SteveGlobalsGrammar(
+           IGrammarService grammarService,
+           INatSpeak natSpeak
+        )
+           : base(grammarService, natSpeak) {
+         // @formatter:off
+         #pragma warning disable format
 
          AddChordCommand("dismiss", Key.Escape);
          AddChordCommand("slap",    Key.Return);
          AddChordCommand("slam",    Key.Control, Key.Return);
-         
+
          // Cursor movement commands.
          AddChordCommand("york",  Key.Home);
          AddChordCommand("pork",  Key.End);
@@ -255,91 +261,115 @@ namespace Renfrew.Core.Grammars {
          AddChordCommand("window right", Key.LWin, Key.Shift, Key.Right);
          AddChordCommand("switchy",      Key.Menu, Key.Tab);
          AddChordCommand("switchy boo",  Key.Menu, Key.Control, Key.Tab);
+         #pragma warning restore format
+         // @formatter:on
 
          // Add letters as commands.
          foreach (var entry in LetterKeys) {
-            AddChordCommand(entry.Key, entry.Value);
-         }
-      }
+                AddChordCommand(entry.Key, entry.Value);
+            }
+        }
 
-      /// <summary>
-      ///  Only to be called from the constructor.
-      /// </summary>
-      private void AddChordCommand(string commandName, params KeyPress[] chordKeys) {
-         AddChordCommand(commandName, KeyChord.Keys(chordKeys));
-      }
+        /// <summary>
+        ///  Only to be called from the constructor.
+        /// </summary>
+        private void AddChordCommand(
+           string commandName,
+           params KeyPress[] chordKeys
+        ) {
+            AddChordCommand(commandName, KeyChord.Keys(chordKeys));
+        }
 
-      /// <summary>
-      ///  Only to be called from the constructor.
-      /// </summary>
-      private void AddChordCommand(string commandName, params KeyChord[] chords) {
-         Commands[commandName] = chords.ToList();
-      }
+        /// <summary>
+        ///  Only to be called from the constructor.
+        /// </summary>
+        private void AddChordCommand(
+           string commandName,
+           params KeyChord[] chords
+        ) {
+            Commands[commandName] = chords.ToList();
+        }
 
-      /// <summary>
-      ///  Only to be called from the constructor.
-      /// </summary>
-      private void AddSequenceCommand(string commandName, params KeyPress[] sequenceOfKeyPresses) {
-         AddSequenceCommand(commandName, sequenceOfKeyPresses.AsEnumerable());
-      }
+        /// <summary>
+        ///  Only to be called from the constructor.
+        /// </summary>
+        private void AddSequenceCommand(
+           string commandName,
+           params KeyPress[] sequenceOfKeyPresses
+        ) {
+            AddSequenceCommand(commandName, sequenceOfKeyPresses.AsEnumerable());
+        }
 
-      private void AddSequenceCommand(string commandName, IEnumerable<KeyPress> sequenceOfKeyPresses) {
-         Commands[commandName] = sequenceOfKeyPresses.Select(
-            keyPress => KeyChord.Keys(keyPress)
-         ).ToList();
-      }
-
-      /// <summary>
-      ///  Only to be called from the constructor.
-      /// </summary>
-      private void AddSequenceCommand(string commandName, params char[] sequenceOfChars) {
-         AddSequenceCommand(commandName, sequenceOfChars.Select(CharKey.KeyPress));
-      }
-
-      public override void Initialize() {
-         AddRule("globals", e =>
-            e.Repeat(command => command
-               .SayOneOf(Commands.Select(c => c.Key))
-                  .Do(words => SetCurrentCommand(Commands[words.First()]))
-               .OptionallyOneOf(times => times
-                  .SayOneOf(Numbers.Select(n => n.Key))
+        private void AddSequenceCommand(
+           string commandName,
+           IEnumerable<KeyPress> sequenceOfKeyPresses
+        ) {
+            Commands[commandName] = sequenceOfKeyPresses.Select(
+                  keyPress => KeyChord.Keys(keyPress)
                )
-               .Do(words => ExecuteCommand(words.FirstOrDefault()))
-            )
-         );
+               .ToList();
+        }
 
-         AddRule("snore", e => e.Say("Snore").Do(NatSpeak.MicSleep));
+        /// <summary>
+        ///  Only to be called from the constructor.
+        /// </summary>
+        private void AddSequenceCommand(
+           string commandName,
+           params char[] sequenceOfChars
+        ) {
+            AddSequenceCommand(
+               commandName,
+               sequenceOfChars.Select(CharKey.KeyPress)
+            );
+        }
 
-         Load();
+        public override void Initialize() {
+            AddRule(
+               "globals",
+               e =>
+                  e.Repeat(
+                     command => command
+                        .SayOneOf(Commands.Select(c => c.Key))
+                        .Do(words => SetCurrentCommand(Commands[words.First()]))
+                        .Optionally(
+                           times => times
+                              .SayOneOf(Numbers.Select(n => n.Key))
+                        )
+                        .Do(words => ExecuteCommand(words.FirstOrDefault()))
+                  )
+            );
 
-         ActivateDefaultRules();
-      }
+            AddRule("snore", e => e.Say("snore").Do(NatSpeak.MicSleep));
 
-      void ActivateDefaultRules() {
-         ActivateRule("globals");
-         ActivateRule("snore");
-      }
+            Load();
 
-      void ReactivateDefaultRules() {
-         ReactivateRule("globals");
-         ReactivateRule("snore");
-      }
+            ActivateDefaultRules();
+        }
 
-      private void ExecuteCommand(string word) {
-         uint times = word != null? Numbers[word] : 1;
+        void ActivateDefaultRules() {
+            ActivateRule("globals");
+            ActivateRule("snore");
+        }
 
-         for (int i = 0; i < times; i++) {
-            Keyboard.PlayKeys(_currentCommand);
-         }
-      }
+        void ReactivateDefaultRules() {
+            ReactivateRule("globals");
+            ReactivateRule("snore");
+        }
 
-      private void SetCurrentCommand(IEnumerable<KeyChord> chords) {
-         _currentCommand = chords;
-      }
+        private void ExecuteCommand(string word) {
+            var times = word != null ? Numbers[word] : 1;
 
-      public override void Dispose() {
-         throw new NotImplementedException();
-      }
-   }
+            for (var i = 0; i < times; i++) {
+                Keyboard.PlayKeys(_currentCommand);
+            }
+        }
 
+        private void SetCurrentCommand(IEnumerable<KeyChord> chords) {
+            _currentCommand = chords;
+        }
+
+        public override void Dispose() {
+            throw new NotImplementedException();
+        }
+    }
 }

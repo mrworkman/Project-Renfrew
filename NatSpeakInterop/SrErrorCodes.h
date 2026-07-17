@@ -18,13 +18,13 @@
 #pragma once
 
 namespace Renfrew::NatSpeakInterop::Dragon {
-   public ref class SrErrorCodes {
-   public:
-      static constexpr int SRERR_INVALIDCHAR       = 0x80040208;
-      static constexpr int SRERR_GRAMMARTOOCOMPLEX = 0x80040406;
-      static constexpr int SRERR_GRAMMARERROR      = 0x80040416;
-      static constexpr int SRERR_INVALIDRULE       = 0x80040417;
-      static constexpr int SRERR_RULEALREADYACTIVE = 0x80040418;
-      static constexpr int SRERR_RULENOTACTIVE     = 0x80040419;
-   };
+    public ref class SrErrorCodes {
+        public:
+            static constexpr int SRERR_INVALIDCHAR       = 0x80040208;
+            static constexpr int SRERR_GRAMMARTOOCOMPLEX = 0x80040406;
+            static constexpr int SRERR_GRAMMARERROR      = 0x80040416;
+            static constexpr int SRERR_INVALIDRULE       = 0x80040417;
+            static constexpr int SRERR_RULEALREADYACTIVE = 0x80040418;
+            static constexpr int SRERR_RULENOTACTIVE     = 0x80040419;
+    };
 }

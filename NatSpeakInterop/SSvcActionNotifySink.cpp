@@ -20,26 +20,24 @@
 
 using namespace Renfrew::NatSpeakInterop::Sinks;
 
-SSvcActionNotifySink::SSvcActionNotifySink() {
-
-}
+SSvcActionNotifySink::SSvcActionNotifySink() {}
 
 void SSvcActionNotifySink::ExecutionAborted(DWORD, HRESULT, DWORD) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 }
 
 void SSvcActionNotifySink::ExecutionDone(DWORD) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 }
 
 void SSvcActionNotifySink::ExecutionStatus(DWORD, DWORD) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 }
 
 void SSvcActionNotifySink::PlaybackDone(DWORD) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 }
 
 void SSvcActionNotifySink::PlaybackAborted(DWORD, HRESULT) {
-   Debug::WriteLine(__FUNCTION__);
+    Debug::WriteLine(__FUNCTION__);
 }

@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# Pre-commit hook: block the commit if staged C# files are not formatted.
+# It does NOT modify files -- it only verifies. Enable in a clone with:
+#   git config core.hooksPath .githooks
+#
+set -eu
+
+# Staged C# files only (Added/Copied/Modified/Renamed -- not Deleted).
+files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.cs')
+[ -z "$files" ] && exit 0
+
+if ! command -v dotnet >/dev/null 2>&1; then
+   echo "pre-commit: 'dotnet' not on PATH; skipping format check." >&2
+   exit 0
+fi
+
+echo "pre-commit: checking formatting of staged C# files..."
+
+# --verify-no-changes returns non-zero if any staged file would be reformatted,
+# without touching the files. Unquoted $files is intentional (one arg per path).
+# shellcheck disable=SC2086
+if dotnet format "Project Renfrew.sln" --include $files --severity warn \
+      --verify-no-changes; then
+   echo "pre-commit: formatting OK."
+   exit 0
+fi
+
+cat >&2 <<'MSG'
+
+pre-commit: staged C# files are not formatted -- commit blocked.
+
+Fix, then re-stage and commit again:
+  dotnet format "Project Renfrew.sln"
+  git add -u
+
+(To bypass this check once: git commit --no-verify)
+MSG
+exit 1

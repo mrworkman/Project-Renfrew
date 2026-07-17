@@ -23,81 +23,82 @@ using System.Windows.Forms;
 using NLog;
 
 namespace Renfrew.Launcher {
-   using Core;
-   using NatSpeakInterop;
+    using Core;
+    using NatSpeakInterop;
 
-   public class Launcher {
+    public class Launcher {
 
-      private static Logger _logger = LogManager.GetCurrentClassLogger();
+        private static Logger _logger = LogManager.GetCurrentClassLogger();
 
-      private NatSpeakService _natSpeakService;
-      private IntPtr _sitePtr;
+        private NatSpeakService _natSpeakService;
+        private IntPtr _sitePtr;
 
-      private bool _isTerminated = false;
+        private bool _isTerminated = false;
 
-      public Launcher() {
-         _natSpeakService = new NatSpeakService();
-      }
+        public Launcher() {
+            _natSpeakService = new NatSpeakService();
+        }
 
-      public async void Launch() {
+        public async void Launch() {
 
-         Application.ApplicationExit += OnApplicationExit;
-         Application.ThreadExit      += OnApplicationExit;
+            Application.ApplicationExit += OnApplicationExit;
+            Application.ThreadExit += OnApplicationExit;
 
-         _logger.Info("Renfrew starting...");
+            _logger.Info("Renfrew starting...");
 
-         try {
-            _logger.Debug("Creating 'site object'...");
-            _sitePtr = _natSpeakService.CreateSiteObject();
+            try {
+                _logger.Debug("Creating 'site object'...");
+                _sitePtr = _natSpeakService.CreateSiteObject();
 
-            _logger.Debug("Calling Connect()...");
-            _natSpeakService.Connect(_sitePtr);
+                _logger.Debug("Calling Connect()...");
+                _natSpeakService.Connect(_sitePtr);
 
-            _logger.Debug("Starting Core Application...");
+                _logger.Debug("Starting Core Application...");
 
-            await CoreApplication.Instance.Start(_natSpeakService);
+                await CoreApplication.Instance.Start(_natSpeakService);
 
-         } catch (Exception e) {
-            _logger.Fatal(e, "");
+            } catch (Exception e) {
+                _logger.Fatal(e, "");
 
-            _logger.Fatal(e, "Could not connect to Dragon NaturallySpeaking. Is it running?");
+                _logger.Fatal(e, "Could not connect to Dragon NaturallySpeaking. Is it running?");
 
-            CoreApplication.Instance.ShowNotifyError(
-               "There was an unexpected error that requires Project Renfrew to quit. 😞 See the log for more info."
-            );
+                CoreApplication.Instance.ShowNotifyError(
+                   "There was an unexpected error that requires Project Renfrew to quit. 😞 See the log for more info."
+                );
 
-            // Wait long enough for the user to see the error message.
-            Thread.Sleep(10000);
+                // Wait long enough for the user to see the error message.
+                Thread.Sleep(10000);
 
-            _logger.Debug("Exiting application.");
+                _logger.Debug("Exiting application.");
 
-            // Kill the application
-            Application.ExitThread();
-            Environment.Exit(-1);
-         }
+                // Kill the application
+                Application.ExitThread();
+                Environment.Exit(-1);
+            }
 
-      }
+        }
 
-      private void OnApplicationExit(Object sender, EventArgs eventArgs) {
-         Terminate();
-      }
+        private void OnApplicationExit(object sender, EventArgs eventArgs) {
+            Terminate();
+        }
 
-      private void Terminate() {
-         if (_isTerminated == true)
-            return;
+        private void Terminate() {
+            if (_isTerminated == true) {
+                return;
+            }
 
-         // Stop the application
-         CoreApplication.Instance.Stop();
+            // Stop the application
+            CoreApplication.Instance.Stop();
 
-         // Disconnect from Dragon properly
-         _natSpeakService.Disconnect();
-         _natSpeakService.ReleaseSiteObject(_sitePtr);
+            // Disconnect from Dragon properly
+            _natSpeakService.Disconnect();
+            _natSpeakService.ReleaseSiteObject(_sitePtr);
 
-         // Prevent re-entry
-         _isTerminated = true;
+            // Prevent re-entry
+            _isTerminated = true;
 
-         _logger.Info("Exiting.");
-      }
+            _logger.Info("Exiting.");
+        }
 
-   }
+    }
 }

@@ -22,100 +22,100 @@ using System.Windows;
 using System.Windows.Threading;
 
 namespace Renfrew.Core.Grammars.MousePlot {
-   public abstract class BaseWindow : Window, IWindow {
-      private readonly String DefaultColourName = "Yellow";
+    public abstract class BaseWindow : Window, IWindow {
+        private readonly string DefaultColourName = "Yellow";
 
-      public BaseWindow() {
+        public BaseWindow() {
 
-      }
+        }
 
-      #region Builtins
-      public new virtual void Close() {
-         Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
-            base.Hide();
-         })).Wait();
-      }
+        #region Builtins
+        public new virtual void Close() {
+            Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+                base.Hide();
+            })).Wait();
+        }
 
-      public new void Focus() {
-         Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
-            base.Focus();
-            Activate();
-         })).Wait();
-      }
+        public new void Focus() {
+            Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+                base.Focus();
+                Activate();
+            })).Wait();
+        }
 
-      public new double Height {
-         get {
-            return (double)Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Height));
-         }
-         protected set => base.Height = value;
-      }
-
-      public new double Left {
-         get {
-            return (double)Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Left));
-         }
-         protected set => base.Left = value;
-      }
-
-      public new virtual void Show() {
-         Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
-            base.Show();
-         })).Wait();
-      }
-
-      public new virtual void ShowDialog() {
-         Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
-            base.ShowDialog();
-         })).Wait();
-      }
-
-      public new double Top {
-         get {
-            return (double)Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Top));
-         }
-         protected set => base.Top = value;
-      }
-
-      public new double Width {
-         get {
-            return (double)Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Width));
-         }
-         protected set => base.Width = value;
-      }
-      #endregion
-
-      public virtual void Move(double x, double y) {
-         Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
-            Left = x;
-            Top = y;
-         })).Wait();
-      }
-
-      public virtual void SetColour(GridColour colour) {
-         Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
-            try {
-               SetColour(colour.ToString());
-            } catch (IOException) {
-               SetColour(DefaultColourName);
+        public new double Height {
+            get {
+                return (double)Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Height));
             }
-         })).Wait();
-      }
+            protected set => base.Height = value;
+        }
 
-      private void SetColour(String c) {
-         var merged = this.Resources.MergedDictionaries;
+        public new double Left {
+            get {
+                return (double)Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Left));
+            }
+            protected set => base.Left = value;
+        }
 
-         merged.Clear();
+        public new virtual void Show() {
+            Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+                base.Show();
+            })).Wait();
+        }
 
-         merged.Add(new ResourceDictionary() {
-            Source = new Uri(
-               $"Core;component/Grammars/MousePlot/Themes/{c}.xaml",
-               UriKind.RelativeOrAbsolute
-            )
-         });
-      }
+        public new virtual void ShowDialog() {
+            Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+                base.ShowDialog();
+            })).Wait();
+        }
 
-      public virtual void SetScreenBounds(Rectangle rectangle) { }
+        public new double Top {
+            get {
+                return (double)Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Top));
+            }
+            protected set => base.Top = value;
+        }
 
-      public virtual void Rotate(double angle) { }
-   }
+        public new double Width {
+            get {
+                return (double)Dispatcher.Invoke(DispatcherPriority.Send, new Func<double>(() => base.Width));
+            }
+            protected set => base.Width = value;
+        }
+        #endregion
+
+        public virtual void Move(double x, double y) {
+            Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+                Left = x;
+                Top = y;
+            })).Wait();
+        }
+
+        public virtual void SetColour(GridColour colour) {
+            Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
+                try {
+                    SetColour(colour.ToString());
+                } catch (IOException) {
+                    SetColour(DefaultColourName);
+                }
+            })).Wait();
+        }
+
+        private void SetColour(string c) {
+            var merged = this.Resources.MergedDictionaries;
+
+            merged.Clear();
+
+            merged.Add(new ResourceDictionary() {
+                Source = new Uri(
+                  $"Core;component/Grammars/MousePlot/Themes/{c}.xaml",
+                  UriKind.RelativeOrAbsolute
+               )
+            });
+        }
+
+        public virtual void SetScreenBounds(Rectangle rectangle) { }
+
+        public virtual void Rotate(double angle) { }
+    }
 }

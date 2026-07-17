@@ -21,5 +21,5 @@
 using namespace Renfrew::Win32::Interop;
 
 DWORD ExtendedKeyPress::KeyFlags::get() {
-   return KEYEVENTF_EXTENDEDKEY;
+    return KEYEVENTF_EXTENDEDKEY;
 }

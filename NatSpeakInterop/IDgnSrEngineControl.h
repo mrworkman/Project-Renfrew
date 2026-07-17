@@ -27,20 +27,18 @@
 #define IDgnSrEngineControlGUID "dd109000-6205-11cf-ae61-0000e8a28647"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(IDgnSrEngineControlGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class
-      DECLSPEC_UUID(IDgnSrEngineControlGUID) IDgnSrEngineControl {
-
-      void GetVersion(WORD*, WORD*, WORD*);
-      void GetMicState(WORD*);
-      void SetMicState(WORD, BOOL);
-      void SaveSpeaker(BOOL);
-      void GetChangedInfo(BOOL*, DWORD*);
-      void Resume(QWORD);
-      void RecognitionMimic(DWORD, SDATA, DWORD);
-      void Preinitialize();
-      void SpeakerRename(const WCHAR*, const WCHAR*);
-   };
+    [ComImport, Guid(IDgnSrEngineControlGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(IDgnSrEngineControlGUID) IDgnSrEngineControl {
+        void GetVersion(WORD*, WORD*, WORD*);
+        void GetMicState(WORD*);
+        void SetMicState(WORD, BOOL);
+        void SaveSpeaker(BOOL);
+        void GetChangedInfo(BOOL*, DWORD*);
+        void Resume(QWORD);
+        void RecognitionMimic(DWORD, SDATA, DWORD);
+        void Preinitialize();
+        void SpeakerRename(const WCHAR*, const WCHAR*);
+    };
 }

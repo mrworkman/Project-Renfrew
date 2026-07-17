@@ -19,175 +19,178 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Renfrew.Grammar.FluentApi.ExpressionParts;
+using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
+using Renfrew.Grammar.FluentApi.Interfaces;
+using Renfrew.Grammar.Types;
 
 namespace Renfrew.Grammar.FluentApi {
-   using Elements;
+    internal class Rule : IRule {
+        private readonly IIdGenerator _idGenerator;
 
-   internal class Rule : IRule {
-      private IElementContainer _container;
-      private Stack<IElementContainer> _containerStack;
+        private readonly Dictionary<string, Word> _words = new(
+           StringComparer.CurrentCultureIgnoreCase
+        );
 
-      private ISequence _currentSequence;
-      private UInt32 _countInChain;
-      private Stack<dynamic> _chainStack;
+        /// <summary>
+        ///  Creates a rule without a tracked name. Use only when nesting rules.
+        /// </summary>
+        private Rule(IIdGenerator idGenerator) {
+            _idGenerator = idGenerator
+                ?? throw new ArgumentNullException(nameof(idGenerator));
 
-      internal Rule() {
-         _container = new Sequence();
-         _containerStack = new Stack<IElementContainer>();
+            // The grammar does not track nested rules, so no name or identifier
+            // is required.
+            String = "-";
+            Id = 0;
+        }
 
-         _currentSequence = _container as ISequence;
-         _countInChain = 0;
-         _chainStack = new Stack<dynamic>();
-      }
+        internal Rule(string name, IIdGenerator idGenerator) {
+            _idGenerator = idGenerator
+                           ?? throw new ArgumentNullException(nameof(idGenerator));
 
-      public IElementContainer Elements {
-         get { return _container; }
-      }
+            String = name ?? throw new ArgumentNullException(nameof(name));
+            Id = _idGenerator.GetRuleId(String);
+        }
 
-      public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
-         OneOf(null, actions);
-         return (ActionableRule) this;
-      }
+        /// <summary>
+        ///    Numeric rule identifier.
+        /// </summary>
+        public uint Id { get; }
 
-      private void OneOf(IElementContainer subContainer, params Expression<Action<IRule>>[] actions) {
-         IAlternatives alternatives = new Alternatives();
+        /// <summary>
+        ///    The rule's name.
+        /// </summary>
+        public string String { get; }
 
-         SaveCurrentContainer();
-         SetContainer(subContainer ?? alternatives);
+        public Sequence Sequence { get; } = new();
 
-         // If there is more than one action, then
-         // we need to "alternate" between them
-         if (actions.Length > 1 && subContainer != null) {
-            subContainer.AddElement(alternatives);
-            SetContainer(alternatives);
-         }
+        public IReadOnlyList<Word> Words => _words.Select(entry => entry.Value)
+           .OrderBy(word => word.Id)
+           .ToList();
 
-         SaveCurrentSequence();
+        public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
+            Sequence.AddMember(
+               Alternatives.Create(
+                  actions.Select(InvokeActionInNestedRule).ToList()
+               )
+            );
 
-         foreach (var action in actions) {
-            ResetSequence();
-            action.Compile()(this);
-         }
+            return (ActionableRule)this;
+        }
 
-         RestoreSequence();
+        public IActionableRule Optionally(Expression<Action<IRule>> action) {
+            Sequence.AddMember(Optional.Create(InvokeActionInNestedRule(action)));
 
-         RestoreContainer();
-         AddElementToContainer(subContainer ?? alternatives);
-      }
+            return (ActionableRule)this;
+        }
 
-      public IActionableRule Optionally(Expression<Action<IRule>> action) =>
-         OptionallyOneOf(action);
+        public IActionableRule OptionallyOneOf(
+           params Expression<Action<IRule>>[] actions
+        ) {
+            return Optionally(r => r.OneOf(actions));
+        }
 
-      public IActionableRule OptionallyOneOf(params Expression<Action<IRule>>[] actions) {
-         OneOf(new Optionals(), actions);
-         return (ActionableRule) this;
-      }
+        public IActionableRule OptionallySay(string word) {
+            return Optionally(r => r.Say(word));
+        }
 
-      public IActionableRule OptionallySay(String word) =>
-         Optionally(r => r.Say(word));
+        public IActionableRule OptionallyWithRule(string ruleName) {
+            return Optionally(r => r.WithRule(ruleName));
+        }
 
-      public IActionableRule OptionallyWithRule(String ruleName) =>
-         Optionally(r => r.WithRule(ruleName));
+        // Repeats: A+
+        public IActionableRule Repeat(Expression<Action<IRule>> action) {
+            Sequence.AddMember(Repeated.Create(InvokeActionInNestedRule(action)));
 
-      // Repeats: A+
-      public IActionableRule Repeat(Expression<Action<IRule>> action) =>
-         RepeatOneOf(action);
+            return (ActionableRule)this;
+        }
 
-      // Repeats + Alternatives: ( A | B | C )+
-      public IActionableRule RepeatOneOf(params Expression<Action<IRule>>[] actions) {
-         OneOf(new Repeats(), actions);
-         return (ActionableRule) this;
-      }
+        // Repeats + Alternatives: ( A | B | C )+
+        public IActionableRule RepeatOneOf(
+           params Expression<Action<IRule>>[] actions
+        ) {
+            return Repeat(r => r.OneOf(actions));
+        }
 
-      private void ResetSequence() {
-         _countInChain = 0;
-         _currentSequence = null;
-      }
+        public IActionableRule Say(string word) {
+            var wordExpr = Word.Create(_idGenerator.GetWordId(word), word);
 
-      private void RestoreContainer() {
-         _container = _containerStack.Pop();
-      }
+            if (!_words.ContainsKey(word)) {
+                _words.Add(word, wordExpr);
+            }
 
-      private void RestoreSequence() {
-         var cs = _chainStack.Pop();
-         _countInChain = cs.Count;
-         _currentSequence = cs.Sequence;
-      }
+            Sequence.AddMember(wordExpr);
 
-      private void SaveCurrentContainer() {
-         _containerStack.Push(_container);
-      }
+            return (ActionableRule)this;
+        }
 
-      private void SaveCurrentSequence() {
-         _chainStack.Push(new {
-            Count = _countInChain,
-            Sequence = _currentSequence
-         });
-      }
+        public IActionableRule Say(string word, params string[] additionalWords) {
+            var previousWord = Say(word);
 
-      public IActionableRule Say(String word) {
-         AddElementToContainer( new WordElement(word) );
-         return (ActionableRule) this;
-      }
+            foreach (var additionalWord in additionalWords) {
+                previousWord = previousWord.Say(additionalWord);
+            }
 
-      public IActionableRule SayOneOf(params String[] words) =>
-         SayOneOf(words as IEnumerable<String>);
+            return (ActionableRule)this;
+        }
 
-      public IActionableRule SayOneOf(IEnumerable<String> words) {
-         var alternatives = new Alternatives();
 
-         alternatives.AddElements(words.Select(w => new WordElement(w)));
+        public IActionableRule SayOneOf(params string[] words) {
+            return SayOneOf(words as IEnumerable<string>);
+        }
 
-         AddElementToContainer(alternatives);
+        public IActionableRule SayOneOf(IEnumerable<string> words) {
+            var wordExprs = new List<Word>();
 
-         return (ActionableRule) this;
-      }
+            foreach (var word in words) {
+                var wordExpr = Word.Create(_idGenerator.GetWordId(word), word);
 
-      private void SetContainer(IElementContainer container) =>
-         _container = container;
+                if (!_words.ContainsKey(word)) {
+                    _words.Add(word, wordExpr);
+                }
 
-      public IActionableRule WithRule(String ruleName) {
-         AddElementToContainer(new RuleElement(ruleName));
-         return (ActionableRule)this;
-      }
+                wordExprs.Add(wordExpr);
+            }
 
-      internal void AddElementToContainer(IElement element) {
+            Sequence.AddMember(Alternatives.Create(wordExprs));
 
-         // Because we can't tell ahead of time if there will be
-         // more than one element added to an element container,
-         // we need to check at run-time.
-         //
-         // If the provided element is the first in the chain, we
-         // assume it's the only one, and simply add it to the
-         // container (whatever type that may be).
-         // If a second element comes along, and it needs to go
-         // in that container, then that means there is a
-         // "sequence" of elements. Remove the first element
-         // that was added earlier, add it and the new element
-         // to a new sequence object, and put the sequence
-         // into the container.
-         //
-         // Example of a "chain" (probably not the best term):
-         //
-         // |-- 0 --|------------ 1 ------------|-- 2 --| // <-- Chain #
-         // Say("X").Optionally(r => r.Say("Y")).Say("Z")
+            return (ActionableRule)this;
+        }
 
-         if (_countInChain == 1) {
-            ISequence sequence = new Sequence();
+        public IActionableRule WithRule(string ruleName) {
+            Sequence.AddMember(
+               RuleName.Create(_idGenerator.GetRuleId(ruleName), ruleName)
+            );
 
-            sequence.AddElement(_container.Pop());
-            sequence.AddElement(element);
+            return (ActionableRule)this;
+        }
 
-            _container.AddElement(sequence);
-            _currentSequence = sequence;
-         } else if (_countInChain > 1) {
-            _currentSequence.AddElement(element);
-         } else {
-            _container.AddElement(element);
-         }
+        public bool Equals(IIdString other) {
+            return Id == other?.Id && String == other.String;
+        }
 
-         _countInChain++;
-      }
+        internal void AddAction(GrammarAction action) {
+            Sequence.AddMember(action);
+        }
 
-   }
+        private void AdoptWordsFromRule(Rule r) {
+            foreach (var kvp in r._words) {
+                if (!_words.ContainsKey(kvp.Key)) {
+                    _words.Add(kvp.Key, kvp.Value);
+                }
+            }
+        }
+
+        private Sequence InvokeActionInNestedRule(
+           Expression<Action<IRule>> action
+        ) {
+            var nestedRule = new Rule(_idGenerator);
+
+            action.Compile()(nestedRule);
+            AdoptWordsFromRule(nestedRule);
+
+            return nestedRule.Sequence;
+        }
+    }
 }

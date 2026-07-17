@@ -18,22 +18,22 @@
 using System.Drawing;
 
 namespace Renfrew.Core.Grammars.MousePlot {
-   public interface IWindow {
-      void Close();
-      void Focus();
-      void Move(double x, double y);
-      void Show();
-      bool? ShowDialog();
+    public interface IWindow {
+        void Close();
+        void Focus();
+        void Move(double x, double y);
+        void Show();
+        bool? ShowDialog();
 
-      double Left { get; }
-      double Top { get; }
+        double Left { get; }
+        double Top { get; }
 
-      double Height { get; }
-      double Width { get; }
+        double Height { get; }
+        double Width { get; }
 
-      void SetColour(GridColour colour);
-      void SetScreenBounds(Rectangle rectangle);
+        void SetColour(GridColour colour);
+        void SetScreenBounds(Rectangle rectangle);
 
-      void Rotate(double angle);
-   }
+        void Rotate(double angle);
+    }
 }

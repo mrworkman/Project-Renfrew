@@ -19,22 +19,23 @@ using System;
 using System.Windows.Forms;
 
 namespace Renfrew.Launcher {
-   class LauncherApplicationContext : ApplicationContext {
-      private readonly Launcher _launcher;
+    class LauncherApplicationContext : ApplicationContext {
+        private readonly Launcher _launcher;
 
-      // Constructor
-      public LauncherApplicationContext(Launcher launcher) {
-         if (launcher == null)
-            throw new ArgumentNullException();
+        // Constructor
+        public LauncherApplicationContext(Launcher launcher) {
+            if (launcher == null) {
+                throw new ArgumentNullException();
+            }
 
-         _launcher = launcher;
+            _launcher = launcher;
 
-         InitializeComponent();
-      }
+            InitializeComponent();
+        }
 
-      private void InitializeComponent() {
-         // Let's fire up the Quattro!
-         _launcher.Launch();
-      }
-   }
+        private void InitializeComponent() {
+            // Let's fire up the Quattro!
+            _launcher.Launch();
+        }
+    }
 }

@@ -20,17 +20,15 @@
 #define ISrNotifySinkGUID "090CD9B0-DA1A-11CD-B3CA-00AA0047BA4F"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(ISrNotifySinkGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class 
-      DECLSPEC_UUID(ISrNotifySinkGUID) ISrNotifySink {
-
-      void AttribChanged(DWORD);
-      void Interference(QWORD, QWORD, DWORD);
-      void Sound(QWORD, QWORD);
-      void UtteranceBegin(QWORD);
-      void UtteranceEnd(QWORD, QWORD);
-      void VUMeter(QWORD, WORD);
-   };
+    [ComImport, Guid(ISrNotifySinkGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(ISrNotifySinkGUID) ISrNotifySink {
+        void AttribChanged(DWORD);
+        void Interference(QWORD, QWORD, DWORD);
+        void Sound(QWORD, QWORD);
+        void UtteranceBegin(QWORD);
+        void UtteranceEnd(QWORD, QWORD);
+        void VUMeter(QWORD, WORD);
+    };
 }

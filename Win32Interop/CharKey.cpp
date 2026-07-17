@@ -21,13 +21,13 @@
 using namespace Renfrew::Win32::Interop;
 
 CharKey::CharKey(WORD scanCode) {
-   _scanCode = scanCode;
+    _scanCode = scanCode;
 }
 
 WORD CharKey::ScanCode::get() {
-   return _scanCode;
+    return _scanCode;
 }
 
 UnicodeKeyPress^ CharKey::KeyPress(Char c) {
-   return gcnew CharKey(c);
+    return gcnew CharKey(c);
 }

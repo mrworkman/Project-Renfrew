@@ -22,10 +22,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Renfrew.Grammar.Exceptions {
-   public class NoActiveRulesException : Exception {
-      public NoActiveRulesException()
-         : base("There aren't any active rules in this grammar!") {
+    public class NoActiveRulesException : Exception {
+        public NoActiveRulesException()
+           : base("There aren't any active rules in this grammar!") {
 
-      }
-   }
+        }
+    }
 }

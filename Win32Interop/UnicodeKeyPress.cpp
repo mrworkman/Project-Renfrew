@@ -21,5 +21,5 @@
 using namespace Renfrew::Win32::Interop;
 
 DWORD UnicodeKeyPress::KeyFlags::get() {
-   return KEYEVENTF_UNICODE;
+    return KEYEVENTF_UNICODE;
 }

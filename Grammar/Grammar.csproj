@@ -51,28 +51,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dragon\DirectiveTypes.cs" />
-    <Compile Include="Dragon\ElementGroupings.cs" />
-    <Compile Include="Dragon\RuleDefinitionFactory.cs" />
-    <Compile Include="Dragon\RuleDirective.cs" />
-    <Compile Include="Dragon\RuleDirectiveFactory.cs" />
-    <Compile Include="Elements\Element Container Interfaces\ISequence.cs" />
-    <Compile Include="Elements\Element Container Interfaces\IOptionals.cs" />
-    <Compile Include="Elements\Element Container Interfaces\IRepeats.cs" />
-    <Compile Include="Elements\Element Type Interfaces\IRuleElement.cs" />
-    <Compile Include="Elements\Element Type Interfaces\IWordElement.cs" />
-    <Compile Include="Elements\Element Type Interfaces\IGrammarAction.cs" />
-    <Compile Include="Elements\Element Type Interfaces\IListElement.cs" />
-    <Compile Include="Elements\Base Implementation\ElementContainerBase.cs" />
-    <Compile Include="Elements\Elements.cs" />
-    <Compile Include="Elements\Base Implementation\GroupingBase.cs" />
-    <Compile Include="Elements\Element Container Interfaces\IAlternatives.cs" />
-    <Compile Include="Elements\Element Interfaces\IElement.cs" />
-    <Compile Include="Elements\Element Interfaces\IElementContainer.cs" />
-    <Compile Include="Elements\Element Interfaces\IGrouping.cs" />
-    <Compile Include="Elements\GrammarAction.cs" />
-    <Compile Include="Elements\RuleElement.cs" />
-    <Compile Include="Exceptions\InvalidGrammarElementException.cs" />
+    <Compile Include="Exceptions\ParseExceptions.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Alternatives.cs" />
+    <Compile Include="Collections\ListWalker.cs" />
+    <Compile Include="Parsing\MatchedAction.cs" />
+    <Compile Include="Parsing\Parser.cs" />
+    <Compile Include="Parsing\ParseResult.cs" />
+    <Compile Include="Types\IIdString.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Optional.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Repeated.cs" />
+    <Compile Include="FluentApi\Interfaces\IIdGenerator.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\ISequenceMember.cs" />
+    <Compile Include="FluentApi\ExpressionParts\Sequence.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\ListName.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\RuleName.cs" />
+    <Compile Include="FluentApi\ExpressionParts\SequenceMembers\Word.cs" />
+    <Compile Include="GrammarAction.cs" />
     <Compile Include="Exceptions\InvalidSequenceInCallbackException.cs" />
     <Compile Include="Exceptions\NoActiveRulesException.cs" />
     <Compile Include="FluentApi\ActionableRule.cs" />
@@ -80,11 +74,23 @@
     <Compile Include="FluentApi\Interfaces\IRule.cs" />
     <Compile Include="Grammar.cs" />
     <Compile Include="GrammarExportAttribute.cs" />
-    <Compile Include="GrammarSerializer.cs" />
+    <Compile Include="IdGenerator.cs" />
+    <Compile Include="Serialization\LowLevelTypes\ISerializableRule.cs" />
+    <Compile Include="Serialization\LowLevelTypes\SrCfgRule.cs" />
+    <Compile Include="Serialization\LowLevelTypes\SrCfgXRule.cs" />
+    <Compile Include="Serialization\LowLevelTypes\SrHeader.cs" />
+    <Compile Include="Serialization\LowLevelTypes\SrCfgSymbol.cs" />
+    <Compile Include="Serialization\LowLevelTypes\SrChunk.cs" />
+    <Compile Include="Serialization\Serializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FluentApi\Rule.cs" />
     <Compile Include="FluentApi\RuleFactory.cs" />
-    <Compile Include="Elements\WordElement.cs" />
+    <Compile Include="Serialization\RuleConverter.cs" />
+    <Compile Include="Serialization\HighLevelTypes\OperationType.cs" />
+    <Compile Include="Serialization\HighLevelTypes\RuleInfo.cs" />
+    <Compile Include="Serialization\HighLevelTypes\Symbol.cs" />
+    <Compile Include="Serialization\HighLevelTypes\SymbolType.cs" />
+    <Compile Include="Collections\Lookup.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NatSpeakInterop\NatspeakInterop.vcxproj">
@@ -95,6 +101,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

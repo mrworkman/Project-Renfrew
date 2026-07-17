@@ -20,15 +20,13 @@
 #define IDgnSSvcOutputEventGUID "dd109201-6205-11cf-ae61-0000e8a28647"
 
 namespace Renfrew::NatSpeakInterop::Dragon::ComInterfaces {
-
-   [ComImport, Guid(IDgnSSvcOutputEventGUID)]
-   [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
-   public interface class
-      DECLSPEC_UUID(IDgnSSvcOutputEventGUID) IDgnSSvcOutputEvent {
-
-      HRESULT Register(/* IDgnSSvcActionNotifySink **/ IntPtr);
-      HRESULT PlayString(const PWCHAR, DWORD, DWORD, DWORD, DWORD*);
-      HRESULT NameFromKey(DWORD, DWORD, DWORD, DWORD, PWCHAR, DWORD*);
-      HRESULT PlayEvents(DWORD, const HOOK_EVENTMSG[], DWORD, DWORD);
-   };
+    [ComImport, Guid(IDgnSSvcOutputEventGUID)]
+    [InterfaceType(ComInterfaceType::InterfaceIsIUnknown)]
+    public interface class
+        DECLSPEC_UUID(IDgnSSvcOutputEventGUID) IDgnSSvcOutputEvent {
+        HRESULT Register(/* IDgnSSvcActionNotifySink **/ IntPtr);
+        HRESULT PlayString(const PWCHAR, DWORD, DWORD, DWORD, DWORD*);
+        HRESULT NameFromKey(DWORD, DWORD, DWORD, DWORD, PWCHAR, DWORD*);
+        HRESULT PlayEvents(DWORD, const HOOK_EVENTMSG [], DWORD, DWORD);
+    };
 }
