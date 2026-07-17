@@ -67,7 +67,10 @@ namespace GrammarTests.SerializationTests {
                      },
                      new() {
                         Type = (ushort) SymbolType.Rule,
-                        Value = 2, // Rule ID.
+                        // Dragon's built-in dictation rule has a fixed id, so a
+                        // reference to it serializes with that id, not a
+                        // sequential one.
+                        Value = IdGenerator.DragonDictationRuleId,
                      },
                      new() {
                         Type = (ushort) SymbolType.EndOperation,

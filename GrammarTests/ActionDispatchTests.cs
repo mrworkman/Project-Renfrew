@@ -477,6 +477,89 @@ namespace GrammarTests {
         }
 
         [Test]
+        public void DictationRuleConsumesAllTrailingSpeech() {
+            IEnumerable<string> received = null;
+
+            _grammar.ImportRule("dgndictation");
+            _grammar.AddRule(
+               "naming",
+               r => r.Say("score")
+                  .WithRule("dgndictation")
+                  .Do(words => received = words)
+            );
+            _grammar.ActivateRule("naming");
+
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("score", "naming"),
+               Spoken("hello", "dgndictation"),
+               Spoken("world", "dgndictation")
+            });
+
+            // The dictation rule swallows every trailing word regardless of what
+            // was said; the trailing action's scope spans the whole rule, so it
+            // sees the command word plus the dictated words.
+            Assert.That(
+               received,
+               Is.EqualTo(new[] { "score", "hello", "world" })
+            );
+        }
+
+        [Test]
+        public void DictationRuleAllowsTrailingGrammarWords() {
+            IEnumerable<string> received = null;
+
+            _grammar.ImportRule("dgndictation");
+            _grammar.AddRule(
+               "naming",
+               r => r.Say("score")
+                  .WithRule("dgndictation")
+                  .Say("stop")
+                  .Do(words => received = words)
+            );
+            _grammar.ActivateRule("naming");
+
+            // Dictation is a run of words Dragon tags with its rule id; the
+            // trailing "stop" carries the naming rule's id, so it is left for
+            // the continuation and the rule may keep matching after dictation.
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("score", "naming"),
+               Spoken("this", "dgndictation"),
+               Spoken("is", "dgndictation"),
+               Spoken("a test", "dgndictation"),
+               Spoken("stop", "naming")
+            });
+
+            Assert.That(
+               received,
+               Is.EqualTo(new[] { "score", "this", "is", "a test", "stop" })
+            );
+        }
+
+        [Test]
+        public void DictationRuleMatchesZeroWords() {
+            IEnumerable<string> received = null;
+
+            _grammar.ImportRule("dgndictation");
+            _grammar.AddRule(
+               "naming",
+               r => r.Say("score")
+                  .WithRule("dgndictation")
+                  .Say("stop")
+                  .Do(words => received = words)
+            );
+            _grammar.ActivateRule("naming");
+
+            // No dictated words at all: the dictation run is empty and the rule
+            // still matches "score stop".
+            _grammar.InvokeRule(new List<SpokenWord> {
+               Spoken("score", "naming"),
+               Spoken("stop", "naming")
+            });
+
+            Assert.That(received, Is.EqualTo(new[] { "score", "stop" }));
+        }
+
+        [Test]
         public void ParsingALeftRecursiveRuleThrowsInsteadOfOverflowing() {
             // A rule that references itself before consuming any word would
             // recurse forever; the parser detects this and throws.

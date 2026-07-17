@@ -240,6 +240,13 @@ namespace Renfrew.Grammar.Parsing {
            RuleName ruleName,
            Continuation continuation
         ) {
+            // Dragon's built-in dictation rule (a fixed id) matches a run of
+            // free dictation words. It has no members to descend into, so
+            // consume the run here instead of resolving and descending.
+            if (ruleName.Id == IdGenerator.DragonDictationRuleId) {
+                return MatchDictation(continuation);
+            }
+
             var rule = _grammar.GetRule(ruleName.Id);
 
             if (rule == null) {
@@ -249,6 +256,30 @@ namespace Renfrew.Grammar.Parsing {
             // Descend into the referenced rule; its words carry the rule id,
             // and once it is consumed, the parent's continuation takes over.
             return MatchRule(rule, continuation);
+        }
+
+        /// <summary>
+        ///    Matches Dragon's built-in dictation rule: a run of zero or more
+        ///    words that Dragon tags with the dictation rule id. Consumes the
+        ///    whole run, then hands off to <paramref name="continuation" />.
+        ///    Real grammar words that follow carry their own rule id and are
+        ///    left for the continuation, so dictation may appear mid-rule.
+        /// </summary>
+        private ParseResult MatchDictation(Continuation continuation) {
+            var checkpoint = Save();
+
+            while (!_phrase.IsAtEnd
+                   && _phrase.Current.RuleId == IdGenerator.DragonDictationRuleId) {
+                _phrase.MoveForward();
+            }
+
+            var result = continuation();
+
+            if (result is ParseResult.Failure) {
+                Restore(checkpoint);
+            }
+
+            return result;
         }
 
         private ParseResult MatchAlternatives(

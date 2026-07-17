@@ -20,6 +20,12 @@ using Renfrew.Grammar.FluentApi.Interfaces;
 
 namespace Renfrew.Grammar {
     internal class IdGenerator : IIdGenerator {
+        // Dragon assigns its built-in free-dictation rule this fixed id, and
+        // tags every dictated word with it. We mint the same id so grammar
+        // references to the rule line up with the words Dragon reports.
+        public const uint DragonDictationRuleId = 1_000_000;
+        private const string DragonDictationRuleName = "dgndictation";
+
         private readonly Dictionary<string, uint> _listNames = new();
         private readonly Dictionary<string, uint> _ruleNames = new();
         private readonly Dictionary<string, uint> _words = new();
@@ -40,6 +46,10 @@ namespace Renfrew.Grammar {
 
         public uint GetRuleId(string ruleName) {
             var lower = ruleName.ToLowerInvariant();
+
+            if (lower == DragonDictationRuleName) {
+                return DragonDictationRuleId;
+            }
 
             if (!_ruleNames.ContainsKey(lower)) {
                 _ruleNames[lower] = _currentRuleNameId++;
