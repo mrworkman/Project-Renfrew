@@ -153,13 +153,13 @@ namespace Renfrew.Core.Grammars {
             AddSequenceCommand("kimmy", up.Concat<KeyPress>(down));
 
             // Common Shortcuts.
-            AddChordCommand("copy",  Key.Control, Key.C);
-            AddChordCommand("copy that",  Key.Control, Key.C);
-            AddChordCommand("paste", Key.Control, Key.V);
-            AddChordCommand("paste it", Key.Control, Key.V);
-            AddChordCommand("cut",   Key.Control, Key.X);
-            AddChordCommand("undo",  Key.Control, Key.Z);
-            AddChordCommand("redo",  Key.Control, Key.Y);
+            AddChordCommand("copy",          Key.Control, Key.C);
+            AddChordCommand("copy that",     Key.Control, Key.C);
+            AddChordCommand("paste",         Key.Control, Key.V);
+            AddChordCommand("paste it",      Key.Control, Key.V);
+            AddChordCommand("cut",           Key.Control, Key.X);
+            AddChordCommand("undo",          Key.Control, Key.Z);
+            AddChordCommand("redo",          Key.Control, Key.Y);
             AddChordCommand("save file",     Key.Control, Key.S);
             // Sometimes NatSpeak hears "save" as its "say" command, so
             // instead of sending CTRL+S it inserts "file" 🙄
@@ -379,15 +379,15 @@ namespace Renfrew.Core.Grammars {
         public override void Initialize() {
             AddRule(
                 "globals",
-                e => e.Repeat(command =>
-                    command.SayOneOf(Commands.Select(c => c.Key))
-                        .Do(words => SetCurrentCommand(Commands[words.First()]))
-                        .Optionally(times =>
-                            times.SayOneOf(Numbers.Select(n => n.Key))
-                        )
-                        .Do(words =>
-                            ExecuteCommand(words.Skip(1).FirstOrDefault())
-                        )
+                e => e.Repeat(command => command
+                    .SayOneOf(Commands.Select(c => c.Key))
+                    .Do(words => SetCurrentCommand(Commands[words.First()]))
+                    .Optionally(times =>
+                        times.SayOneOf(Numbers.Select(n => n.Key))
+                    )
+                    .Do(words =>
+                        ExecuteCommand(words.FirstOrDefault())
+                    )
                 )
             );
 
