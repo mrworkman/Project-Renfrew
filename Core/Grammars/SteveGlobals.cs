@@ -262,10 +262,19 @@ namespace Renfrew.Core.Grammars {
             AddChordCommand("conmen",       Key.Shift, Key.F10);
             AddChordCommand("mini",         Key.LWin, Key.Down);
             AddChordCommand("maxi",         Key.LWin, Key.Up);
-            AddChordCommand("window left",  Key.LWin, Key.Shift, Key.Left);
-            AddChordCommand("window right", Key.LWin, Key.Shift, Key.Right);
             AddChordCommand("switchy",      Key.Menu, Key.Tab);
             AddChordCommand("switchy boo",  Key.Menu, Key.Control, Key.Tab);
+
+            // "Snap" the window to the left/right of the screen.
+            // Window snapping must be enabled in Windows multitasking settings.
+            AddChordCommand("snap left",    Key.LWin, Key.Left);
+            AddChordCommand("snap right",   Key.LWin, Key.Right);
+
+            // Move the window to a different monitor.
+            // Window snapping must be enabled in Windows multitasking settings.
+            AddChordCommand("window left",  Key.LWin, Key.Shift, Key.Left);
+            AddChordCommand("window right", Key.LWin, Key.Shift, Key.Right);
+
             #pragma warning restore format
             // @formatter:on
 
