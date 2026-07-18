@@ -46,6 +46,7 @@ namespace Renfrew.Grammar {
         private readonly RuleFactory _ruleFactory;
         private readonly IIdGenerator _idGenerator;
 
+        public static readonly string DgnDictation = "dgndictation";
 
         protected Grammar(IGrammarService grammarService, INatSpeak natSpeak) :
            this(
@@ -186,6 +187,8 @@ namespace Renfrew.Grammar {
                 );
             }
         }
+
+        protected void ImportDgnDictation() => ImportRule(DgnDictation);
 
         public void ImportRule(string name) {
             if (string.IsNullOrWhiteSpace(name)) {
