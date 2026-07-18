@@ -1,4 +1,4 @@
-﻿- name: netsted1
+﻿- name: nested
   rules:
     # This rule gets ID: 1
     - rule: "([left] | right | middle)"
@@ -14,4 +14,47 @@
       - click:4@2
       - left:1@1,click:4@2
       - right:2@1,click:4@2
-    bad: []
+      - middle:3@1,double:5@2,click:4@2
+      - left:1@1,triple:6@2,click:4@2
+      - double:5@2,click:4@2
+    bad:
+      - left:1@1
+      - right:2@1
+      - left:1@1,right:2@1,double:5@2,click:4@2
+      - double:5@2,click:4@2,triple:6@2,click:4@2
+      - click:4@2,left:1@1
+
+- name: deeply_nested
+  rules:
+    # This rule gets ID: 1
+    - rule: "(Mr | Mrs | Miss)"
+      name: title
+      export: false
+
+    # This rule gets ID: 2
+    - rule: "[<first_name>] (Terwilliger | Simpson)"
+      name: name
+      export: false
+
+    # This rule gets ID: 3
+    - rule: "(Bob | Homer | Marge)"
+      name: first_name
+      export: false
+
+    # This rule gets ID: 4
+    - rule: "hello [<title>] <name>"
+      name: greeting
+      export: true
+
+  tests:
+    good:
+      - hello:9@4,Miss:3@1,Simpson:5@2
+      - hello:9@4,Simpson:5@2
+      - hello:9@4,Homer:7@3,Simpson:5@2
+      - hello:9@4,Mr:1@1,Bob:6@3,Terwilliger:4@2
+    bad:
+      - Mr:1@1,Simpson:5@2
+      - hello:9@4
+      - hello:9@4,Mr:1@1
+      - hello:9@4,Mrs:2@1,Homer:7@3
+      - hello:9@4,Homer:7@3,Homer:7@3,Simpson:5@2
