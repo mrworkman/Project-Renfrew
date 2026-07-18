@@ -458,25 +458,6 @@ namespace GrammarTests {
         }
 
         [Test]
-        [Ignore("Start-rule activation gating changed separately; test to be "
-              + "revisited once that behavior is finalized.")]
-        public void InvokingWhoseStartRuleIsNotActiveThrows() {
-            _grammar.AddRule("greet", r => r.Say("Hello").Do(() => { }));
-            _grammar.AddRule("other", r => r.Say("Bye").Do(() => { }));
-
-            // Activate a rule, but speak words belonging to a different,
-            // inactive rule.
-            _grammar.ActivateRule("other");
-
-            Assert.That(
-               () => _grammar.InvokeRule(new List<SpokenWord> {
-                   Spoken("Hello", "greet")
-               }),
-               Throws.InstanceOf<InvalidSequenceInCallbackException>()
-            );
-        }
-
-        [Test]
         public void DictationRuleConsumesAllTrailingSpeech() {
             IEnumerable<string> received = null;
 

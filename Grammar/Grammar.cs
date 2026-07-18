@@ -98,6 +98,14 @@ namespace Renfrew.Grammar {
         }
 
         public void AddRule(string name, IRule rule) {
+            AddRule(name, rule, export: true);
+        }
+
+        // An exported rule is a grammar entry point: the parser may start a
+        // phrase there, and it is serialized for Dragon to activate. A
+        // non-exported rule still lives in the grammar and can be referenced by
+        // others (via <name>), but it is never an entry point on its own.
+        protected void AddRule(string name, IRule rule, bool export) {
             if (string.IsNullOrWhiteSpace(name)) {
                 throw new ArgumentException(
                    "Value cannot be null or whitespace.",
@@ -125,14 +133,29 @@ namespace Renfrew.Grammar {
             }
 
             _allRules.Add(rule);
-            _exportedRules.Add(rule);
+
+            if (export) {
+                _exportedRules.Add(rule);
+            }
         }
 
         protected void AddRule(
            string name,
            Expression<Action<IRule>> ruleExpression
         ) {
-            AddRule(name, _ruleFactory.Create(name, _idGenerator, ruleExpression));
+            AddRule(name, ruleExpression, export: true);
+        }
+
+        protected void AddRule(
+           string name,
+           Expression<Action<IRule>> ruleExpression,
+           bool export
+        ) {
+            AddRule(
+               name,
+               _ruleFactory.Create(name, _idGenerator, ruleExpression),
+               export
+            );
         }
 
         public void AddRule(string name, Func<IRule, IRule> ruleFunc) {
@@ -239,16 +262,12 @@ namespace Renfrew.Grammar {
                 throw new NoActiveRulesException();
             }
 
-            var startRuleId = spokenWords.First().RuleId;
-
-            // TODO: Consider where we should actually look for rules (_allRules vs _activeRules)
-            if (!_allRules.ContainsKey(startRuleId)) {
-                throw new InvalidSequenceInCallbackException(
-                   $"Speech event started in rule {startRuleId}, " +
-                   "which is not active."
-                );
-            }
-
+            // Exported rules are the grammar's entry points: they are what gets
+            // serialized and handed to Dragon, so a live phrase can only have
+            // come from one of them. The parser tries each and works out where
+            // the phrase actually begins; we cannot infer that from the first
+            // spoken word's rule id, since Dragon tags each word with the
+            // (possibly nested) rule that directly matched it.
             var result = Parser.Parse(
                this,
                new ListWalker<SpokenWord>(spokenWords)

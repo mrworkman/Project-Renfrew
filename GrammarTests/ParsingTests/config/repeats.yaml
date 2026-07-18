@@ -2,7 +2,7 @@
   rules:
     - rule: hello jerk+
       name: repeats1_rule
-      export: false
+      export: true
   tests:
     good:
       - hello:1@1,jerk:2@1
@@ -16,7 +16,7 @@
   rules:
     - rule: hello jerk+ face
       name: repeats2_rule
-      export: false
+      export: true
   tests:
     good:
       - hello:1@1,jerk:2@1,face:3@1
@@ -29,7 +29,7 @@
   rules:
     - rule: one (two three)+ two three four
       name: repeats3_rule
-      export: false
+      export: true
   tests:
     good:
       - one:1@1,two:2@1,three:3@1,two:2@1,three:3@1,four:4@1

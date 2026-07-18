@@ -2,7 +2,7 @@
   rules:
     - rule: hello | jello
       name: alternatives1_rule
-      export: false
+      export: true
   tests:
     good:
       - hello:1@1
@@ -14,7 +14,7 @@
   rules:
     - rule: one (two | three) four
       name: alternatives2_rule
-      export: false
+      export: true
   tests:
     good:
       - one:1@1,two:2@1,four:4@1
@@ -28,7 +28,7 @@
   rules:
     - rule: one (two three | two three four | two three four five | two three four five six) two three four five six
       name: alternatives3_rule
-      export: false
+      export: true
   tests:
     good:
       - one:1@1,two:2@1,three:3@1,two:2@1,three:3@1,four:4@1,five:5@1,six:6@1

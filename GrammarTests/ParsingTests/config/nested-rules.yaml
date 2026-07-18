@@ -1,0 +1,17 @@
+﻿- name: netsted1
+  rules:
+    # This rule gets ID: 1
+    - rule: "([left] | right | middle)"
+      name: mouse_button
+      export: false
+
+    # This rule gets ID: 2
+    - rule: "<mouse_button> (click | double click | triple click)"
+      name: mouse_click
+      export: true
+  tests:
+    good:
+      - click:4@2
+      - left:1@1,click:4@2
+      - right:2@1,click:4@2
+    bad: []

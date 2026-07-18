@@ -2,7 +2,7 @@
   rules:
     - rule: this is a test
       name: test
-      export: false
+      export: true
   tests:
     good:
       - this:1@1,is:2@1,a:3@1,test:4@1

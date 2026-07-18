@@ -2,7 +2,7 @@
   rules:
     - rule: hello [cosmo] kramer
       name: optionals1_rule
-      export: false
+      export: true
   tests:
     good:
       - hello:1@1,cosmo:2@1,kramer:3@1
@@ -14,7 +14,7 @@
   rules:
     - rule: i'm cosmo kramer [the ass man]
       name: optionals2_rule
-      export: false
+      export: true
   tests:
     good:
       - i'm:1@1,cosmo:2@1,kramer:3@1
@@ -26,7 +26,7 @@
   rules:
     - rule: one two three [four five] four five
       name: optionals4_rule
-      export: false
+      export: true
   tests:
     good:
       - one:1@1,two:2@1,three:3@1,four:4@1,five:5@1
@@ -40,7 +40,7 @@
   rules:
     - rule: "[one two three [four]] five"
       name: optionals4_rule
-      export: false
+      export: true
   tests:
     good:
       - five:5@1

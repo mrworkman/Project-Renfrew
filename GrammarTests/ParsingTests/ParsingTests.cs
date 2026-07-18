@@ -55,7 +55,11 @@ namespace GrammarTests.ParsingTests {
             foreach (var ruleSpec in ruleSpecs) {
                 var parser = new RuleStringParser();
 
-                AddRule(ruleSpec.Name, parser.ParseExpression(ruleSpec.Rule));
+                AddRule(
+                   ruleSpec.Name,
+                   parser.ParseExpression(ruleSpec.Rule),
+                   ruleSpec.Export
+                );
             }
         }
     }
@@ -173,6 +177,13 @@ namespace GrammarTests.ParsingTests {
                .ToList();
         }
 
+        private static string GetGrammarWords(Grammar grammar) {
+            return string.Join(
+                ", ",
+                grammar.Words.Select(w => $"{{ Word = {w.String}, Word ID: {w.Id} }}")
+            );
+        }
+
         [Test]
         [TestCaseSource(nameof(TestGrammarCases))]
         public void ParsingTest(TestCase testCase) {
@@ -181,9 +192,26 @@ namespace GrammarTests.ParsingTests {
             var result = Parser.Parse(testCase.TestGrammar, phrase);
 
             if (testCase.ExpectedSuccess) {
-                Assert.IsInstanceOf<ParseResult.Success>(result);
+                Assert.IsInstanceOf<ParseResult.Success>(
+                    result, string.Format(
+                        "Parse should have succeeded!\n" +
+                        "Grammar words: {0}\n\n" +
+                        "Spoken words: {1}\n\n",
+                        GetGrammarWords(testCase.TestGrammar),
+                        string.Join(",", testCase.TestCaseWords)
+                    )
+                );
             } else {
-                Assert.IsInstanceOf<ParseResult.Failure>(result);
+                Assert.IsInstanceOf<ParseResult.Failure>(
+                    result,
+                    string.Format(
+                        "Parse should have failed!\n" +
+                        "Grammar words: {0}\n\n" +
+                        "Spoken words: {1}\n\n",
+                        GetGrammarWords(testCase.TestGrammar),
+                        string.Join(",", testCase.TestCaseWords)
+                    )
+                );
             }
         }
 

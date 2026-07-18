@@ -74,12 +74,21 @@ namespace Renfrew.Grammar.Parsing {
         }
 
         /// <summary>
-        ///    Parses the given phrase against the grammar. The rule to start
-        ///    from is taken from the first spoken word's rule id; the whole
-        ///    phrase must be consumed for the parse to succeed. On success the
-        ///    result carries the actions to invoke, each with the words matched
-        ///    in its own sequence since the previous action there.
+        ///    Parses the given phrase against the grammar, trying each exported
+        ///    rule as an entry point; the first one that consumes the whole
+        ///    phrase wins. On success the result carries the actions to invoke,
+        ///    each with the words matched in its own sequence since the previous
+        ///    action there.
         /// </summary>
+        /// <remarks>
+        ///    Only exported rules are entry points: they are what gets
+        ///    serialized and handed to Dragon, so a phrase can only have come
+        ///    from one of them. The parser cannot instead pick a single entry
+        ///    point from the first spoken word's rule id, since Dragon tags each
+        ///    word with the id of the (possibly nested) rule that directly
+        ///    matched it — a phrase whose top-level rule opens with a sub-rule
+        ///    reference would carry the sub-rule's id on its first word.
+        /// </remarks>
         public static ParseResult Parse(
            Grammar grammar,
            ListWalker<SpokenWord> phrase
@@ -96,19 +105,19 @@ namespace Renfrew.Grammar.Parsing {
                 return ParseResult.Failed();
             }
 
-            var startRule = grammar.GetRule(phrase.Current.RuleId);
+            foreach (var startRule in grammar.ExportedRules) {
+                phrase.MoveTo(0);
 
-            if (startRule == null) {
-                return ParseResult.Failed();
+                var parser = new Parser(phrase, grammar);
+                var result =
+                   parser.MatchRule(startRule, parser.IsPhraseFullyConsumed);
+
+                if (result is ParseResult.Success) {
+                    return ParseResult.Succeeded(parser.BuildMatchedActions());
+                }
             }
 
-            var parser = new Parser(phrase, grammar);
-            var result =
-               parser.MatchRule(startRule, parser.IsPhraseFullyConsumed);
-
-            return result is ParseResult.Success
-               ? ParseResult.Succeeded(parser.BuildMatchedActions())
-               : result;
+            return ParseResult.Failed();
         }
 
         private ParseResult MatchRule(IRule rule, Continuation continuation) {
