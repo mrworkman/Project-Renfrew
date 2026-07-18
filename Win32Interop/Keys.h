@@ -190,16 +190,16 @@ namespace Renfrew::Win32::Interop {
         public: property WORD VirtualKeyCode { virtual WORD get() override { return    13; } }
     };
 
-    public ref class ShiftKey sealed : ExtendedKeyPress {
-        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    16; } }
+    public ref class ShiftKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    16; } }
     };
 
-    public ref class ControlKey sealed : ExtendedKeyPress {
-        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    17; } }
+    public ref class ControlKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    17; } }
     };
 
-    public ref class MenuKey sealed : ExtendedKeyPress {
-        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    18; } }
+    public ref class MenuKey sealed : KeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD get() override { return    18; } }
     };
 
     public ref class PauseKey sealed : KeyPress {
@@ -270,36 +270,36 @@ namespace Renfrew::Win32::Interop {
         public: property WORD VirtualKeyCode { virtual WORD get() override { return    32; } }
     };
 
-    public ref class PriorKey sealed : KeyPress {
-        public: property WORD VirtualKeyCode { virtual WORD get() override { return    33; } }
+    public ref class PriorKey sealed : ExtendedKeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    33; } }
     };
 
-    public ref class NextKey sealed : KeyPress {
-        public: property WORD VirtualKeyCode { virtual WORD get() override { return    34; } }
+    public ref class NextKey sealed : ExtendedKeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    34; } }
     };
 
-    public ref class EndKey sealed : KeyPress {
-        public: property WORD VirtualKeyCode { virtual WORD get() override { return    35; } }
+    public ref class EndKey sealed : ExtendedKeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    35; } }
     };
 
-    public ref class HomeKey sealed : KeyPress {
-        public: property WORD VirtualKeyCode { virtual WORD get() override { return    36; } }
+    public ref class HomeKey sealed : ExtendedKeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    36; } }
     };
 
-    public ref class LeftKey sealed : KeyPress {
-        public: property WORD VirtualKeyCode { virtual WORD get() override { return    37; } }
+    public ref class LeftKey sealed : ExtendedKeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    37; } }
     };
 
-    public ref class UpKey sealed : KeyPress {
-        public: property WORD VirtualKeyCode { virtual WORD get() override { return    38; } }
+    public ref class UpKey sealed : ExtendedKeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    38; } }
     };
 
-    public ref class RightKey sealed : KeyPress {
-        public: property WORD VirtualKeyCode { virtual WORD get() override { return    39; } }
+    public ref class RightKey sealed : ExtendedKeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    39; } }
     };
 
-    public ref class DownKey sealed : KeyPress {
-        public: property WORD VirtualKeyCode { virtual WORD get() override { return    40; } }
+    public ref class DownKey sealed : ExtendedKeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    40; } }
     };
 
     public ref class SelectKey sealed : KeyPress {
@@ -318,12 +318,12 @@ namespace Renfrew::Win32::Interop {
         public: property WORD VirtualKeyCode { virtual WORD get() override { return    44; } }
     };
 
-    public ref class InsertKey sealed : KeyPress {
-        public: property WORD VirtualKeyCode { virtual WORD get() override { return    45; } }
+    public ref class InsertKey sealed : ExtendedKeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    45; } }
     };
 
-    public ref class DeleteKey sealed : KeyPress {
-        public: property WORD VirtualKeyCode { virtual WORD get() override { return    46; } }
+    public ref class DeleteKey sealed : ExtendedKeyPress {
+        public: property WORD VirtualKeyCode { virtual WORD  get() override { return    46; } }
     };
 
     public ref class HelpKey sealed : KeyPress {

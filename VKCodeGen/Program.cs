@@ -13,6 +13,33 @@ namespace VKCodeGen {
     static class Program {
         static readonly string WinUserH = @"C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\WinUser.h";
 
+        // Keys that must be emitted with KEYEVENTF_EXTENDEDKEY. These are the
+        // dedicated navigation / arrow cluster, whose scan codes are
+        // E0-prefixed on real hardware. Names match the Pascalized VK_*
+        // identifiers.
+        //
+        // Important note on Shift+arrow keys:
+        // The navigation / arrow cluster are genuine "extended" keys (their
+        // scan codes are E0-prefixed). They MUST carry KEYEVENTF_EXTENDEDKEY
+        // when injected, otherwise their bare scan codes collide with the
+        // numeric keypad -- and holding Shift over a keypad key triggers
+        // Windows' "fake shift" handling, which corrupts the shift state and
+        // leaves Shift stuck (e.g. "Ctrl+Shift+Left"). The generic modifiers
+        // (Shift/Control/Menu) are NOT extended -- they resolve to their
+        // left-hand, non-extended physical keys.
+        static readonly HashSet<string> _extendedKeys = new() {
+            "Prior",   // Page Up
+            "Next",    // Page Down
+            "End",
+            "Home",
+            "Left",
+            "Up",
+            "Right",
+            "Down",
+            "Insert",
+            "Delete",
+        };
+
         static void Main(string[] args) {
             Console.WriteLine("Generating file...");
 
@@ -53,12 +80,7 @@ namespace VKCodeGen {
                         continue;
                     }
 
-                    var isExtended =
-                       name == "Shift" ||
-                       name == "Control" ||
-                       name == "Menu" ||
-                       name == "Win";
-                    ;
+                    var isExtended = _extendedKeys.Contains(name);
 
                     if (isExtended) {
                         AddExtendedKeyPressClassDef(outputFileContents, name, value);
