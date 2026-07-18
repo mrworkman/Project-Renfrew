@@ -24,7 +24,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NLog;
-using NLog.Fluent;
 using Renfrew.Core.Properties;
 using Renfrew.Grammar.Serialization;
 using Application = System.Windows.Forms.Application;
@@ -171,7 +170,7 @@ namespace Renfrew.Core {
                 try {
                     grammar.Initialize();
                 } catch (Exception e) {
-                    Logger.Error();
+                    Logger.Error("");
                     Logger.Error("---=== EXCEPTION CAUGHT ===---");
                     Logger.Error(e);
                     Logger.Error("---=== END OF EXCEPTION DETAIL ===---");

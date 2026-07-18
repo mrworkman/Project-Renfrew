@@ -13,6 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -65,8 +67,11 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.5.6\lib\net45\NLog.dll</HintPath>
+    <Reference Include="NLog, Version=6.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.6.1.4\lib\net46\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog.Targets.Trace, Version=6.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.Targets.Trace.6.0.3\lib\net46\NLog.Targets.Trace.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -99,6 +104,13 @@
   <PropertyGroup>
     <PostBuildEvent>call "$(ProjectDir)sign.bat" "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\NLog.Schema.6.1.4\build\NLog.Schema.targets" Condition="Exists('..\packages\NLog.Schema.6.1.4\build\NLog.Schema.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NLog.Schema.6.1.4\build\NLog.Schema.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NLog.Schema.6.1.4\build\NLog.Schema.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
