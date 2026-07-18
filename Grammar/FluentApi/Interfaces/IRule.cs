@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using Renfrew.Grammar.FluentApi.ExpressionParts;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.Types;
@@ -32,18 +31,18 @@ namespace Renfrew.Grammar.FluentApi.Interfaces {
         IActionableRule SayOneOf(IEnumerable<string> words);
         IActionableRule SayOneOf(params string[] words);
 
-        IActionableRule OneOf(params Expression<Action<IRule>>[] actions);
+        IActionableRule OneOf(params Action<IRule>[] actions);
 
-        IActionableRule Optionally(Expression<Action<IRule>> action);
+        IActionableRule Optionally(Action<IRule> action);
 
         IActionableRule OptionallyOneOf(
-           params Expression<Action<IRule>>[] actions
+           params Action<IRule>[] actions
         );
 
         IActionableRule OptionallySay(string word);
 
-        IActionableRule Repeat(Expression<Action<IRule>> action);
-        IActionableRule RepeatOneOf(params Expression<Action<IRule>>[] actions);
+        IActionableRule Repeat(Action<IRule> action);
+        IActionableRule RepeatOneOf(params Action<IRule>[] actions);
 
         IActionableRule OptionallyWithRule(string ruleName);
         IActionableRule WithRule(string ruleName);

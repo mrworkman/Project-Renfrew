@@ -57,7 +57,7 @@ namespace GrammarTests.ParsingTests {
 
                 AddRule(
                    ruleSpec.Name,
-                   parser.ParseExpression(ruleSpec.Rule),
+                   parser.ParseAction(ruleSpec.Rule),
                    ruleSpec.Export
                 );
             }

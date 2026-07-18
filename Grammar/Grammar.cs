@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using NLog;
 using Renfrew.Grammar.Collections;
@@ -141,19 +140,19 @@ namespace Renfrew.Grammar {
 
         protected void AddRule(
            string name,
-           Expression<Action<IRule>> ruleExpression
+           Action<IRule> ruleBuilder
         ) {
-            AddRule(name, ruleExpression, export: true);
+            AddRule(name, ruleBuilder, export: true);
         }
 
         protected void AddRule(
            string name,
-           Expression<Action<IRule>> ruleExpression,
+           Action<IRule> ruleBuilder,
            bool export
         ) {
             AddRule(
                name,
-               _ruleFactory.Create(name, _idGenerator, ruleExpression),
+               _ruleFactory.Create(name, _idGenerator, ruleBuilder),
                export
             );
         }

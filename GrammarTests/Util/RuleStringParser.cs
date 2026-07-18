@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 using Renfrew.Grammar.FluentApi;
 using Renfrew.Grammar.FluentApi.Interfaces;
@@ -44,7 +43,7 @@ namespace GrammarTests.Util {
     public class RuleStringParser {
         private static readonly RuleFactory RuleFactory = new();
 
-        public Expression<Action<IRule>> ParseExpression(
+        public Action<IRule> ParseAction(
            string ruleString
         ) {
             if (ruleString == null) {
@@ -57,7 +56,7 @@ namespace GrammarTests.Util {
 
             cursor.Expect(TokenKind.End);
 
-            return BuildExpression(root);
+            return BuildAction(root);
         }
 
         #region Tokenizer
@@ -312,12 +311,11 @@ namespace GrammarTests.Util {
 
         #region Fluent API Builder
 
-        private Expression<Action<IRule>> BuildExpression(Node node) {
-            // Drive the fluent API imperatively. The nested-rule fluent methods
-            // require an Expression, so wrap the (captured) build delegate in one
-            // it can compile and invoke against the nested rule.
-            Action<IRule> apply = rule => Apply(rule, node);
-            return rule => apply(rule);
+        private Action<IRule> BuildAction(Node node) {
+            // Drive the fluent API imperatively: hand each nested-rule fluent
+            // method a delegate that applies this node's terms to the rule it
+            // is given.
+            return rule => Apply(rule, node);
         }
 
         private void Apply(IRule rule, Node node) {
@@ -336,14 +334,14 @@ namespace GrammarTests.Util {
                     break;
                 case AlternationNode alternation:
                     rule.OneOf(
-                       alternation.Branches.Select(BuildExpression).ToArray()
+                       alternation.Branches.Select(BuildAction).ToArray()
                     );
                     break;
                 case OptionalNode optional:
-                    rule.Optionally(BuildExpression(optional.Child));
+                    rule.Optionally(BuildAction(optional.Child));
                     break;
                 case RepeatNode repeat:
-                    rule.Repeat(BuildExpression(repeat.Child));
+                    rule.Repeat(BuildAction(repeat.Child));
                     break;
                 default:
                     throw new InvalidOperationException(

@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using Renfrew.Grammar.FluentApi.ExpressionParts;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
@@ -69,7 +68,7 @@ namespace Renfrew.Grammar.FluentApi {
            .OrderBy(word => word.Id)
            .ToList();
 
-        public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
+        public IActionableRule OneOf(params Action<IRule>[] actions) {
             Sequence.AddMember(
                Alternatives.Create(
                   actions.Select(InvokeActionInNestedRule).ToList()
@@ -79,14 +78,14 @@ namespace Renfrew.Grammar.FluentApi {
             return (ActionableRule)this;
         }
 
-        public IActionableRule Optionally(Expression<Action<IRule>> action) {
+        public IActionableRule Optionally(Action<IRule> action) {
             Sequence.AddMember(Optional.Create(InvokeActionInNestedRule(action)));
 
             return (ActionableRule)this;
         }
 
         public IActionableRule OptionallyOneOf(
-           params Expression<Action<IRule>>[] actions
+           params Action<IRule>[] actions
         ) {
             return Optionally(r => r.OneOf(actions));
         }
@@ -100,7 +99,7 @@ namespace Renfrew.Grammar.FluentApi {
         }
 
         // Repeats: A+
-        public IActionableRule Repeat(Expression<Action<IRule>> action) {
+        public IActionableRule Repeat(Action<IRule> action) {
             Sequence.AddMember(Repeated.Create(InvokeActionInNestedRule(action)));
 
             return (ActionableRule)this;
@@ -108,7 +107,7 @@ namespace Renfrew.Grammar.FluentApi {
 
         // Repeats + Alternatives: ( A | B | C )+
         public IActionableRule RepeatOneOf(
-           params Expression<Action<IRule>>[] actions
+           params Action<IRule>[] actions
         ) {
             return Repeat(r => r.OneOf(actions));
         }
@@ -183,11 +182,11 @@ namespace Renfrew.Grammar.FluentApi {
         }
 
         private Sequence InvokeActionInNestedRule(
-           Expression<Action<IRule>> action
+           Action<IRule> action
         ) {
             var nestedRule = new Rule(_idGenerator);
 
-            action.Compile()(nestedRule);
+            action(nestedRule);
             AdoptWordsFromRule(nestedRule);
 
             return nestedRule.Sequence;

@@ -16,7 +16,6 @@
 //
 
 using System;
-using System.Linq.Expressions;
 
 using Renfrew.Grammar.FluentApi.Interfaces;
 
@@ -29,20 +28,20 @@ namespace Renfrew.Grammar.FluentApi {
         public IRule Create(
            string name,
            IIdGenerator idGenerator,
-           Expression<Action<IRule>> expression
+           Action<IRule> ruleBuilder
         ) {
             var rule = new Rule(name, idGenerator);
-            expression.Compile()(rule);
+            ruleBuilder(rule);
             return rule;
         }
 
         public IActionableRule CreateActionableRule(
            string name,
            IIdGenerator idGenerator,
-           Expression<Action<IRule>> expression
+           Action<IRule> ruleBuilder
         ) {
             IActionableRule rule = (ActionableRule)new Rule(name, idGenerator);
-            expression.Compile()(rule);
+            ruleBuilder(rule);
             return rule;
         }
     }

@@ -17,7 +17,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using Renfrew.Grammar.FluentApi.ExpressionParts;
 using Renfrew.Grammar.FluentApi.ExpressionParts.SequenceMembers;
 using Renfrew.Grammar.FluentApi.Interfaces;
@@ -57,16 +56,16 @@ namespace Renfrew.Grammar.FluentApi {
 
         #region Defer to Base Rule
 
-        public IActionableRule OneOf(params Expression<Action<IRule>>[] actions) {
+        public IActionableRule OneOf(params Action<IRule>[] actions) {
             return _rule.OneOf(actions);
         }
 
-        public IActionableRule Optionally(Expression<Action<IRule>> action) {
+        public IActionableRule Optionally(Action<IRule> action) {
             return _rule.Optionally(action);
         }
 
         public IActionableRule OptionallyOneOf(
-           params Expression<Action<IRule>>[] actions
+           params Action<IRule>[] actions
         ) {
             return _rule.OptionallyOneOf(actions);
         }
@@ -79,12 +78,12 @@ namespace Renfrew.Grammar.FluentApi {
             return _rule.OptionallyWithRule(ruleName);
         }
 
-        public IActionableRule Repeat(Expression<Action<IRule>> action) {
+        public IActionableRule Repeat(Action<IRule> action) {
             return _rule.Repeat(action);
         }
 
         public IActionableRule RepeatOneOf(
-           params Expression<Action<IRule>>[] actions
+           params Action<IRule>[] actions
         ) {
             return _rule.RepeatOneOf(actions);
         }
